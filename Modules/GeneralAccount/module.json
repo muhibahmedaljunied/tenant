@@ -1,0 +1,13 @@
+{
+    "name": "GeneralAccount",
+    "alias": "generalaccount",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GeneralAccount\\Providers\\GeneralAccountServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,0 +1,25 @@
+services:
+  laravel-docker:
+    container_name: laravel-docker-MAZERP8.2.12
+    build: .
+    volumes:
+      - .:/var/www/html/MZERRP8.2.12
+    ports:
+      - 9003:80
+  mysql_db: 
+    container_name: mysql_db-MAZERP8.2.12
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: maz
+    ports:
+    - 3307:3306
+  phpmyadmin:
+    container_name: phpmyadmin-MAZERP8.2.12
+    image: phpmyadmin:latest
+    ports:
+      - 9002:80
+    environment:
+        PMA_HOST: mysql_db
+        MYSQL_USER: root
+ 

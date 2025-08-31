@@ -1,0 +1,26 @@
+{
+    "name": "salemcode8/tracker",
+    "description": "",
+    "authors": [
+        {
+            "name": "Salem Tarek",
+            "email": "salemcode8@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Tracker\\": ""
+        }
+    },
+    "require": {
+        "lorisleiva/laravel-actions": "^2.6"
+    }
+}

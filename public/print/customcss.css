@@ -1,0 +1,8 @@
+/* @media print{
+    .user_tr_table thead th {
+        font-size: 10px;
+    }
+    .user_tr_table tbody tr>td:first-child {
+    font-size: .8em;
+    }
+} */

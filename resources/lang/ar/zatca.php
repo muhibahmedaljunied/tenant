@@ -1,0 +1,113 @@
+<?php
+return [
+    'zatca'     => 'الفاتوره الالكترونيه بالسعوديه',
+    'phase' => "المرحله",
+    'sent_status_invoice' => "حالة الارسال",
+    'phase_placeholder' => "اختر المرحله المطبقه عليك",
+    'phase_1' => "المرحله الاولي",
+    'phase_2' => "المرحله الثانيه",
+
+    'settings_title'     => 'اعدادات الفاتوره الالكترونيه بالسعوديه',
+    'invoices_issuing_types' => [
+        '1100' => 'Simplified And Standard (B2B & B2C)',
+        '0100' => 'Simplified B2B (Business to Business)',
+        '1000' => 'Standard B2C (Business to Customer)'
+    ],
+    'full_integrate' => 'التكامل مع هيئة الزكاه والدخل بالسعوديه',
+    'invoices_purpose_types' => [
+        '388' => 'Sales Invoice',
+        '383' => 'Debit Invoice',
+        '381' => 'Credit Invoice'
+    ],
+    'sent_to_zatca_statuses' => [
+        'sent' => 'Sent',
+        'not_sent' => 'Not Sent',
+        'reported' => 'B2C Invoice',
+        'cleared' => 'B2B Invoice',
+    ],
+    'settings' => [
+        'show' => 'عرض',
+        'title' => 'الإعدادات',
+        'name' => 'الاسم',
+        'mobile' => 'الجوال',
+        'trn' => 'TRN',
+        'crn' => 'CRN',
+        'street_name' => 'اسم الشارع',
+        'building_number' => 'رقم المبنى',
+        'plot_identification' => 'تحديد القطعة',
+        'region' => 'المنطقة',
+        'city' => 'المدينة',
+        'postal_number' => 'الرمز البريدي',
+        'egs_serial_number' => 'EGS',
+        'business_category' => 'فئة العمل',
+        'common_name' => 'الاسم المشترك',
+        'organization_unit_name' => 'اسم الوحدة التنظيمية',
+        'organization_name' => 'اسم المؤسسة',
+        'country_name' => 'اسم الدولة',
+        'registered_address' => 'عنوان مسجل',
+        'otp' => 'OTP',
+        'email_address' => 'عنوان البريد الإلكتروني',
+        'invoice_type' => 'نوع الفاتورة',
+        'is_production' => 'is Production',
+        'choose_country_name' => 'اختر الدولة',
+        'choose_invoice_type' => 'اختر نوع إصدار الفاتورة',
+        'choose_business_category' => 'اختر فئة العمل',
+        'actions' => [
+            'add_new_setting' => 'Add New Setting',
+            'edit_setting' => 'Edit Setting',
+        ],
+    ],
+    'respones' => [
+        'not_found' => 'Not Found',
+        'not_allowed' => 'Not Allowed',
+        'is_sent_before' => 'Invoice Is Sent Before',
+        'is_sent' => 'Invoice Is Sent Successfully',
+        'invoice_status_fetched' => 'Invoice Is Fetched Successfully',
+    ],
+    'invoices' => [
+        'number'  => 'رقم الفاتوره',
+        'issue_at'  => 'تاريخ الارسال',
+        'total'  => 'اجمالي الفاتوره',
+        'tax_total'  => 'اجمالي الضرايب',
+        'total_discount'  => 'اجمالي الخصومات',
+        'total_net'  => 'اجمالي مدفوع',
+        'sent_to_zatca'  => 'حالة الارسال',
+        'sent_to_zatca_status'  => 'الحاله',
+        'send'  => 'ارسال',
+        'statuses' => [
+            'warning'   => 'تحذير',
+            'error'     => 'خطأ',
+            'pass'      => 'نجاح',
+        ],
+
+        'title' => 'الفواتير',
+        'taxpayer' => [
+            'title' => 'TaxPayer',
+        ],
+        'client' => [
+            'title' => 'Customer',
+        ],
+    ],
+    'profile' => [
+        'title' => 'Profile',
+        'name' => 'Name',
+        'email' => 'Email',
+        'mobile' => 'Mobile',
+        'personal_information' => 'Personal Information',
+        'update_your_personal_informaiton' => 'Update your personal informaiton',
+        'user_info' => 'User Info',
+        'user_credentials' => 'User Password Change',
+        'new_password' => 'New Password',
+        'verify_new_password' => 'Verify New Password',
+    ],
+    'countries_iso_codes' => [
+        'SA' => 'السعوديه',
+    ],
+    "completeness" => "الاكتمال",
+    'msg' => [
+        "added_success" => "تم إضافة بنجاح",
+        "updated_success" => "تم تحديث بنجاح",
+        "deleted_success" => "تم الحذف بنجاح",
+    ],
+    'failed_send' => "لم يتم ارسال الفاتوره للبوايه الالكترونيه #:number"
+];
