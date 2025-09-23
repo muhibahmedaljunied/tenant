@@ -144,7 +144,11 @@ $(document).ready(function () {
                 source: function (request, response) {
                     $.getJSON(
                         '/purchases/get_products',
-                        { location_id: $('#location_id').val(), term: request.term },
+                        { location_id: $('#location_id').val(),
+                            // ---------muhib add this-----------
+                            store_id: $('#store_id').val(),
+                            // --------------
+                             term: request.term },
                         response
                     );
                 },
@@ -689,8 +693,7 @@ function get_purchase_entry_row(product_id, variation_id) {
                 location_id: location_id,
             },
             success: function (result) {
-
-                console.log('resultresultresultresult',result);
+                console.log('resultresultresultresult', result);
                 $(result)
                     .find('.purchase_quantity')
                     .each(function () {

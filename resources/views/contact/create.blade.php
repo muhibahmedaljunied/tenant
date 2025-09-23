@@ -83,6 +83,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4 customer_fields">
+                        <div class="form-group">
+                            <label for="customer_group_id">
+                                {{ __('lang_v1.customer_group') }}:
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-users"></i>
+                                </span>
+                                <select name="customer_group_id" id="customer_group_id" class="form-control">
+                                    @foreach($customer_groups as $key => $value)
+                                        <option value="{{ $key }}" {{ old('customer_group_id') == $key ? 'selected' : '' }}>
+                                            {{ $value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    
 
                     <div class="col-md-4">
                         <div class="form-group">

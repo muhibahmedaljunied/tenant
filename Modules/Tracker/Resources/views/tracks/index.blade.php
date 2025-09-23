@@ -212,7 +212,7 @@
             }
 
             $.ajax({
-                url: "{{ action('\Modules\Tracker\Http\Controllers\TrackController@index') }}",
+                url: "{{ route('track-index') }}",
                 method: 'GET',
                 data,
                 success: function(data) {

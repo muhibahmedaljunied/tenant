@@ -7,7 +7,7 @@
 	   <h1>@lang('crm::lang.add_schedule')</h1>
 	</section>
 	<section class="content no-print">
-		{!! Form::open(['url' => action('\Modules\Crm\Http\Controllers\ScheduleController@store'), 'method' => 'post', 'id' => 'add_advance_schedule' ]) !!}
+		{!! Form::open(['url' => route('schedule-store'), 'method' => 'post', 'id' => 'add_advance_schedule' ]) !!}
 
 		<div class="box box-solid">
         	<div class="box-body">
@@ -263,7 +263,7 @@
 					}
 
 					$.ajax({
-			            url: '{{action("\Modules\Crm\Http\Controllers\ScheduleController@getInvoicesForFollowUp")}}',
+			            url: '{{route("schedule-getInvoicesForFollowUp")}}',
 			            dataType: 'json',
 			            data: data,
 			            success: function(data) {
@@ -289,7 +289,7 @@
 		if (days != '') {
 			$('.hidden_box').removeClass('hide');
 			$.ajax({
-	            url: '{{action("\Modules\Crm\Http\Controllers\ScheduleController@getFollowUpGroups")}}',
+	            url: '{{route("schedule-getFollowUpGroups")}}',
 	            dataType: 'html',
 	            data: {days: days, follow_up_by: follow_up_by},
 	            success: function(result) {
@@ -311,7 +311,7 @@
 		if (invoices != '') {
 			$('.hidden_box').removeClass('hide');
 			$.ajax({
-	            url: '{{action("\Modules\Crm\Http\Controllers\ScheduleController@getFollowUpGroups")}}',
+	            url: '{{route("schedule-getFollowUpGroups")}}',
 	            dataType: 'html',
 	            data: {invoices: invoices, follow_up_by: 'payment_status'},
 	            success: function(result) {

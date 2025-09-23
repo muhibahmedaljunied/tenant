@@ -203,7 +203,7 @@
         <div class="row">
             <div class="col-lg-2 ">
                 <a href="/pos/create" class="cont">
-                    <h2><i class="fas fa-dollar-sign"></i></h2>
+                    <h2>1</h2>
                     <h3>@lang('tenant.users') </h3>
 
                 </a>
@@ -211,17 +211,8 @@
 
             <div class="col-lg-2 ">
                 <a href="/pos/create" class="cont">
-                    <h2><i class="fas fa-dollar-sign"></i></h2>
-                    <h3>@lang('tenant.tenants') </h3>
-
-                </a>
-            </div>
-
-
-            {{-- <div class="col-lg-2 ">
-                <a href="/pos/create" class="cont">
-                    <h2><i class="fas fa-dollar-sign"></i></h2>
-                    <h3>@lang('lang_v1.kasher') </h3>
+                    <h2>0</h2>
+                    <h3>@lang('tenant.suspended') </h3>
 
                 </a>
             </div>
@@ -229,27 +220,30 @@
 
             <div class="col-lg-2 ">
                 <a href="/pos/create" class="cont">
-                    <h2><i class="fas fa-dollar-sign"></i></h2>
-                    <h3>@lang('lang_v1.kasher') </h3>
+                    <h2>1</h2>
+                    <h3>@lang('tenant.active') </h3>
+
+                </a>
+            </div>
+
+
+            <div class="col-lg-2 ">
+                <a href="/pos/create" class="cont">
+                    <h2>1</h2>
+                    <h3>@lang('tenant.in-active') </h3>
 
                 </a>
             </div>
 
             <div class="col-lg-2 ">
                 <a href="/pos/create" class="cont">
-                    <h2><i class="fas fa-dollar-sign"></i></h2>
-                    <h3>@lang('lang_v1.kasher') </h3>
+                    <h2>0</i></h2>
+                    <h3>@lang('tenant.blocked') </h3>
 
                 </a>
             </div>
 
-            <div class="col-lg-2 ">
-                <a href="/pos/create" class="cont">
-                    <h2><i class="fas fa-dollar-sign"></i></h2>
-                    <h3>@lang('lang_v1.kasher') </h3>
-
-                </a>
-            </div> --}}
+       
 
             <?php
             
@@ -283,7 +277,7 @@
     </div>
 @stop
 @section('javascript')
-    <script src="{{ asset('js/home.js?v=' . $asset_v) }}"></script>
-    <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/home.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/payment.js?v=' . $asset_v) }}"></script>
 
 @endsection

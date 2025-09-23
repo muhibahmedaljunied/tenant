@@ -60,14 +60,22 @@ class Product extends Model
         return $this->hasMany(\App\ProductVariation::class);
     }
 
-    // -------
+    // --------------------------------muhib add this for store--------------------
 
-   public function variation_location_details()
+    // public function variation_location_details()
+    // {
+    //     return $this->belongsToMany(\App\BusinessLocation::class, 'variation_location_details', 'product_id', 'location_id');
+    // }
+
+
+    public function variation_location_details()
     {
-        return $this->belongsToMany(\App\BusinessLocation::class,'variation_location_details', 'product_id', 'location_id');
+        return $this->hasMany(VariationLocationDetails::class, 'product_id');
     }
 
-    // ---------------
+
+
+    // ----------------------------------------------------------------------------
 
     /**
      * Get the brand associated with the product.
@@ -194,14 +202,43 @@ class Product extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
+    // --------------------------------muhib comment this for store--------------------
+
+    // public function scopeForLocation($query, $location_id)
+    // {
+    //     return $query->where(function ($q) use ($location_id) {
+    //         $q->whereHas('product_locations', function ($query) use ($location_id) {
+    //             $query->where('product_locations.location_id', $location_id);
+    //         });
+    //     });
+    // }
+
+
+    // --------------------------------muhib add this for store--------------------
+
+
     public function scopeForLocation($query, $location_id)
     {
         return $query->where(function ($q) use ($location_id) {
-            $q->whereHas('product_locations', function ($query) use ($location_id) {
-                $query->where('product_locations.location_id', $location_id);
+            $q->whereHas('variation_location_details', function ($query) use ($location_id) {
+                $query->where('variation_location_details.location_id', $location_id);
             });
         });
     }
+
+
+    // -----------------muhib add this for store------------
+    public function scopeForStore($query, $store_id)
+    {
+
+
+        return $query->where(function ($q) use ($store_id) {
+            $q->whereHas('variation_location_details', function ($query) use ($store_id) {
+                $query->where('variation_location_details.store_id', $store_id);
+            });
+        });
+    }
+    // ----------------------------------------
 
     /**
      * Get warranty associated with the product.
@@ -219,5 +256,4 @@ class Product extends Model
     {
         return $this->belongsTo(kitchen::class, 'kitchen_id');
     }
-
 }

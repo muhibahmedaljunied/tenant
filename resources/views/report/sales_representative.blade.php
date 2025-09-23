@@ -134,6 +134,6 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
-    <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/payment.js?v=' . $asset_v) }}"></script>
 @endsection

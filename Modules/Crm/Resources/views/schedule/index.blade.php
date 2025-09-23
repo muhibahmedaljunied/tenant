@@ -57,10 +57,10 @@
 			                <button type="button" class="btn btn-primary btn-add-schedule">
 			                <i class="fa fa-plus"></i> @lang('messages.add')</button>
 
-			                <a href="{{action('\Modules\Crm\Http\Controllers\ScheduleController@create')}}" class="btn btn-success">
+			                <a href="{{route('schedule-create')}}" class="btn btn-success">
 			                <i class="fa fa-plus"></i> @lang('crm::lang.add_advance_follow_up')</a>
 			            </div>
-			            <input type="hidden" name="schedule_create_url" id="schedule_create_url" value="{{action('\Modules\Crm\Http\Controllers\ScheduleController@create')}}">
+			            <input type="hidden" name="schedule_create_url" id="schedule_create_url" value="{{route('schedule-create')}}">
 		        	@endslot
 			        <div class="col-sm-12">
 			            <div class="table-responsive">
@@ -113,7 +113,7 @@
     <div class="modal fade edit_schedule" tabindex="-1" role="dialog"></div>
 @endsection
 @section('javascript')
-	<script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
 	<script type="text/javascript">
 		$(function () {
 			$('#follow_up_date_range').daterangepicker(

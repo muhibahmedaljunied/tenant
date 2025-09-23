@@ -52,6 +52,7 @@
                             </span>
                             <select name="location_id" id="location_id" class="form-control select2" required>
                                 @foreach ($business_locations as $key => $location)
+                                
                                     <option value="{{ $key }}">{{ $location }}</option>
                                 @endforeach
                             </select>
@@ -62,7 +63,7 @@
                     <div class="form-group">
                         <label for="store_id">@lang('store.store'):</label>
                         <select name="store_id" id="store_id" class="form-control select2" style="width:100%;">
-
+                            <option value="">{{ __('messages.all') }}</option>
                         </select>
                     </div>
                 </div>
@@ -120,5 +121,39 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script>
+
+    <script>
+        $('#location_id').on('change', function() {
+
+            console.log('hebo_change');
+            var locationIds = $(this).val();
+            if (!locationIds) {
+                $('#store_id').html(
+                    '<option value="">{{ __('messages.please_select') }}</option>');
+                $('#store_id').trigger('change');
+                return;
+            }
+            $.ajax({
+                url: '{{ route('getStoresByLocationsProductPurchaseReport') }}',
+                type: 'POST',
+                data: {
+                    location_ids: locationIds,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    var options =
+                        '<option value="">{{ __('messages.please_select') }}</option>';
+                    $.each(data, function(key, value) {
+                        // console.log(key);
+                        console.log(value['name']);
+                        options += '<option value="' + value['id'] + '">' +
+                            value['name'] + '</option>';
+                    });
+                    $('#store_id').html(options).trigger('change');
+                }
+            });
+        });
+    </script>
+
 @endsection

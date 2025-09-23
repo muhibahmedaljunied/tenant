@@ -61,7 +61,7 @@
             @component('components.widget', ['class' => 'box-solid', 'title' => __( 'essentials::lang.all_leaves' )])
                 @slot('tool')
                     <div class="box-tools">
-                        <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{action('\Modules\Essentials\Http\Controllers\EssentialsLeaveController@create')}}" data-container="#add_leave_modal">
+                        <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{route('essentialsLeave-create')}}" data-container="#add_leave_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>
                 @endslot
@@ -100,7 +100,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    "url": "{{action('\Modules\Essentials\Http\Controllers\EssentialsLeaveController@index')}}",
+                    "url": "{{route('essentialsLeave-index')}}",
                     "data" : function(d) {
                         if ($('#user_id_filter').length) {
                             d.user_id = $('#user_id_filter').val();
@@ -254,7 +254,7 @@
             var start = $('#leave_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
             var end = $('#leave_filter_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
             $.ajax({
-                url: '{{action("\Modules\Essentials\Http\Controllers\EssentialsLeaveController@getUserLeaveSummary")}}?user_id=' + user_id + '&start_date=' + start + '&end_date=' + end ,
+                url: '{{route("essentialsLeave-getUserLeaveSummary")}}?user_id=' + user_id + '&start_date=' + start + '&end_date=' + end ,
                 dataType: 'html',
                 success: function(html) {
                     $('#user_leave_summary').html(html);

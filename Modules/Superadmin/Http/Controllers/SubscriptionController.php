@@ -114,8 +114,10 @@ class SubscriptionController extends BaseController
             DB::beginTransaction();
 
             $business_id = request()->session()->get('user.business_id');
-
+            // dd('1',$package_id);
             $package = Package::active()->find($package_id);
+
+  
 
             //Check if superadmin only package
             if ($package->is_private == 1 && !auth()->user()->can('superadmin')) {
@@ -503,6 +505,8 @@ class SubscriptionController extends BaseController
      */
     public function show($id)
     {
+
+
         if (!auth()->user()->can('superadmin.access_package_subscriptions')) {
             abort(403, 'Unauthorized action.');
         }
@@ -513,6 +517,7 @@ class SubscriptionController extends BaseController
             ->with(['package', 'created_user', 'business'])
             ->find($id);
 
+
         $system_settings = System::getProperties([
             'invoice_business_name',
             'email',
@@ -522,6 +527,8 @@ class SubscriptionController extends BaseController
             'invoice_business_state',
             'invoice_business_country'
         ]);
+
+        // dd($system_settings);
         $system = [];
         foreach ($system_settings as $setting) {
             $system[$setting['key']] = $setting['value'];

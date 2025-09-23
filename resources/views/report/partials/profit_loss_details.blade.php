@@ -10,7 +10,7 @@
             <tr>
                 <th>{{ __('report.opening_stock') }} <br><small class="text-muted">(@lang('lang_v1.by_sale_price'))</small>:</th>
                 <td>
-                    <span class="display_currency" data-currency_symbol="true">{{$data['opening_stock_by_sp']}}</span>
+                    {{-- <span class="display_currency" data-currency_symbol="true">{{$data['opening_stock_by_sp']}}</span> --}}
                 </td>
             </tr>
             <tr>
@@ -85,7 +85,7 @@
             <tr>
                 <th>{{ __('report.closing_stock') }} <br><small class="text-muted">(@lang('lang_v1.by_sale_price'))</small>:</th>
                 <td>
-                    <span class="display_currency" data-currency_symbol="true">{{$data['closing_stock_by_sp']}}</span>
+                    {{-- <span class="display_currency" data-currency_symbol="true">{{$data['closing_stock_by_sp']}}</span> --}}
                 </td>
             </tr>
             <tr>

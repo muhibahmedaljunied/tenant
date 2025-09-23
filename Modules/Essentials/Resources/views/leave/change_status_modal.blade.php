@@ -3,7 +3,7 @@
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
 
-	    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\EssentialsLeaveController@changeStatus') }}" method="post" id="change_status_form">
+	    <form action="{{ route('essentialsLeave-changeStatus') }}" method="post" id="change_status_form">
             @csrf
 		    <div class="modal-header">
 		      	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

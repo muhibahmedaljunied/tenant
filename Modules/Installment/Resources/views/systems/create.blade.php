@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\Modules\Installment\Http\Controllers\InstallmentSystemController@store') }}"
+        <form action="{{ route('installmentSystem-store') }}"
             method="POST"
             id="add_installment_system">
             @csrf

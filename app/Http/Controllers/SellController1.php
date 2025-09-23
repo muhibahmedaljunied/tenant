@@ -34,7 +34,7 @@ use Modules\Tracker\Entities\Track;
 use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\Facades\DataTables;
 
-class SellController extends Controller
+class SellController1 extends Controller
 {
     /**
      * All Utils instance.

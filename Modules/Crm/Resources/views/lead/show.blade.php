@@ -85,7 +85,7 @@
 <div class="modal fade edit_schedule" tabindex="-1" role="dialog"></div>
 @endsection
 @section('javascript')
-	<script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
     @includeIf('documents_and_notes.document_and_note_js')
     <script type="text/javascript">
         $(document).ready(function() {

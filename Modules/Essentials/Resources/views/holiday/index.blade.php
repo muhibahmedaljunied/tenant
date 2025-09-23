@@ -38,7 +38,7 @@
                 @if($is_admin)
                 @slot('tool')
                     <div class="box-tools">
-                        <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{action('\Modules\Essentials\Http\Controllers\EssentialsHolidayController@create')}}" data-container="#add_holiday_modal">
+                        <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{route('essentialsHoliday-create')}}" data-container="#add_holiday_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>
                 @endslot
@@ -75,7 +75,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    "url": "{{action('\Modules\Essentials\Http\Controllers\EssentialsHolidayController@index')}}",
+                    "url": "{{route('essentialsHoliday-index')}}",
                     "data" : function(d) {
                         d.location_id = $('#location_id').val();
                         if($('#holiday_filter_date_range').val()) {

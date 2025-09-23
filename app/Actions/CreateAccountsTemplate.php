@@ -12,6 +12,7 @@ class CreateAccountsTemplate
     private static $accounts = [];
     public function __construct($business)
     {
+  
         $this->business = $business;
     }
 
@@ -37,6 +38,7 @@ class CreateAccountsTemplate
     public function setDefaultAccounts(): self
     {
        
+       
         return $this->setAccounts(self::getMasterAccounts());
     }
     private function getAccounts(): array
@@ -56,6 +58,7 @@ class CreateAccountsTemplate
     {
         $accounts = $this->getAccounts();
         $baseAccounts = collect(self::getMasterAccounts());
+   
         foreach ($accounts as $key => $account) {
             $values = $account;
             $values['created_at'] = now()->toDateTimeString();
@@ -70,6 +73,7 @@ class CreateAccountsTemplate
                 $values['account_status'] = $masterAccount['account_status'];
             }
             // ---------------------------- \\
+
             AcMaster::updateOrCreate([
                 'account_number' => $values['account_number'],
                 'business_id' => $this->business

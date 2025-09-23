@@ -1,5 +1,5 @@
 <div class="modal-dialog" role="document">
-	{!! Form::open(['url' => action('\Modules\Crm\Http\Controllers\ContactLoginController@update', ['id' => $user->id]), 'method' => 'put', 'id' => 'contact_login_edit' ]) !!}
+	{!! Form::open(['url' => route('contactLogin-update', ['id' => $user->id]), 'method' => 'put', 'id' => 'contact_login_edit' ]) !!}
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">

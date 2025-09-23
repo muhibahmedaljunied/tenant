@@ -25,8 +25,10 @@ class SettingsController extends Controller
      * @param ProductUtils $product
      * @return void
      */
-    public function __construct(ModuleUtil $moduleUtil, ManufacturingUtil $mfgUtil)
-    {
+    public function __construct(
+        ModuleUtil $moduleUtil,
+        ManufacturingUtil $mfgUtil
+    ) {
         $this->moduleUtil = $moduleUtil;
         $this->mfgUtil = $mfgUtil;
     }
@@ -45,8 +47,8 @@ class SettingsController extends Controller
 
         $version = System::getProperty('manufacturing_version');
 
-                $menuItems = $request->menuItems;
-        return view('manufacturing::settings.index')->with(compact('manufacturing_settings', 'version','menuItems'));
+        $menuItems = $request->menuItems;
+        return view('manufacturing::settings.index')->with(compact('manufacturing_settings', 'version', 'menuItems'));
     }
 
     /**
@@ -67,19 +69,21 @@ class SettingsController extends Controller
             $settings['disable_editing_ingredient_qty'] = !empty($request->input('disable_editing_ingredient_qty')) ? true : false;
 
             $settings['enable_updating_product_price'] = !empty($request->input('enable_updating_product_price')) ? true : false;
-            
-            $business = Business::where('id', $business_id)
-                                ->update(['manufacturing_settings' => json_encode($settings)]);
 
-            $output = ['success' => 1,
-                            'msg' => __("lang_v1.updated_success")
-                        ];
+            $business = Business::where('id', $business_id)
+                ->update(['manufacturing_settings' => json_encode($settings)]);
+
+            $output = [
+                'success' => 1,
+                'msg' => __("lang_v1.updated_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return redirect()->back()->with('status', $output);

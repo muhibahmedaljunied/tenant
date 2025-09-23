@@ -6,13 +6,14 @@ use App\System;
 use Composer\Semver\Comparator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 class InstallController extends Controller
 {
+    protected $module_name;
+    protected $appVersion;
     public function __construct()
     {
         $this->module_name = 'manufacturing';
@@ -25,9 +26,9 @@ class InstallController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('superadmin')) {
-            abort(403, 'Unauthorized action.');
-        }
+        // if (!auth()->user()->can('superadmin')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
 
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '512M');

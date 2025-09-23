@@ -34,8 +34,10 @@ class PurchaseReturnController extends Controller
      * @param TransactionUtil $transactionUtil
      * @return void
      */
-    public function __construct(TransactionUtil $transactionUtil, ProductUtil $productUtil)
-    {
+    public function __construct(
+        TransactionUtil $transactionUtil,
+        ProductUtil $productUtil
+    ) {
         $this->transactionUtil = $transactionUtil;
         $this->productUtil = $productUtil;
         $this->purchaseAccountingService = app(PurchaseAccountingService::class);
@@ -251,6 +253,8 @@ class PurchaseReturnController extends Controller
         }
         $business_id = request()->session()->get('user.business_id');
 
+        $id = $request->segment(3);
+        // dd($id);
         $purchase = Transaction::where('business_id', $business_id)
             ->where('type', 'purchase')
             ->with([
@@ -265,6 +269,7 @@ class PurchaseReturnController extends Controller
                 'purchase_lines.product.unit'
             ])
             ->find($id);
+
 
 
         foreach ($purchase->purchase_lines as $key => $value) {
@@ -453,7 +458,7 @@ class PurchaseReturnController extends Controller
         }
 
         $business_id = request()->session()->get('user.business_id');
-
+ 
         $purchase = Transaction::where('business_id', $business_id)
             ->with([
                 'return_parent',

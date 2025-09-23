@@ -17,6 +17,7 @@ class ContactBookingController extends Controller
      *
      */
     protected $commonUtil;
+    protected $bookingStatuses;
 
     public function __construct(Util $commonUtil)
     {

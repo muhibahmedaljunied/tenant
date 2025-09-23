@@ -1,6 +1,6 @@
 <div class="modal fade reminder" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\ReminderController@store') }}" id="reminder_form" method="post">
+    <form action="{{ route('reminder-store') }}" id="reminder_form" method="post">
       @csrf
       <div class="modal-content">
         <div class="modal-header">

@@ -77,6 +77,7 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12">
                     @component('components.widget', ['class' => 'box-solid'])
+              
                         <input type="hidden" name="location_id" id="location_id"
                             value="{{ !empty($default_location) ? $default_location->id : '' }}"
                             data-receipt_printer_type="{{ !empty($default_location->receipt_printer_type) ? $default_location->receipt_printer_type : 'browser' }}"
@@ -165,6 +166,10 @@
                         @endif
                         <div class="clearfix"></div>
                         <div class="@if (!empty($commission_agent)) col-sm-3 @else col-sm-4 @endif">
+                         
+
+
+
                             <div class="form-group">
                                 <label for="contact_id">{{ __('contact.customer') }}:*</label>
                                 <div class="input-group">
@@ -195,6 +200,8 @@
                                     </span>
                                 </div>
                             </div>
+                            
+                            
                             <small>
                                 <strong>@lang('lang_v1.billing_address'):</strong>
                                 <div id="billing_address_div">
@@ -949,14 +956,14 @@
 @stop
 
 @section('javascript')
-    <script src="{{ asset('js/pos.js?v=' . $asset_v) }}"></script>
-    <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
-    <script src="{{ asset('js/opening_stock.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/pos.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/product.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/opening_stock.js?v=' . $asset_v) }}"></script>
     <!-- Call restaurant module if defined -->
     @if (in_array('tables', $enabled_modules) ||
             in_array('modifiers', $enabled_modules) ||
             in_array('service_staff', $enabled_modules))
-        <script src="{{ asset('js/restaurant.js?v=' . $asset_v) }}"></script>
+        <script src="{{ url('js/restaurant.js?v=' . $asset_v) }}"></script>
     @endif
     <script type="text/javascript">
         $(document).ready(function() {

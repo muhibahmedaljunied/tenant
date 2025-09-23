@@ -22,7 +22,7 @@
 			<div class="box-body">
 				<div class="row">
 					<div class="col-md-12">
-						<form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\DocumentController@store') }}" id="upload_document_form" enctype="multipart/form-data" method="post" style="display:none">
+						<form action="{{ route('document-store') }}" id="upload_document_form" enctype="multipart/form-data" method="post" style="display:none">
                             @csrf
                             <div class="row">
                                 <div class="col-sm-12">

@@ -17,28 +17,28 @@
                 <ul class="nav navbar-nav">
 
                         <li @if(request()->segment(2) == 'partners') class="active" @endif>
-                            <a href="{{action('\Modules\Partners\Http\Controllers\PartnersController@index')}}">
+                            <a href="{{route('partners-index')}}">
                                 <i class="fa fa-user"></i>
                                الشركاء
                             </a>
                         </li>
 
                         <li @if(request()->segment(2) == 'partners_pay') class="active" @endif>
-                            <a href="{{action('\Modules\Partners\Http\Controllers\PaymentsController@index')}}">
+                            <a href="{{route('payments-index')}}">
                                 <i class="fa fa-map-marker"></i>
                                 سجل مدفوعات الشركاء
                             </a>
                         </li>
 
                             <li @if(request()->segment(2) == 'partners_set') class="active" @endif>
-                                <a href="{{action('\Modules\Partners\Http\Controllers\FinalAccountController@index')}}">
+                                <a href="{{route('finalAccount-index')}}">
                                     <i class="fa fa-plus-circle"></i>
                                     الحساب الختامي
                                 </a>
                             </li>
 
                             <li @if(request()->segment(2) == 'partners_set') class="active" @endif>
-                                <a href="{{action('\Modules\Partners\Http\Controllers\BusinessController@index')}}">
+                                <a href="{{route('business-index')}}">
                                     <i class="fa fa-calendar-minus"></i>
                                     التقدير المالي
                                 </a>

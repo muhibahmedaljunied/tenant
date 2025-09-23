@@ -124,7 +124,10 @@ $(document).ready(function () {
     }
     stock_report_cols.push({ data: 'stock', name: 'stock', searchable: false });
     stock_report_cols.push({ data: 'unit_price', name: 'variations.sell_price_inc_tax' });
-    stock_report_cols.push({ data: 'unit_price_without_tax', name: 'variations.default_sell_price' });
+    stock_report_cols.push({
+        data: 'unit_price_without_tax',
+        name: 'variations.default_sell_price',
+    });
     if ($('th.stock_price').length) {
         stock_report_cols.push({
             data: 'stock_value_by_sale_price_without_tax',
@@ -138,7 +141,7 @@ $(document).ready(function () {
             searchable: false,
             orderable: false,
         });
-    
+
         stock_report_cols.push({
             data: 'potential_profit',
             name: 'potential_profit',
@@ -663,6 +666,7 @@ $(document).ready(function () {
             url: '/reports/stock-expiry',
             data: function (d) {
                 d.location_id = $('#location_id').val();
+                d.store_id = $('#store_id').val();
                 d.category_id = $('#category_id').val();
                 d.sub_category_id = $('#sub_category_id').val();
                 d.brand_id = $('#brand').val();
@@ -680,8 +684,9 @@ $(document).ready(function () {
             { data: 'sku', name: 'p.sku' },
             // { data: 'ref_no', name: 't.ref_no' },
             { data: 'location', name: 'l.name' },
+            { data: 'store', name: 'store.store_name' },
             { data: 'stock_left', name: 'stock_left', searchable: false },
-            { data: 'lot_number', name: 'lot_number' },
+            // { data: 'lot_number', name: 'lot_number' },
             { data: 'exp_date', name: 'exp_date' },
             { data: 'mfg_date', name: 'mfg_date' },
             // { data: 'edit', name: 'edit' },
@@ -1635,6 +1640,7 @@ function get_stock_details(rowData) {
 
 function updateStockAdjustmentReport() {
     var location_id = $('#stock_adjustment_location_filter').val();
+    var store_id = $('#store_id').val();
     var start = $('#stock_adjustment_date_filter')
         .data('daterangepicker')
         .startDate.format('YYYY-MM-DD');
@@ -1642,7 +1648,7 @@ function updateStockAdjustmentReport() {
         .data('daterangepicker')
         .endDate.format('YYYY-MM-DD');
 
-    var data = { start_date: start, end_date: end, location_id: location_id };
+    var data = { start_date: start, end_date: end, location_id: location_id,store_id: store_id };
 
     var loader = __fa_awesome();
     $('.total_amount').html(loader);
@@ -1667,6 +1673,8 @@ function updateStockAdjustmentReport() {
         .url(
             '/stock-adjustments?location_id=' +
                 location_id +
+                '&store_id=' +
+                store_id +
                 '&start_date=' +
                 start +
                 '&end_date=' +

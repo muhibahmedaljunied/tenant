@@ -27,6 +27,7 @@
                 </div>
             @endslot
         @endcan
+        
         @can('store.view')
             <div class="table-responsive">
                 <table class="table table-bordered table-striped" id="store_table">

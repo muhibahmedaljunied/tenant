@@ -1,13 +1,13 @@
-<link rel="stylesheet" href="{{ asset('css/vendor.css?v='.$asset_v) }}">
+<link rel="stylesheet" href="{{ url('css/vendor.css?v='.$asset_v) }}">
 
 @if( in_array(session()->get('user.language', config('app.locale')), config('constants.langs_rtl')) )
-	<link rel="stylesheet" href="{{ asset('css/rtl.css?v='.$asset_v) }}">
+	<link rel="stylesheet" href="{{ url('css/rtl.css?v='.$asset_v) }}">
 @endif
 
 @yield('css')
 
 <!-- app css -->
-<link rel="stylesheet" href="{{ asset('css/app.css?v='.$asset_v) }}">
+<link rel="stylesheet" href="{{ url('css/app.css?v='.$asset_v) }}">
 
 @if(isset($pos_layout) && $pos_layout)
 	<style type="text/css">
@@ -33,7 +33,7 @@
 	  display: none;
 	}
 	.patt-circ.dir {
-	  background-image: url("{{asset('/img/pattern-directionicon-arrow.png')}}");
+	  background-image: url("{{url('/img/pattern-directionicon-arrow.png')}}");
 	  background-position: center;
 	  background-repeat: no-repeat;
 	}

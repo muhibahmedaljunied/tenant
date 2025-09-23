@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Business;
 use App\BusinessLocation;
 use App\Store;
 use App\Product;
@@ -10,6 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 
 use App\Utils\Util;
+use App\VariationLocationDetails;
 
 class StoreController extends Controller
 {
@@ -136,10 +138,11 @@ class StoreController extends Controller
                 )
                 ->get();
 
+
+
+
+
             // dd($store);
-
-
-
             return Datatables::of($store)
                 ->addColumn(
                     'action',
@@ -151,19 +154,19 @@ class StoreController extends Controller
                         <button data-href="{{action(\'StoreController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_store_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
                     @endcan'
                 )
-                // ->addColumn('store_name', '11')
-                ->addColumn('store_name', function ($row) {
+             
+                ->editColumn('store_name', function ($row) {
                     if ($row->store_name) {
                         return $row->store_name;
                     }
                 })
-                // ->addColumn('short_name', '12')
-                ->addColumn('short_name', function ($row) {
+   
+                ->editColumn('short_name', function ($row) {
                     if (! empty($row->short_name)) {
                         return $row->short_name;
                     }
                 })
-                ->addColumn('business_locations', function ($row) {
+                ->editColumn('business_locations', function ($row) {
                     if (! empty($row->business_locations)) {
                         return $row->business_locations;
                     }
@@ -241,7 +244,7 @@ class StoreController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-    
+
         try {
 
 
@@ -250,12 +253,12 @@ class StoreController extends Controller
             $input['location_id'] = $request['select_location_id'];
             $input['business_id'] = $request->session()->get('user.business_id');
             $input['created_at'] =  $request->session()->get('user.id');
- 
 
 
-    
+
+
             $store = Store::create($input);
-    
+
             $output = [
                 'success' => true,
                 'data' => $store,
@@ -297,15 +300,19 @@ class StoreController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+
+
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $store = Store::where('business_id', $business_id)->find($id);
 
-            $stores = Store::forDropdown($business_id);
+            $locations = BusinessLocation::forDropdown($business_id);
             $menuItems = $request->menuItems;
 
+            // dd($store);
+
             return view('store.edit')
-                ->with(compact('store', 'stores', 'menuItems'));
+                ->with(compact('store', 'locations', 'menuItems'));
         }
     }
 
@@ -382,7 +389,7 @@ class StoreController extends Controller
                 $store = Store::where('business_id', $business_id)->findOrFail($id);
 
                 //check if any product associated with the store
-                $exists = Product::where('store_id', $store->id)
+                $exists = VariationLocationDetails::where('store_id', $store->id)
                     ->exists();
                 if (! $exists) {
                     $store->delete();
@@ -397,6 +404,8 @@ class StoreController extends Controller
                     ];
                 }
             } catch (\Exception $e) {
+
+                // dd($e->getMessage());
                 \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
                 $output = [

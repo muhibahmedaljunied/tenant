@@ -91,6 +91,11 @@
         {{-- <span class="logo-lg">{{ Session::get('business.name') }} <i class="fa fa-circle text-success"
                 id="online_indicator"></i></span> --}}
 
+                <span>{{ Auth::User()->user_type }}  <i class="fa fa-circle text-success"
+                    id="online_indicator"></i> </span>
+
+
+
     </a>
 
 
@@ -124,14 +129,20 @@
 
 
       
+            <button id="btnCalculator" title="@lang('lang_v1.calculator')" type="button"
+            class="btn btn-success btn-flat pull-left m-8 btn-sm mt-10 popover-default hidden-xs"
+            data-toggle="popover" data-trigger="click" data-content='@include('layouts.partials.calculator')' data-html="true"
+            data-placement="bottom">
+            <strong><i class="fa fa-calculator fa-lg" aria-hidden="true"></i></strong>
+        </button>
 
 
 
-
-
+        <div class="m-8 pull-left mt-15 hidden-xs" style="color: #fff;"><strong>{{ \Carbon\Carbon::now()->format('Y-m-d') }}</strong>
+        </div>
 
             <ul class="nav navbar-nav">
-
+                @include('layouts.partials.header-notifications')
                 <!-- User Account Menu -->
                 <li class="dropdown user user-menu">
                     <!-- Menu Toggle Button -->
@@ -140,27 +151,27 @@
                         @php
                             $profile_photo = auth()->user();
                         @endphp
-                        @if (!empty($profile_photo))
+                        {{-- @if (!empty($profile_photo))
                             <img src="{{ $profile_photo->display_url }}" class="user-image" alt="User Image">
-                        @endif
+                        @endif --}}
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span>{{ Auth::User()->username }} </span>
+                        <span>{{ Auth::User()->first_name }} </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
                         <li class="user-header">
 
                             <p>
-                                {{ Auth::User()->username }}
+                                {{ Auth::User()->first_name }}
                             </p>
                         </li>
                         <!-- Menu Body -->
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            {{-- <div class="pull-left">
-                                <a href="{{ action('ItGuy\UserController@getProfile') }}"
+                            <div class="pull-left">
+                                <a href="#"
                                     class="btn btn-default btn-flat">@lang('lang_v1.profile')</a>
-                            </div> --}}
+                            </div>
                             <div class="pull-right">
                                 <a href="{{ action('Auth\LoginController@logout') }}"
                                     class="btn btn-default btn-flat">@lang('lang_v1.sign_out')</a>

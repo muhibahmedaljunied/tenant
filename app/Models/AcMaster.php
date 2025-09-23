@@ -29,7 +29,7 @@ class AcMaster extends Model
         'account_status',
         'stop_flag',
         'com_code',
-        // 'business_id'
+        'business_id'
     ];
 
 

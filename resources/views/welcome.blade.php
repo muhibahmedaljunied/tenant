@@ -13,8 +13,8 @@
     <!-- Fonts -->
     <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,600" rel="stylesheet" type="text/css"> -->
 
-    <link rel="stylesheet" href="{{ asset('css/vendor.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url('css/vendor.css') }}">
+    <link rel="stylesheet" href="{{ url('css/dashboard.css') }}">
 
     <!-- Styles -->
 
@@ -28,7 +28,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <img src="{{asset('img/erp.jpg')}}">
+        <img src="{{url('img/erp.jpg')}}">
     </div>
     <div class="col-md-8">
         <div class="title">

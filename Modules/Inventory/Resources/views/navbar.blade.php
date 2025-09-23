@@ -10,8 +10,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{action('StocktackingController@index')}}"><i
-                        class="fa fas fa-truck"></i> جرد المخازن</a>
+                {{-- <a class="navbar-brand" href="{{action('StocktackingController@index')}}"><i
+                        class="fa fas fa-truck"></i> جرد المخازن</a> --}}
+                        <a class="navbar-brand" href="{{route('stocktacking-index')}}"><i
+                            class="fa fas fa-truck"></i> جرد المخازن</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -19,12 +21,16 @@
                 <ul class="nav navbar-nav">
 
                     <li @if(request()->segment(2) == 'report') class="active" @endif>
-                        <a href="{{action('StocktackingController@report',$transaction_id)}}">
+                        {{-- <a href="{{action('StocktackingController@report',$transaction_id)}}"> --}}
+                            <a href="{{route('stocktacking-report',$transaction_id)}}">
+
                             منتجات مجرودة
                         </a>
                     </li>
                     <li class="{{request()->segment(2) == 'not-tacking-report' ? 'active' : ''}}">
-                        <a href="{{action('StocktackingController@not_tacking_report',$transaction_id)}}">
+                        {{-- <a href="{{action('StocktackingController@not_tacking_report',$transaction_id)}}"> --}}
+                            <a href="{{route('stocktacking-not_tacking_report',$transaction_id)}}">
+
                             منتجات غير مجرودة
                         </a>
                     </li>

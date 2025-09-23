@@ -40,8 +40,10 @@ class ReportController extends Controller
         if (!(auth()->user()->can('superadmin') || $this->moduleUtil->hasThePermissionInSubscription($business_id, 'project_module'))) {
             abort(403, 'Unauthorized action.');
         }
-        
-        return view('project::reports.index');
+
+
+        $menuItems = $request->menuItems;
+        return view('project::reports.index',compact('menuItems'));
     }
 
     /**
@@ -64,24 +66,26 @@ class ReportController extends Controller
                 $start_date = $request->input('start_date');
                 $end_date = $request->input('end_date');
 
-                $query = ProjectUser::with(['projects' => function ($query) use ($project_ids) {
-                    //filter by project id
-                    if (!empty($project_ids)) {
-                        $query->whereIn('pjt_projects.id', $project_ids);
-                    }
-                },
-                'projects.timeLogs' => function ($query) use ($start_date, $end_date) {
-                    // filter by start & end date
-                    if (!empty($start_date) && !empty($end_date)) {
-                        if ($start_date == $end_date) {
-                            $query->whereDate('start_datetime', $start_date);
-                        } else {
-                            $query->whereBetween('start_datetime', [$start_date, $end_date]);
+                $query = ProjectUser::with([
+                    'projects' => function ($query) use ($project_ids) {
+                        //filter by project id
+                        if (!empty($project_ids)) {
+                            $query->whereIn('pjt_projects.id', $project_ids);
                         }
-                    }
-                },
-                'projects.timeLogs.task'])
-                ->where('business_id', $business_id);
+                    },
+                    'projects.timeLogs' => function ($query) use ($start_date, $end_date) {
+                        // filter by start & end date
+                        if (!empty($start_date) && !empty($end_date)) {
+                            if ($start_date == $end_date) {
+                                $query->whereDate('start_datetime', $start_date);
+                            } else {
+                                $query->whereBetween('start_datetime', [$start_date, $end_date]);
+                            }
+                        }
+                    },
+                    'projects.timeLogs.task'
+                ])
+                    ->where('business_id', $business_id);
 
                 //filter by user
                 if (!empty($user_ids)) {
@@ -119,7 +123,7 @@ class ReportController extends Controller
                     'msg' => __('lang_v1.success')
                 ];
             } catch (Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
                 $output = [
                     'success' => false,
@@ -150,7 +154,7 @@ class ReportController extends Controller
         if (!(auth()->user()->can('superadmin') || $this->moduleUtil->hasThePermissionInSubscription($business_id, 'project_module'))) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         if ($request->ajax()) {
             try {
                 $start_date = $request->input('start_date');
@@ -168,14 +172,15 @@ class ReportController extends Controller
                         }
                     },
                     'timeLogs.task',
-                    'timeLogs.user'])
-                ->where('business_id', $business_id);
+                    'timeLogs.user'
+                ])
+                    ->where('business_id', $business_id);
 
                 //filter by project id
                 if (!empty($request->input('project_id'))) {
                     $projects->whereIn('id', $request->input('project_id'));
                 }
-                
+
                 $projects = $projects->get();
 
                 $timelog_report_html = View::make('project::reports.partials.project_timelog')
@@ -188,7 +193,7 @@ class ReportController extends Controller
                     'msg' => __('lang_v1.success')
                 ];
             } catch (Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
                 $output = [
                     'success' => false,

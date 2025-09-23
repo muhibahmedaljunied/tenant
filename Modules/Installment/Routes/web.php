@@ -11,6 +11,12 @@
 |
 */
 
+use Modules\Installment\Http\Controllers\CustomerController;
+use Modules\Installment\Http\Controllers\InstallController;
+use Modules\Installment\Http\Controllers\InstallmentController;
+use Modules\Installment\Http\Controllers\InstallmentSystemController;
+use Modules\Installment\Http\Controllers\SellController;
+
 Route::middleware([
     'web',
     'SetSessionData',
@@ -19,42 +25,36 @@ Route::middleware([
     'timezone',
     'AdminSidebarMenu'
 ])->prefix('installment')->group(function () {
-    Route::get('/', 'InstallmentController@index');
-    Route::get('/install', 'InstallController@index');
-    Route::post('/install', 'InstallController@install');
-    Route::get('/install/uninstall', 'InstallController@uninstall');
-    Route::get('/install/update', 'InstallController@update');
+    Route::get('/', [InstallmentController::class,'index']);
+    Route::get('/install',  [InstallController::class,'index']);
+    Route::post('/install', [InstallController::class,'install']);
+    Route::get('/install/uninstall',  [InstallController::class,'uninstall']);
+    Route::get('/install/update',  [InstallController::class,'update']);
 
 
     Route::resource('/installment', 'InstallmentController');
-    Route::get('/installments', 'InstallmentController@instalments');
-    Route::get('/installmentdelete/{id}', 'InstallmentController@installmentdelete');
-    Route::get('/paymentdelete/{id}', 'InstallmentController@paymentdelete');
-    Route::get('/addpayment/{id}', 'InstallmentController@addpayment');
-    Route::post('/storepayment', 'InstallmentController@storepayment');
-    Route::get('/business', 'InstallmentController@business');
+    Route::get('/installments',[InstallmentController::class,'instalments']);
+    Route::get('/installmentdelete/{id}', [InstallmentController::class,'installmentdelete']);
+    Route::get('/paymentdelete/{id}',[InstallmentController::class,'paymentdelete']);
+    Route::get('/addpayment/{id}', [InstallmentController::class,'addpayment']);
+    Route::post('/storepayment', [InstallmentController::class,'storepayment']);
+    Route::get('/business', [InstallmentController::class,'business']);
+ 
+    Route::get('/printinstallment/{id}', [InstallmentController::class,'printinstallment']);
 
-    Route::get('/printinstallment/{id}', 'InstallmentController@printinstallment');
-
-
-
-    Route::resource('/system', 'InstallmentSystemController');
-    Route::get('/getsystemdata', 'InstallmentSystemController@getsystemdata');
-
-
-
-
+    Route::resource('/system','InstallmentSystemController');
+    Route::get('/getsystemdata', [InstallmentSystemController::class,'getsystemdata']);
 
 
     Route::resource('/customer', 'CustomerController');
-    Route::get('/getcustomerdata/{id}', 'CustomerController@getcustomerdata');
+    Route::get('/getcustomerdata/{id}', [CustomerController::class,'getcustomerdata']);
 
-    Route::get('/createinstallment2/{id}/{total}/{paid?}', 'CustomerController@createinstallment2');
-    Route::post('/createinstallment', 'CustomerController@createinstallment');
-    Route::get('/getinstallment', 'CustomerController@getinstallment');
-    Route::get('/contacts', 'CustomerController@contacts');
-    Route::get('/contactwithinstallment', 'CustomerController@contactwithinstallment');
+    Route::get('/createinstallment2/{id}/{total}/{paid?}', [CustomerController::class,'createinstallment2']);
+    Route::post('/createinstallment',[CustomerController::class,'createinstallment'] );
+    Route::get('/getinstallment',[CustomerController::class,'getinstallment']);
+    Route::get('/contacts',[CustomerController::class,'contacts']);
+    Route::get('/contactwithinstallment', [CustomerController::class,'contactwithinstallment']);
 
 
-    Route::get('/sells', 'SellController@index');
+    Route::get('/sells', [SellController::class,'index']);
 });

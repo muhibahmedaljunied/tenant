@@ -17,7 +17,7 @@
                 <ul class="nav navbar-nav">
 
                     <li @if(request()->segment(2) == 'assets') class="active" @endif>
-                        <a href="{{action('\Modules\Assets\Http\Controllers\AssetsController@index')}}">
+                        <a href="{{route('assets-index')}}">
                             <i class="fa fa-user"></i>
                            الأصول الثابتة
                         </a>

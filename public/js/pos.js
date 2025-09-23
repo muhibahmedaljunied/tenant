@@ -156,6 +156,7 @@ $(document).ready(function () {
                         {
                             price_group: price_group,
                             location_id: $('input#location_id').val(),
+                            store_id: $('input#store_id').val(),
                             term: request.term,
                             not_for_selling: 0,
                             search_fields: search_fields,

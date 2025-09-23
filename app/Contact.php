@@ -86,41 +86,42 @@ class Contact extends Authenticatable
      */
     public static function contactDropdown($business_id, $exclude_default = false, $prepend_none = true, $append_id = true)
     {
-        $query = Contact::where('business_id', $business_id)
-            ->where('type', '!=', 'lead')
-            ->active();
-
-        if ($exclude_default) {
-            $query->where('is_default', 0);
-        }
-
-        if ($append_id) {
-            $query->select(
-                DB::raw("CASE 
+        $query = $query = Contact::where('business_id', $business_id)
+        ->where('type', '!=', 'lead')
+        ->active();
+    
+    if ($exclude_default) {
+        $query->where('is_default', 0);
+    }
+    
+    if ($append_id) {
+        $query->select(
+            DB::raw("CASE 
                 WHEN contact_id IS NULL OR contact_id = '' 
                 THEN name 
                 ELSE ISNULL(name, '') + ' - ' + ISNULL(supplier_business_name, '') + ' (' + ISNULL(contact_id, '') + ')' 
-             END AS supplier")
-    ,
-                'id'
-            );
-        } else {
-            $query->select(
-                'id',
-                DB::raw("CASE 
+            END AS supplier"),
+            'id'
+        );
+    } else {
+        $query->select(
+            'id',
+            DB::raw("CASE 
                 WHEN supplier_business_name IS NOT NULL 
                 THEN ISNULL(name, '') + ' (' + ISNULL(supplier_business_name, '') + ')' 
                 ELSE ISNULL(name, '') 
-             END AS supplier")
+            END AS supplier")
+        );
+    }
     
-            );
-        }
-
-        if (auth()->check() && !auth()->user()->can('supplier.view') && auth()->user()->can('supplier.view_own')) {
-            $query->where('contacts.created_by', auth()->user()->id);
-        }
-
-        $contacts = $query->pluck('supplier', 'id');
+    if (auth()->check() && !auth()->user()->can('supplier.view') && auth()->user()->can('supplier.view_own')) {
+        $query->where('contacts.created_by', auth()->user()->id);
+    }
+    
+    $contacts = $query->pluck('supplier', 'id');
+    
+        // $contacts = $query->get();
+        // dd($contacts);
 
         //Prepend none
         if ($prepend_none) {

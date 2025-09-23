@@ -121,7 +121,14 @@ class ManageUserController extends Controller
         $form_partials = $this->moduleUtil->getModuleData('moduleViewPartials', ['view' => 'manage_user.create']);
         $menuItems = $request->menuItems;
         return view('manage_user.create')
-            ->with(compact('roles', 'username_ext', 'contacts', 'locations', 'form_partials','menuItems'));
+            ->with(compact(
+                'roles',
+                'username_ext',
+                'contacts',
+                'locations',
+                'form_partials',
+                'menuItems'
+            ));
     }
 
     /**
@@ -268,7 +275,7 @@ class ManageUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         if (!auth()->user()->can('user.view')) {
             abort(403, 'Unauthorized action.');
@@ -289,8 +296,9 @@ class ManageUserController extends Controller
             ->with(['causer', 'subject'])
             ->latest()
             ->get();
+            $menuItems = $request->menuItems;
 
-        return view('manage_user.show', compact('user', 'view_partials', 'users', 'activities'));
+        return view('manage_user.show', compact('user', 'view_partials', 'users', 'activities','menuItems'));
     }
 
     /**
@@ -299,7 +307,7 @@ class ManageUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         if (!auth()->user()->can('user.update')) {
             abort(403, 'Unauthorized action.');
@@ -329,9 +337,21 @@ class ManageUserController extends Controller
 
         //Get user form part from modules
         $form_partials = $this->moduleUtil->getModuleData('moduleViewPartials', ['view' => 'manage_user.edit', 'user' => $user]);
+        $menuItems = $request->menuItems;
 
         return view('manage_user.edit')
-            ->with(compact('roles', 'user', 'contact_access', 'contacts', 'is_checked_checkbox', 'locations', 'permitted_locations', 'form_partials', 'username_ext'));
+            ->with(compact(
+                'roles',
+                'user',
+                'contact_access',
+                'contacts',
+                'is_checked_checkbox',
+                'locations',
+                'permitted_locations',
+                'form_partials',
+                'username_ext',
+                'menuItems'
+            ));
     }
 
     /**

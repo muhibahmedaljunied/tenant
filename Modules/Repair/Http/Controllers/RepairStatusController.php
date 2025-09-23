@@ -20,6 +20,7 @@ class RepairStatusController extends Controller
      *
      */
     protected $moduleUtil;
+    protected $repairUtil;
 
 
     /**

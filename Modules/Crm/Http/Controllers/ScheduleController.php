@@ -26,6 +26,7 @@ class ScheduleController extends Controller
     protected $commonUtil;
     protected $moduleUtil;
     protected $crmUtil;
+    protected $status_bg;
     /**
      * Constructor
      *

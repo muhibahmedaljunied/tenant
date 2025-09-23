@@ -75,7 +75,7 @@
 
                             <div class="box-body">
                                 <form
-                                    action="{{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@mapTaxRates') }}"
+                                    action="{{ route('woocommerce-mapTaxRates') }}"
                                     method="post">
                                     <div class="col-xs-12">
                                         <table class="table">
@@ -209,7 +209,7 @@
                 $(this).html(syncing_text);
                 $(this).attr('disabled', true);
                 $.ajax({
-                    url: "{{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@syncCategories') }}",
+                    url: "{{ route('woocommerce-syncCategories') }}",
                     dataType: "json",
                     timeout: 0,
                     success: function(result) {
@@ -238,7 +238,7 @@
                 var type = $(this).data('sync-type');
 
                 $.ajax({
-                    url: "{{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@syncProducts') }}?type=" +
+                    url: "{{ route('woocommerce-syncProducts') }}?type=" +
                         type,
                     dataType: "json",
                     timeout: 0,
@@ -267,7 +267,7 @@
                 btn.attr('disabled', true);
 
                 $.ajax({
-                    url: "{{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@syncOrders') }}",
+                    url: "{{ route('woocommerce-syncOrders') }}",
                     dataType: "json",
                     timeout: 0,
                     success: function(result) {
@@ -287,7 +287,7 @@
 
         function update_sync_date() {
             $.ajax({
-                url: "{{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@getSyncLog') }}",
+                url: "{{ route('woocommerce-getSyncLog') }}",
                 dataType: "json",
                 timeout: 0,
                 success: function(data) {
@@ -336,7 +336,7 @@
                         var btn = $(this);
                         btn.attr('disabled', true);
                         $.ajax({
-                            url: "{{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@resetCategories') }}",
+                            url: "{{ route('woocommerce-resetCategories') }}",
                             dataType: "json",
                             success: function(result) {
                                 if (result.success == true) {
@@ -376,7 +376,7 @@
                         var btn = $(this);
                         btn.attr('disabled', true);
                         $.ajax({
-                            url: "{{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@resetProducts') }}",
+                            url: "{{ route('woocommerce-resetProducts') }}",
                             dataType: "json",
                             success: function(result) {
                                 if (result.success == true) {

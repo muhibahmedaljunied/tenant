@@ -43,15 +43,15 @@ class HomeController extends Controller
         TransactionUtil $transactionUtil,
         ModuleUtil $moduleUtil,
         Util $commonUtil,
-        RestaurantUtil $restUtil
+        // RestaurantUtil $restUtil
     ) {
         $this->businessUtil = $businessUtil;
         $this->transactionUtil = $transactionUtil;
         $this->moduleUtil = $moduleUtil;
         $this->commonUtil = $commonUtil;
-        // dd(12);
-        $this->restUtil = $restUtil;
-        // dd(auth()->user());
+        // $this->restUtil = $restUtil;
+        // // dd(auth()->user());
+       
        
     }
 
@@ -63,7 +63,9 @@ class HomeController extends Controller
     public function index(Request $request)
     {
 
-        
+      
+        // dd(12);
+
 
         $business_id = request()->session()->get('user.business_id');
 

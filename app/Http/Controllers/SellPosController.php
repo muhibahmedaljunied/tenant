@@ -44,6 +44,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Services\Zatca\ZatcaInvoiceService;
 use App\Listeners\SendSellInvoiceToZatcaListener;
 use App\Store;
+use Illuminate\Support\Facades\Log;
 
 class SellPosController extends Controller
 {
@@ -178,7 +179,7 @@ class SellPosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -189,8 +190,12 @@ class SellPosController extends Controller
 
         //Check if subscribed or not, then check for users quota
         if (! $this->moduleUtil->isSubscribed($business_id)) {
+
+ 
             return $this->moduleUtil->expiredResponse(action('HomeController@index'));
+            
         } elseif (! $this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
+            
             return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellPosController@index'));
         }
 
@@ -304,6 +309,7 @@ class SellPosController extends Controller
             })->pluck('name', 'id');
         }
 
+        $menuItems = $request->menuItems;
         return view('sale_pos.create')
             ->with(
                 compact(
@@ -337,7 +343,8 @@ class SellPosController extends Controller
                     'pos_module_data',
                     'invoice_schemes',
                     'default_invoice_schemes',
-                    'invoice_layouts'
+                    'invoice_layouts',
+                    'menuItems'
                 )
             );
     }
@@ -431,6 +438,7 @@ class SellPosController extends Controller
                 $input['exchange_rate'] = 1;
             }
 
+    
             //Customer group details
             $contact_id = $request->get('contact_id', null);
             $cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
@@ -453,7 +461,7 @@ class SellPosController extends Controller
                 $ref_count = $this->transactionUtil->setAndGetReferenceCount('subscription');
                 $input['subscription_no'] = $this->transactionUtil->generateReferenceNumber('subscription', $ref_count);
             }
-
+          
             if (! empty($request->input('invoice_scheme_id'))) {
                 $input['invoice_scheme_id'] = $request->input('invoice_scheme_id');
             }
@@ -483,15 +491,13 @@ class SellPosController extends Controller
             if ($this->transactionUtil->isModuleEnabled('service_staff')) {
                 $input['res_waiter_id'] = request()->get('res_waiter_id');
             }
-
             //upload document
             $input['document'] = $this->transactionUtil->uploadFile($request, 'sell_document', 'documents');
 
             $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id);
+
             //Upload Shipping documents
             Media::uploadMedia($business_id, $transaction, $request, 'shipping_documents', false, 'shipping_document');
-
-
             $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id'], false, null, [], true);
             event(new SellTransactionCreated($transaction));
             if (! $is_direct_sale) {
@@ -505,10 +511,12 @@ class SellPosController extends Controller
             $is_credit_sale = (isset($input['is_credit_sale']) && $input['is_credit_sale']);
 
             /* $input['payment']=!empty($input['payment'])?$input['payment']:'0.0';*/
+            Log::info('4444444444444444444444444444444444444444444444444');
 
             if (! $transaction->is_suspend && ! empty($input['payment']) && ! $is_credit_sale) {
                 $this->transactionUtil->createOrUpdatePaymentLines($transaction, $input['payment']);
             }
+
 
             //Check for final and do some processing.
             if ($input['status'] == 'final') {
@@ -547,9 +555,11 @@ class SellPosController extends Controller
                     $this->cashRegisterUtil->addSellPayments($transaction, $input['payment']);
                 }
 
+        
                 //Update payment status
                 $payment_status = $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);
 
+                // dd($payment_status);
                 $transaction->payment_status = $payment_status;
 
                 if ($request->session()->get('business.enable_rp') == 1) {

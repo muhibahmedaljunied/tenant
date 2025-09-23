@@ -237,5 +237,5 @@
 @endsection
 
 @section('javascript')
-	<script src="{{ asset('js/sell_return.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('js/sell_return.js?v=' . $asset_v) }}"></script>
 @endsection

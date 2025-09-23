@@ -298,7 +298,7 @@
     @include('repair::job_sheet.tagify_css')
 @stop
 @section('javascript')
-    <script src="{{ asset('js/repair_module.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/repair_module.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(document).ready( function() {
 

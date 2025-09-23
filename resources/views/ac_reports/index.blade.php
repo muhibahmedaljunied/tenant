@@ -18,9 +18,9 @@
         }
     </style>
     @if (app()->getLocale() == 'ar')
-        <link rel="stylesheet" href="{{ asset('customs/ac/custom_ar.css') }}">
+        <link rel="stylesheet" href="{{ url('customs/ac/custom_ar.css') }}">
     @else
-        <link rel="stylesheet" href="{{ asset('customs/ac/custom.css') }}">
+        <link rel="stylesheet" href="{{ url('customs/ac/custom.css') }}">
     @endif
 @endsection
 @section('content')

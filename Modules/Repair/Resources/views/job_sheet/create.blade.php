@@ -25,7 +25,7 @@
             $product_cond = [];
         @endphp
     @endif
-    <form action="{{ action('\\Modules\\Repair\\Http\\Controllers\\JobSheetController@store') }}" id="job_sheet_form" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('jobSheet-store') }}" id="job_sheet_form" method="POST" enctype="multipart/form-data">
         @csrf
         @includeIf('repair::job_sheet.partials.scurity_modal')
         <div class="box box-solid">
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
-                         <a class="btn btn-sm btn-primary pull-right" data-href="{{action('\\Modules\\Repair\\Http\\Controllers\\DeviceModelController@create')}}" id="add_device_model">
+                         <a class="btn btn-sm btn-primary pull-right" data-href="{{route('deviceModel-create')}}" id="add_device_model">
                         	<i class="fa fa-plus"></i>
                         	@lang('messages.add')
                         </a>
@@ -306,7 +306,7 @@
             });
         });
 </script>
-    <script src="{{ asset('js/pos.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/pos.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(document).ready( function() {
 

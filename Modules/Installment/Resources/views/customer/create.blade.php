@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <form action="{{ action('\\Modules\\Installment\\Http\\Controllers\\CustomerController@createinstallment') }}" method="post" id="add_installment">
+        <form action="{{ route('customer-createinstallment') }}" method="post" id="add_installment">
             @csrf
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

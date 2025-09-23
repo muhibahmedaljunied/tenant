@@ -19,8 +19,6 @@ class User extends Authenticatable
     use HasApiTokens;
 
     // -----------------muhib add this-
-    use HasApiTokens;
-    use Notifiable;
     use HasRoles;
     // -----------------
 
@@ -282,7 +280,6 @@ class User extends Authenticatable
     public function getRoleNameAttribute()
     {
         $role_name_array = $this->getRoleNames();
-     
         $role_name = !empty($role_name_array[0]) ? explode('#', $role_name_array[0])[0] : '';
         return $role_name;
     }

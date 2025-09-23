@@ -49,7 +49,7 @@
 </section>
 @stop
 @section('javascript')
-<script src="{{ asset('modules/productcatalogue/plugins/qrcode/qrcode.js') }}"></script>
+<script src="{{ url('modules/productcatalogue/plugins/qrcode/qrcode.js') }}"></script>
 <script type="text/javascript">
 
     (function($) {

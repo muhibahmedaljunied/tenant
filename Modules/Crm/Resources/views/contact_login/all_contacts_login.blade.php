@@ -23,7 +23,7 @@
 	@component('components.widget', ['class' => 'box-primary', 'title' => __('crm::lang.all_contacts_login')])
 		@slot('tool')
 			<div class="box-tools">
-				<a class="btn btn-sm btn-primary pull-right contact-login-add" data-href="{{action('\Modules\Crm\Http\Controllers\ContactLoginController@create')}}" >
+				<a class="btn btn-sm btn-primary pull-right contact-login-add" data-href="{{route('contactLogin-create')}}" >
 					<i class="fa fa-plus"></i>
 					@lang( 'messages.add' )
 				</a>

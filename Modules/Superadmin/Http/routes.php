@@ -152,16 +152,16 @@ Route::middleware([
 ])->group(function () {
     Route::get('/subscription/{package_id}/paypal-express-checkout', [SubscriptionController::class, 'paypalExpressCheckout']);
     Route::get('/subscription/{package_id}/pesapal-callback', [SubscriptionController::class, 'pesapalCallback'])->name('pesapalCallback');
-    Route::get('/subscription/{package_id}/pay', [SubscriptionController::class, 'pay']);
+    Route::get('/subscription/{package_id}/pay', [SubscriptionController::class, 'pay'])->name('subscription-pay');
     Route::any('/subscription/{package_id}/confirm', [SubscriptionController::class, 'confirm'])->name('subscription-confirm');
     Route::get('/all-subscriptions', [SubscriptionController::class, 'allSubscriptions']);
     Route::get('/subscription/{package_id}/register-pay', [SubscriptionController::class, 'registerPay'])->name('register-pay');
     // Route::resource('/subscription', SubscriptionController::class);
-    Route::get('/subscription', [SubscriptionController::class,'index'])->name('subscription-index');
-    Route::get('/subscription', [SubscriptionController::class,'allSubscriptions'])->name('subscription-all');
-    Route::get('/subscription', [SubscriptionController::class,'show'])->name('subscription-show');
-    Route::get('/subscription', [SubscriptionController::class,'confirm'])->name('subscription-confirm');
-    Route::get('/subscription', [SubscriptionController::class,'pay'])->name('subscription-pay');
+    Route::get('/subscription-index', [SubscriptionController::class,'index'])->name('subscription-index');
+    Route::get('/subscription-all', [SubscriptionController::class,'allSubscriptions'])->name('subscription-all');
+    Route::get('/subscription-show/{package_id}', [SubscriptionController::class,'show'])->name('subscription-show');
+    Route::get('/subscription-confirm', [SubscriptionController::class,'confirm'])->name('subscription-confirm');
+    // Route::get('/subscription-pay', [SubscriptionController::class,'pay'])->name('subscription-pay');
     // Route::get('/subscription', [SubscriptionController::class,'paypalExpressCheckout'])->name('subscription-paypalExpressCheckout');
 
     

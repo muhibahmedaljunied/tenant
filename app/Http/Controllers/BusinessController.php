@@ -258,7 +258,7 @@ class BusinessController extends Controller
             $business = $this->businessUtil->createNewBusiness($business_details);
 
 
-            // dd(12);
+ 
             //Update user with business id
             $user->business_id = $business->id;
             $user->save();

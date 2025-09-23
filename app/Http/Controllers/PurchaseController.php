@@ -54,6 +54,8 @@ class PurchaseController extends Controller
         BusinessUtil $businessUtil,
         ModuleUtil $moduleUtil
     ) {
+
+
         $this->productUtil = $productUtil;
         $this->transactionUtil = $transactionUtil;
         $this->businessUtil = $businessUtil;
@@ -519,7 +521,7 @@ class PurchaseController extends Controller
             $purchases = $this->productUtil->remapSellProductVariations($purchases); //this is array of product
             $skippedStatus = ['ordered', 'pending'];
             $createAcJournal = ($transaction_data['status'] == 'received');
-     
+
             $this->productUtil->createOrUpdatePurchaseLines(
                 $transaction,
                 $purchases,
@@ -550,6 +552,7 @@ class PurchaseController extends Controller
         } catch (\Exception $e) {
 
 
+            dd($e->getMessage());
             DB::rollBack();
             logger()->emergency("File: {$e->getFile()} Line: {$e->getLine()} Message: {$e->getMessage()} Trace :\n {$e->getTraceAsString()}");
 
@@ -603,11 +606,12 @@ class PurchaseController extends Controller
      */
     public function show(Request $request, $id)
     {
-        // if (!auth()->user()->can('purchase.view')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('purchase.view')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $business_id = request()->session()->get('user.business_id');
+        $id = $request->segment(2);
         $taxes = TaxRate::where('business_id', $business_id)
             ->pluck('name', 'id');
         $purchase = Transaction::where('business_id', $business_id)
@@ -684,8 +688,9 @@ class PurchaseController extends Controller
         }
 
         //Check if the transaction can be edited or not.
-        $edit_days = request()->session()->get('business.transaction_edit_days');
-        if (!$this->transactionUtil->canBeEdited($id, $edit_days)) {
+        $edit_days = (int)request()->session()->get('business.transaction_edit_days');
+
+        if (!$this->transactionUtil->canBeEdited($id,  $edit_days)) {
             return back()->with('status', [
                 'success' => 0,
                 'msg' => __('messages.transaction_edit_not_allowed', ['days' => $edit_days])
@@ -724,6 +729,7 @@ class PurchaseController extends Controller
                 'purchase_lines.sub_unit'
             )
             ->first();
+
 
         foreach ($purchase->purchase_lines as $key => $value) {
             if (!empty($value->sub_unit_id)) {
@@ -1102,6 +1108,7 @@ class PurchaseController extends Controller
                 })
                 ->active()
                 ->where('products.business_id', $business_id)
+                ->where('products.business_id', $business_id)
                 ->whereNull('variations.deleted_at')
                 ->select(
                     'products.id as product_id',
@@ -1124,6 +1131,14 @@ class PurchaseController extends Controller
             if (!empty(request()->location_id)) {
                 $q->ForLocation(request()->location_id);
             }
+
+            // --------------muhib add this for store------------------
+            if (!empty(request()->store_id)) {
+                $q->ForStore(request()->store_id);
+            }
+
+            // -----------------------------------
+
             $products = $q->get();
             $products_array = [];
             foreach ($products as $product) {

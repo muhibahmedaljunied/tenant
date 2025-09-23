@@ -404,8 +404,8 @@
 
 @section('javascript')
     <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
-    <script src="{{ asset('js/set_right_left_xslx.js') }}"></script>
-    <script src="{{ asset('js/excel_debt_export.js') }}"></script>
+    <script src="{{ url('js/set_right_left_xslx.js') }}"></script>
+    <script src="{{ url('js/excel_debt_export.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.js"></script>
     <script>
         $(document).ready(function() {

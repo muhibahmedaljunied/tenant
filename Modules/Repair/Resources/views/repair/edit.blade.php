@@ -362,7 +362,7 @@
 @stop
 
 @section('javascript')
-	<script src="{{ asset('js/pos.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('js/pos.js?v=' . $asset_v) }}"></script>
 	@include('repair::layouts.partials.javascripts')
 	<script type="text/javascript">
 		$(document).ready( function() {

@@ -1,7 +1,8 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\Modules\Manufacturing\Http\Controllers\RecipeController@addIngredients') }}"
+        {{-- <form action="{{ action('\Modules\Manufacturing\Http\Controllers\RecipeController@addIngredients') }}" --}}
+                <form action="{{ route('recipe-addIngredients') }}"
             method="GET"
             id="choose_product_form">
             @csrf

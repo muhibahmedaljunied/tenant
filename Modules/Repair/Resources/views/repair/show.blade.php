@@ -267,7 +267,9 @@
                         <tr>
                             <td>{{$media->display_name}}</td>
                             <td><a href="{{$media->display_url}}" target="_blank" class="btn btn-info btn-xs"><i class="fa fa-external-link"></i></a></td>
-                            <td><a href="{{action('\Modules\Repair\Http\Controllers\RepairController@deleteMedia', $media->id)}}"" class="btn btn-danger btn-xs delete_media"><i class="fa fa-trash"></i></a></td>
+                            {{-- <td><a href="{{action('\Modules\Repair\Http\Controllers\RepairController@deleteMedia', $media->id)}}"" class="btn btn-danger btn-xs delete_media"><i class="fa fa-trash"></i></a></td> --}}
+                            <td><a href="{{route('repair-deleteMedia', $media->id)}}"" class="btn btn-danger btn-xs delete_media"><i class="fa fa-trash"></i></a></td>
+
                         </tr>
                         @empty
                         <tr>

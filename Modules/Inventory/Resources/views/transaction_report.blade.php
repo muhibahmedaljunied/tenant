@@ -176,7 +176,9 @@
 
             $.ajax({
                 type:'get',
-                url:"{{action('\Modules\Inventory\Http\Controllers\StocktackingController@report')}}",
+                // url:"{{action('\Modules\Inventory\Http\Controllers\StocktackingController@report')}}",
+                url:"{{route('stocktacking-report')}}",
+
                 data: {
                     type : $('#product_list_filter_type').val(),
                     category_id : $('#product_list_filter_category_id').val(),
@@ -205,7 +207,7 @@
         function get_last_product(){
             $.ajax({
                 type:'POST',
-                url:"{{action('\Modules\Inventory\Http\Controllers\InventoryController@get_last_product')}}",
+                url:"{{route('inventory-get_last_product')}}",
                 data:{
                     '_token' :"{{ csrf_token() }}",
                     'transaction_id':{{$transaction_id}},
@@ -243,7 +245,9 @@
                     var old_val = $(`#old_${product_id}`).val();
                     $.ajax({
                         type: 'GET',
-                        url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@stock_line_save')}}",
+                        // url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@stock_line_save')}}",
+                        url: "{{route('inventory-stock_line_save')}}",
+
                         data: {
                             '_token': "{{ csrf_token() }}",
                             transaction_id:{{$transaction_id}},
@@ -271,7 +275,9 @@
             var transaction_id=$('#transaction_id').val();
             var location_id=$('#location_id').val();
             $.ajax({
-                url:"{{action('\Modules\Inventory\Http\Controllers\InventoryController@getproduct')}}",
+                // url:"{{action('\Modules\Inventory\Http\Controllers\InventoryController@getproduct')}}",
+                url:"{{route('inventory-getproduct')}}",
+
                 dataType: 'html',
                 data:{
                     transaction_id:transaction_id,
@@ -331,7 +337,9 @@
             }).then(willSave => {
                 if (willSave) {
                     $.ajax({
-                        url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@deletstock')}}",
+                        // url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@deletstock')}}",
+                        url: "{{route('inventory-deletstock')}}",
+
                         dataType: 'html',
                         data: {
                             transaction_id: transaction_id, 

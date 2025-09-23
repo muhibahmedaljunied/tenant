@@ -51,7 +51,8 @@
     	recipe_table = $('#recipe_table').DataTable({
 	        processing: true,
 	        serverSide: true,
-	        ajax: '{{action("\Modules\Manufacturing\Http\Controllers\RecipeController@index")}}',
+	        // ajax: '{{action("\Modules\Manufacturing\Http\Controllers\RecipeController@index")}}',
+            ajax: '{{route("recipe-index")}}',
 	        columnDefs: [
 	            {
 	                targets: [0, 5, 6, 7],

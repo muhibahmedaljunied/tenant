@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <form action="{{ action('\\Modules\\Installment\\Http\\Controllers\\InstallmentSystemController@update', ['system'=>$data->id]) }}" method="POST" id="edit_installment_system">
+        <form action="{{ route('installmentSystem-update', ['system'=>$data->id]) }}" method="POST" id="edit_installment_system">
             @csrf
             @method('PUT')
             <div class="modal-header">

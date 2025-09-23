@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-xl" role="document">
   <div class="modal-content">
 
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\AttendanceController@store') }}" method="post" id="attendance_form">
+    <form action="{{ route('attendance-store') }}" method="post" id="attendance_form">
       @csrf
 
       <div class="modal-header">

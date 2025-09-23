@@ -25,6 +25,7 @@ class TaskController extends Controller
     protected $commonUtil;
     protected $projectUtil;
     protected $moduleUtil;
+    protected $priority_colors;
     /**
      * Constructor
      *

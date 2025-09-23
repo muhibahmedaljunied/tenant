@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-12">
-        <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\AttendanceController@importAttendance') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('attendance-importAttendance') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-sm-6">
@@ -20,7 +20,7 @@
         <br><br>
         <div class="row">
             <div class="col-sm-4">
-                <a href="{{ asset('modules/essentials/files/import_attendance_template.xls') }}" class="btn btn-success" download><i class="fa fa-download"></i> @lang('lang_v1.download_template_file')</a>
+                <a href="{{ url('modules/essentials/files/import_attendance_template.xls') }}" class="btn btn-success" download><i class="fa fa-download"></i> @lang('lang_v1.download_template_file')</a>
             </div>
         </div>
 

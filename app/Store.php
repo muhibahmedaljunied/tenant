@@ -16,6 +16,13 @@ class Store extends Model
     protected $guarded = ['id'];
 
 
+
+    public function variation_store_details()
+    {
+        return $this->hasMany(VariationLocationDetail::class, 'store_id');
+    }
+
+
     public static function forDropdown(
         $business_id,
 

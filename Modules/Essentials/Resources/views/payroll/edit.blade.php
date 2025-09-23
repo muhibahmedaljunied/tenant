@@ -11,7 +11,7 @@
 
 <!-- Main content -->
 <section class="content">
-<form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\PayrollController@update', [$payroll->id]) }}" method="post" id="add_payroll_form">
+<form action="{{ route('payroll-update', [$payroll->id]) }}" method="post" id="add_payroll_form">
     @csrf
     @method('PUT')
     <div class="row">

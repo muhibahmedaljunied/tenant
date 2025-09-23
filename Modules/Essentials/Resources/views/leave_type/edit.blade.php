@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\EssentialsLeaveTypeController@update', [$leave_type->id]) }}" method="post" id="edit_leave_type_form">
+    <form action="{{ route('essentialsLeaveType-update', [$leave_type->id]) }}" method="post" id="edit_leave_type_form">
         @csrf
         @method('PUT')
         <div class="modal-header">

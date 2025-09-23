@@ -68,6 +68,8 @@ class TransactionPaymentController extends Controller
      */
     public function store(Request $request)
     {
+
+
         try {
             $business_id = $request->session()->get('user.business_id');
             $transaction_id = $request->input('transaction_id');
@@ -75,7 +77,7 @@ class TransactionPaymentController extends Controller
 
             $transaction_before = $transaction->replicate();
 
-            if (!auth()->user()->canAny(['purchase.payments','sell.payments'])) {
+            if (!auth()->user()->canAny(['purchase.payments', 'sell.payments'])) {
                 abort(403, 'Unauthorized action.');
             }
 
@@ -130,7 +132,7 @@ class TransactionPaymentController extends Controller
 
                 //Pay from advance balance
                 $payment_amount = $inputs['amount'];
-              
+
                 $contact_balance = !empty($transaction->contact) ? $transaction->contact->balance : 0;
                 if ($inputs['method'] == 'advance' && $inputs['amount'] > $contact_balance) {
                     throw new AdvanceBalanceNotAvailable(__('lang_v1.required_advance_balance_not_available'));
@@ -156,6 +158,8 @@ class TransactionPaymentController extends Controller
                 'msg' => __('purchase.payment_added_success')
             ];
         } catch (Exception $e) {
+
+            dd($e->getMessage());
             DB::rollBack();
             $msg = __('messages.something_went_wrong');
 
@@ -416,6 +420,7 @@ class TransactionPaymentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
 
@@ -481,48 +486,129 @@ class TransactionPaymentController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $due_payment_type = request()->input('type');
+            //         $query = Contact::where('contacts.id', $contact_id)
+            //             ->join('transactions AS t', 'contacts.id', '=', 't.contact_id');
+            //         if ($due_payment_type == 'purchase') {
+            //             $query->select(
+
+            //                 DB::raw("SUM(CASE WHEN t.type = 'purchase' THEN final_total ELSE 0 END) AS total_purchase"),
+            //                 DB::raw("SUM(CASE WHEN t.type = 'purchase' THEN 
+            // (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id = t.id) 
+            // ELSE 0 END) AS total_paid"),
+
+            //                 'contacts.name',
+            //                 'contacts.supplier_business_name',
+            //                 'contacts.id as contact_id'
+            //             );
+            //         } elseif ($due_payment_type == 'purchase_return') {
+            //             $query->select(
+
+            //                 DB::raw("SUM(CASE WHEN t.type = 'purchase_return' THEN final_total ELSE 0 END) AS total_purchase_return"),
+
+            //                 DB::raw("SUM(CASE WHEN t.type = 'purchase_return' THEN 
+            // (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id = t.id)
+            // ELSE 0 END) AS total_return_paid"),
+
+            //                 'contacts.name',
+            //                 'contacts.supplier_business_name',
+            //                 'contacts.id as contact_id'
+            //             );
+            //         } elseif ($due_payment_type == 'sell') {
+            //             $query->select(
+
+            //                 DB::raw("SUM(CASE WHEN t.type = 'sell' AND t.status = 'final' THEN final_total ELSE 0 END) AS total_invoice"),
+
+            //                 DB::raw("SUM(CASE WHEN t.type = 'sell' AND t.status = 'final' THEN 
+            // (SELECT SUM(CASE WHEN is_return = 1 THEN -1 * amount ELSE amount END) 
+            //  FROM transaction_payments 
+            //  WHERE transaction_payments.transaction_id = t.id)
+            // ELSE 0 END) AS total_paid"),
+
+            //                 'contacts.name',
+            //                 'contacts.supplier_business_name',
+            //                 'contacts.id as contact_id'
+            //             );
+            //         } elseif ($due_payment_type == 'sell_return') {
+            //             $query->select(
+
+            //                 DB::raw("SUM(CASE WHEN t.type = 'sell_return' THEN final_total ELSE 0 END) AS total_sell_return"),
+
+            //                 DB::raw("SUM(CASE WHEN t.type = 'sell_return' THEN 
+            // (SELECT SUM(ISNULL(amount, 0)) 
+            //  FROM transaction_payments 
+            //  WHERE transaction_payments.transaction_id = t.id)
+            // ELSE 0 END) AS total_return_paid"),
+
+            //                 'contacts.name',
+            //                 'contacts.supplier_business_name',
+            //                 'contacts.id as contact_id'
+            //             );
+            //         }
+
+            //         //Query for opening balance details
+            //         $query->addSelect(
+
+            //             DB::raw("SUM(CASE WHEN t.type = 'opening_balance' THEN final_total ELSE 0 END) AS opening_balance"),
+
+            //             DB::raw("SUM(CASE WHEN t.type = 'opening_balance' THEN 
+            // (SELECT SUM(ISNULL(amount, 0)) 
+            //  FROM transaction_payments 
+            //  WHERE transaction_payments.transaction_id = t.id)
+            // ELSE 0 END) AS opening_balance_paid"),
+
+            //         );
+            //         $contact_details = $query->first();
+
             $query = Contact::where('contacts.id', $contact_id)
-                ->join('transactions AS t', 'contacts.id', '=', 't.contact_id');
+                ->join('transactions AS t', 'contacts.id', '=', 't.contact_id')
+            ->leftJoin('transaction_payments AS tp', 'tp.transaction_id', '=', 't.id');
+
             if ($due_payment_type == 'purchase') {
-                $query->select(
-                    DB::raw("SUM(IF(t.type = 'purchase', final_total, 0)) as total_purchase"),
-                    DB::raw("SUM(IF(t.type = 'purchase', (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as total_paid"),
+                $query->select([
+                    DB::raw("SUM(CASE WHEN t.type = 'purchase' THEN t.final_total ELSE 0 END) AS total_purchase"),
+                    DB::raw("SUM(CASE WHEN t.type = 'purchase' THEN ISNULL(tp.amount, 0) ELSE 0 END) AS total_paid"),
                     'contacts.name',
                     'contacts.supplier_business_name',
                     'contacts.id as contact_id'
-                );
+                ])->groupBy('contacts.id', 'contacts.name', 'contacts.supplier_business_name');
             } elseif ($due_payment_type == 'purchase_return') {
-                $query->select(
-                    DB::raw("SUM(IF(t.type = 'purchase_return', final_total, 0)) as total_purchase_return"),
-                    DB::raw("SUM(IF(t.type = 'purchase_return', (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as total_return_paid"),
+                $query->select([
+                    DB::raw("SUM(CASE WHEN t.type = 'purchase_return' THEN t.final_total ELSE 0 END) AS total_purchase_return"),
+                    DB::raw("SUM(CASE WHEN t.type = 'purchase_return' THEN ISNULL(tp.amount, 0) ELSE 0 END) AS total_return_paid"),
                     'contacts.name',
                     'contacts.supplier_business_name',
                     'contacts.id as contact_id'
-                );
+                ])->groupBy('contacts.id', 'contacts.name', 'contacts.supplier_business_name');
             } elseif ($due_payment_type == 'sell') {
-                $query->select(
-                    DB::raw("SUM(IF(t.type = 'sell' AND t.status = 'final', final_total, 0)) as total_invoice"),
-                    DB::raw("SUM(IF(t.type = 'sell' AND t.status = 'final', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as total_paid"),
+
+
+
+                $query->select([
+                    DB::raw("SUM(CASE WHEN t.type = 'sell' AND t.status = 'final' THEN t.final_total ELSE 0 END) AS total_invoice"),
+                    DB::raw("SUM(CASE WHEN t.type = 'sell' AND t.status = 'final' THEN CASE WHEN tp.is_return = 1 THEN -1 * ISNULL(tp.amount, 0) ELSE ISNULL(tp.amount, 0) END ELSE 0 END) AS total_paid"),
                     'contacts.name',
                     'contacts.supplier_business_name',
                     'contacts.id as contact_id'
-                );
+                ])->groupBy('contacts.id', 'contacts.name', 'contacts.supplier_business_name');
             } elseif ($due_payment_type == 'sell_return') {
-                $query->select(
-                    DB::raw("SUM(IF(t.type = 'sell_return', final_total, 0)) as total_sell_return"),
-                    DB::raw("SUM(IF(t.type = 'sell_return', (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as total_return_paid"),
+                $query->select([
+                    DB::raw("SUM(CASE WHEN t.type = 'sell_return' THEN t.final_total ELSE 0 END) AS total_sell_return"),
+                    DB::raw("SUM(CASE WHEN t.type = 'sell_return' THEN ISNULL(tp.amount, 0) ELSE 0 END) AS total_return_paid"),
                     'contacts.name',
                     'contacts.supplier_business_name',
                     'contacts.id as contact_id'
-                );
+                ])->groupBy('contacts.id', 'contacts.name', 'contacts.supplier_business_name');
             }
 
-            //Query for opening balance details
-            $query->addSelect(
-                DB::raw("SUM(IF(t.type = 'opening_balance', final_total, 0)) as opening_balance"),
-                DB::raw("SUM(IF(t.type = 'opening_balance', (SELECT SUM(amount) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as opening_balance_paid")
-            );
+            // Opening balance
+            $query->addSelect([
+                DB::raw("SUM(CASE WHEN t.type = 'opening_balance' THEN t.final_total ELSE 0 END) AS opening_balance"),
+                DB::raw("SUM(CASE WHEN t.type = 'opening_balance' THEN ISNULL(tp.amount, 0) ELSE 0 END) AS opening_balance_paid")
+            ]);
+
             $contact_details = $query->first();
+
+            // dd($contact_details);
 
             $payment_line = new TransactionPayment();
             if ($due_payment_type == 'purchase') {
@@ -570,7 +656,17 @@ class TransactionPaymentController extends Controller
             // $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
 
             return view('transaction_payment.pay_supplier_due_modal')
-                ->with(compact('branchCenters', 'extraCenters', 'contact_details', 'payment_types', 'payment_line', 'due_payment_type', 'ob_due', 'amount_formated', 'accounts'));
+                ->with(compact(
+                    'branchCenters',
+                    'extraCenters',
+                    'contact_details',
+                    'payment_types',
+                    'payment_line',
+                    'due_payment_type',
+                    'ob_due',
+                    'amount_formated',
+                    'accounts'
+                ));
         }
     }
 

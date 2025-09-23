@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\EssentialsAllowanceAndDeductionController@update', $allowance->id) }}" method="post" id="add_allowance_form">
+    <form action="{{ route('essentialsAllowanceAndDeduction-update', $allowance->id) }}" method="post" id="add_allowance_form">
       @csrf
       @method('PUT')
       <div class="modal-header">

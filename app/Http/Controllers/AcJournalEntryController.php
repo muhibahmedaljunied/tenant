@@ -610,19 +610,12 @@ class AcJournalEntryController extends Controller
         return view('ac_journal_entry.opening_balance', compact('menuItems'));
     }
 
-    public function open_period() {
+    public function open_period() {}
 
 
+    public function close_period() {}
 
-    }
-
-
-    public function close_period() {
-
-        
-    }
-
-    public function createOpeningBalance($type)
+    public function createOpeningBalance(Request $request, $type)
     {
         $business_id = request()->session()->get('user.business_id');
         $setting = AcSetting::where('business_id', request()->session()->get('user.business_id'))->first();
@@ -637,7 +630,13 @@ class AcJournalEntryController extends Controller
         }
         $data['accounts'] = AcMaster::whereDoesntHave('parents')->selectRaw("account_number, concat(account_name_ar, ' (', account_number , ')') as account_name_number")->pluck('account_name_number', 'account_number')->toArray();
         $data['type'] = $type;
-        return view('ac_journal_entry.opening_balance.create', $data);
+
+        $menuItems = $request->menuItems;
+        return view(
+            'ac_journal_entry.opening_balance.create',
+            compact('menuItems'),
+            $data
+        );
     }
 
     public function storeOpeningBalance(Request $request, $type)

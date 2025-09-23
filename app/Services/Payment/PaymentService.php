@@ -154,6 +154,9 @@ class PaymentService
             $amount = ($contactType == 'vendor') ? ($request->input('type') == "send" ? -$amount : $amount) : ($request->input('type') == "send" ? -$amount : $amount);
         }
 
+        // dd($amount);
+
+
         return AcJournalEntryDebtAges::create([
             'ac_journal_entries_id'   => $entry->id,
             'amount'                  => $amount,

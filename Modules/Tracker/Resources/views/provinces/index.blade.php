@@ -93,7 +93,7 @@
         function getdata() {
 
             $.ajax({
-                url: "{{action('\Modules\Tracker\Http\Controllers\ProvinceController@index')}}",
+                url: "{{route('province-index')}}",
                 method: 'GET',
                 success: function (data) {
                     document.getElementById("datatable").innerHTML = data;

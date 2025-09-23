@@ -48,7 +48,7 @@
                 <div class="col-md-3 eq-height-col">
                     <div class="box box-solid product-box">
                         <div class="box-body">
-                            <a href="#" class="show-product-details" data-href="{{action('\Modules\ProductCatalogue\Http\Controllers\ProductCatalogueController@show',  [$business->id, $product->id])}}?location_id={{$business_location->id}}">
+                            <a href="#" class="show-product-details" data-href="{{route('productCatalogue-show',  [$business->id, $product->id])}}?location_id={{$business_location->id}}">
                             <img src="{{$product->image_url}}" class="img-responsive catalogue"></a>
 
                             @php
@@ -67,7 +67,7 @@
                                 $min_price = $product->variations->min('sell_price_inc_tax');
                             @endphp
                             <h2 class="catalogue-title">
-                                <a href="#" class="show-product-details" data-href="{{action('\Modules\ProductCatalogue\Http\Controllers\ProductCatalogueController@show',  [$business->id, $product->id])}}?location_id={{$business_location->id}}">
+                                <a href="#" class="show-product-details" data-href="{{route('productCatalogue-show',  [$business->id, $product->id])}}?location_id={{$business_location->id}}">
                                     {{$product->name}}
                                 </a>
                             </h2>

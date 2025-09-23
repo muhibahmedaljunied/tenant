@@ -135,7 +135,7 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script>
 
     <script>
         $('#location_id').on('change', function() {
@@ -156,11 +156,15 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(data) {
+
+                    // console.log(data);
                     var options =
                         '<option value="">{{ __('messages.please_select') }}</option>';
                     $.each(data, function(key, value) {
-                        options += '<option value="' + key + '">' +
-                            value + '</option>';
+                        // console.log(key);
+                        console.log(value['name']);
+                        options += '<option value="' + value['id'] + '">' +
+                            value['name'] + '</option>';
                     });
                     $('#store_id').html(options).trigger('change');
                 }

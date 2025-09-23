@@ -9,9 +9,9 @@
             <small>@lang('lang_v1.manage_products')</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                        <li class="active">Here</li>
-                    </ol> -->
+                                    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                                    <li class="active">Here</li>
+                                </ol> -->
     </section>
 
     <!-- Main content -->
@@ -19,7 +19,6 @@
         <div class="row">
             <div class="col-md-12">
                 @component('components.filters', ['title' => __('report.filters')])
-
                     <div class="col-md-3" id="location_filter">
                         <div class="form-group">
                             <label for="location_id">@lang('purchase.business_location'):</label>
@@ -35,8 +34,10 @@
                     <div class="col-md-3" id="store_filter">
                         <div class="form-group">
                             <label for="store_id">@lang('store.store'):</label>
+
                             <select name="store_id" id="store_id" class="form-control select2" style="width:100%;"
                                 placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
 
                             </select>
                         </div>
@@ -60,6 +61,7 @@
                             <label for="category_id">@lang('product.category'):</label>
                             <select name="category_id" id="product_list_filter_category_id" class="form-control select2"
                                 style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
                                 @foreach ($categories as $key => $value)
                                     <option value="{{ $key }}">{{ $value }}</option>
                                 @endforeach
@@ -72,6 +74,7 @@
                             <label for="unit_id">@lang('product.unit'):</label>
                             <select name="unit_id" id="product_list_filter_unit_id" class="form-control select2"
                                 style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
                                 @foreach ($units as $key => $value)
                                     <option value="{{ $key }}">{{ $value }}</option>
                                 @endforeach
@@ -84,6 +87,7 @@
                             <label for="tax_id">@lang('product.tax'):</label>
                             <select name="tax_id" id="product_list_filter_tax_id" class="form-control select2"
                                 style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
                                 @foreach ($taxes as $key => $value)
                                     <option value="{{ $key }}">{{ $value }}</option>
                                 @endforeach
@@ -96,6 +100,7 @@
                             <label for="brand_id">@lang('product.brand'):</label>
                             <select name="brand_id" id="product_list_filter_brand_id" class="form-control select2"
                                 style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
                                 @foreach ($brands as $key => $value)
                                     <option value="{{ $key }}">{{ $value }}</option>
                                 @endforeach
@@ -131,6 +136,7 @@
                             <label for="product_list_filter_current_stock">@lang('report.current_stock'):</label>
                             <select name="current_stock" id="product_list_filter_current_stock" class="form-control select2"
                                 style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
                                 <option value="zero">Zero</option>
                                 <option value="gtzero">اكبر من الصفر</option>
                                 <option value="lszero">اقل من الصفر</option>
@@ -139,13 +145,13 @@
                     </div>
 
                     {{-- Include module filter --}}
-                    @if (!empty($pos_module_data))
+                    {{-- @if (!empty($pos_module_data))
                         @foreach ($pos_module_data as $key => $value)
                             @if (!empty($value['view_path']))
                                 @includeIf($value['view_path'], ['view_data' => $value['view_data']])
                             @endif
                         @endforeach
-                    @endif
+                    @endif --}}
 
                     <div class="col-md-3" style="display: none;">
                         <div class="form-group">
@@ -171,7 +177,6 @@
                         </div>
                     @endif
 
-                    {{--  --}}
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>@lang('lang_v1.search')</label>
@@ -232,9 +237,9 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
-    <script src="{{ asset('js/opening_stock.js?v=' . $asset_v) }}"></script>
-    <script src="{{ asset('js/gallery.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/product.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/opening_stock.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/gallery.js?v=' . $asset_v) }}"></script>
 
     <script class="content">
         $('#location_id').on('change', function() {
@@ -261,14 +266,18 @@
                         options += '<option value="' + key + '">' +
                             value + '</option>';
                     });
+
+
+
                     $('#store_id').html(options).trigger('change');
+
                 }
             });
         });
     </script>
 
 
-    {{--  <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script> --}}
+    {{--  <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script> --}}
 
 
 @endsection

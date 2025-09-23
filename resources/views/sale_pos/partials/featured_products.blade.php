@@ -9,7 +9,7 @@
 					@elseif(!empty($variation->product->image_url))
 						{{$variation->product->image_url}}
 					@else
-						{{asset('/img/default.png')}}
+						{{url('/img/default.png')}}
 					@endif
 				);
 			background-repeat: no-repeat; background-position: center;

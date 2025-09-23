@@ -56,20 +56,20 @@ class RouteServiceProvider extends ServiceProvider
             // base_path('Modules/Assets/Http/routes.php'),
             // base_path('Modules/ChartOfAccounts/Http/routes.php'),
             // base_path('Modules/Crm/Http/routes.php'),
-            // base_path('Modules/Essentials/Http/routes.php'),
+            base_path('Modules/Essentials/Http/routes.php'),
             // base_path('Modules/GeneralAccount/Http/routes.php'),
-            // base_path('Modules/Installment/Http/routes.php'),
+            base_path('Modules/Installment/Http/routes.php'),
             // base_path('Modules/Inventory/Http/routes.php'),
-            // base_path('Modules/Manufacturing/Http/routes.php'),
+            base_path('Modules/Manufacturing/Http/routes.php'),
             // base_path('Modules/Partners/Http/routes.php'),
-            // base_path('Modules/ProductCatalogue/Http/routes.php'),
-            // base_path('Modules/Project/Http/routes.php'),
-            // base_path('Modules/Repair/Http/routes.php'),
+            base_path('Modules/ProductCatalogue/Http/routes.php'),
+            base_path('Modules/Project/Http/routes.php'),
+            base_path('Modules/Repair/Http/routes.php'),
             // base_path('Modules/Restaurant/Http/routes.php'),
             base_path('Modules/Superadmin/Http/routes.php'),
             // base_path('Modules/Tracker/Http/routes.php'),
             // base_path('Modules/Web/Http/routes.php'),
-            // base_path('Modules/Woocommerce/Http/routes.php'),
+            base_path('Modules/Woocommerce/Http/routes.php'),
             // glob(base_path('Modules/*/Http/routes.php'))
         ];
 
@@ -80,8 +80,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->domain(request()->getHost())
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
-
-
         } else {
 
 
@@ -109,28 +107,6 @@ class RouteServiceProvider extends ServiceProvider
         }
 
 
-
-
-        // if (in_array(request()->getHost(), config('tenancy.central_domains'))) {
-
-        //     Route::middleware('web')
-        //         ->domain(request()->getHost())
-        //         ->namespace($this->namespace)
-        //         ->group(base_path('routes/web.php'));
-
-        // } else {
-
-
-        //     Route::middleware([
-        //         'web',
-        //         InitializeTenancyByDomain::class,
-        //         PreventAccessFromCentralDomains::class,
-
-        //     ])
-
-        //         ->namespace($this->namespace)
-        //         ->group(base_path('routes/tenant.php'));
-        // }
     }
     /**
      * Define the "web" routes for the application.

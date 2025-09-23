@@ -58,7 +58,7 @@
 @endsection
 
 @section('javascript')
-<script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/report.js?v=' . $asset_v) }}"></script>
 <script type="text/javascript">
     $(document).on('shown.bs.modal', '.view_modal', function(e) {
         initAutocomplete();

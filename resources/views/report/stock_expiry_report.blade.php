@@ -30,7 +30,7 @@
                             <div class="form-group">
                                 <label for="store_id">@lang('store.store'):</label>
                                 <select name="store_id" id="store_id" class="form-control select2" style="width:100%;">
-
+                                    <option value="">{{ __('messages.all') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -116,8 +116,9 @@
                                     <th>SKU</th>
                                     <!-- <th>@lang('purchase.ref_no')</th> -->
                                     <th>@lang('business.location')</th>
+                                    <th>@lang('store.name')</th>
                                     <th>@lang('report.stock_left')</th>
-                                    <th>@lang('lang_v1.lot_number')</th>
+                                    {{-- <th>@lang('lang_v1.lot_number')</th> --}}
                                     <th>@lang('product.exp_date')</th>
                                     <th>@lang('product.mfg_date')</th>
                                     <!--  <th>@lang('messages.edit')</th> -->
@@ -143,8 +144,8 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
-    
+    <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script>
+
     <script>
         $('#location_id').on('change', function() {
 
@@ -167,8 +168,10 @@
                     var options =
                         '<option value="">{{ __('messages.please_select') }}</option>';
                     $.each(data, function(key, value) {
-                        options += '<option value="' + key + '">' +
-                            value + '</option>';
+                        // console.log(key);
+                        console.log(value['name']);
+                        options += '<option value="' + value['id'] + '">' +
+                            value['name'] + '</option>';
                     });
                     $('#store_id').html(options).trigger('change');
                 }
@@ -176,4 +179,3 @@
         });
     </script>
 @endsection
-

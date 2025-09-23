@@ -76,7 +76,7 @@
 
 @stop
 @section('javascript')
-	<script src="{{ asset('js/purchase_return.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('js/purchase_return.js?v=' . $asset_v) }}"></script>
 	<script type="text/javascript">
 		__page_leave_confirmation('#purchase_return_form');
 	</script>

@@ -25,7 +25,9 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">@lang('inventory::lang.inventory')</h4>
         </div>
-        <form id="stocking_save" action="{{action('\Modules\Inventory\Http\Controllers\InventoryController@savestocking')}}" method="POST">
+        {{-- <form id="stocking_save" action="{{action('\Modules\Inventory\Http\Controllers\InventoryController@savestocking')}}" method="POST"> --}}
+            <form id="stocking_save" action="{{route('inventory-savestocking')}}" method="POST">
+
             @csrf
             <input type="hidden" name="transaction_id" value="{{$transaction_id}}">
             <input type="hidden" name="location_id" value="{{$location_id}}">

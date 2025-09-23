@@ -1,4 +1,5 @@
-<form action="{{ action('\\Modules\\Repair\\Http\\Controllers\\RepairSettingsController@store') }}" method="post">
+{{-- <form action="{{ action('\\Modules\\Repair\\Http\\Controllers\\RepairSettingsController@store') }}" method="post"> --}}
+    <form action="{{ route('repairSettings-store') }}" method="post">
 @csrf
 <div class="row">
     {{-- <!-- <div class="col-sm-4">

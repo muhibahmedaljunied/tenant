@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\\Modules\\Tracker\\Http\\Controllers\\ProvinceController@update', ['province' => $province]) }}" method="POST" id="editprovince">
+        <form action="{{ route('province-update', ['province' => $province]) }}" method="POST" id="editprovince">
             @csrf
             @method('PUT')
 

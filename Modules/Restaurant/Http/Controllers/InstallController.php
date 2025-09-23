@@ -18,6 +18,8 @@ class InstallController extends Controller
      * @return Response
      */
 
+     protected $module_name;
+     protected $appVersion;
     public function __construct()
     {
         $this->module_name = 'restaurant';
@@ -26,9 +28,9 @@ class InstallController extends Controller
 
     public function index()
     {
-        if (!auth()->user()->can('superadmin')) {
-            abort(403, 'Unauthorized action.');
-        }
+        // if (!auth()->user()->can('superadmin')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
 
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '512M');

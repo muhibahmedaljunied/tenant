@@ -7,9 +7,9 @@
 					@if(count($product->media) > 0)
 						{{$product->media->first()->display_url}}
 					@elseif(!empty($product->product_image))
-						{{asset('/uploads/img/' . rawurlencode($product->product_image))}}
+						{{url('/uploads/img/' . rawurlencode($product->product_image))}}
 					@else
-						{{asset('/img/default.png')}}
+						{{url('/img/default.png')}}
 					@endif
 				);
 			background-repeat: no-repeat; background-position: center;

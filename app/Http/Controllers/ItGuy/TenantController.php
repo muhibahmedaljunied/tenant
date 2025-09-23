@@ -5,8 +5,10 @@ namespace App\Http\Controllers\ItGuy;
 use Illuminate\Http\Request;
 use App\Helpers\Qs;
 use App\Helpers\Usr;
+use App\Helpers\Pay;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TenantRequest;
+use App\Models\Tenant as ModelsTenant;
 use App\Repositories\TenantRepo;
 use App\Repositories\UserRepo;
 use Illuminate\Support\Facades\Log;
@@ -37,41 +39,63 @@ class TenantController extends Controller
 
         $menuItems = $request['menuItems'];
         $tenant = $this->tenant->getAll();
-   
         if (request()->ajax()) {
 
             $tenant = $this->tenant->getAll();
 
 
-            // $user_types = $this->user->getAllTypes();
+            // dd($tenant);
 
             return DataTables::of($tenant)
-                ->addColumn(
-                    'action',
-                    1
-                )
-                ->addColumn('name', 2)
-                ->addColumn('domain', 3)
-                ->addColumn(
-                    'account_status',
-                    4
-                )
-                ->addColumn(
-                    'payment_status',
-                    5
-                )
-                ->addColumn(
-                    'created_at',
-                    6
 
-                )
-                ->addColumn(
-                    'updated_at',
-                    7
+                ->addColumn('name', fn($tenant) => $tenant->name)
+                ->addColumn('domain', fn($tenant) => $tenant->domain->domain ?? '')
+                ->addColumn('account_status', fn($tenant) => $tenant->account_status)
+                ->addColumn('payment_status', fn($tenant) => $tenant->payment_status)
+                ->addColumn('created_at', fn($tenant) => $tenant->created_at->format('Y-m-d H:i:s'))
+                ->addColumn('updated_at', fn($tenant) => $tenant->updated_at->format('Y-m-d H:i:s'))
+                // ->addColumn(
+                //     'action',
+                //     '
+                //     <button data-href="{{action(\'TenantController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_store_button"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
+                //         &nbsp;
+                //         <button data-href="{{action(\'TenantController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_store_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
+                //    '
+                // )
+                // ->addColumn('action', function ($tenant) {
+                //     $html = '<button data-href="' . action('\ItGuy\TenantController@edit', [$tenant->id]) . '" class="btn btn-xs btn-primary edit_store_button">
+                //                 <i class="fa fa-eye" aria-hidden="true"></i> ' . __("messages.view") . '
+                //             </button>';
 
-                )
+                //     $html .= '&nbsp;<button data-href="' . action('\ItGuy\TenantController@destroy', [$tenant->id]) . '" class="btn btn-xs btn-primary edit_store_button">
+                //                 <i class="fa fa-money" aria-hidden="true"></i> ' . __("purchase.view_payments") . '
+                //             </button>';
+
+                //     return $html;
+                // })
+                ->addColumn('action', function ($tenant) {
+                    $editUrl = route('tenants.edit', $tenant->id);
+                    $deleteUrl = route('tenants.destroy', $tenant->id);
+
+                    return '
+                        <button data-href="' . $editUrl . '" class="btn btn-xs btn-primary edit_tenant_button">
+                            <i class="glyphicon glyphicon-edit"></i> ' . __('messages.edit') . '
+                        </button>
+                               &nbsp;
+                                 <button data-href="' . $editUrl . '" class="btn btn-xs btn-info view_tenant_button">
+                            <i class="fa fa-eye"></i>> ' . __('messages.view') . '
+                        </button>
+                        &nbsp;
+                        <button data-href="' . $deleteUrl . '" class="btn btn-xs btn-danger delete_tenant_button">
+                            <i class="glyphicon glyphicon-trash"></i> ' . __('messages.delete') . '
+                        </button>
+                    ';
+                })
+
+
+
                 ->rawColumns(['action'])
-                ->make(false);
+                ->make(true);
         }
 
         return view("pages.it_guy.tenants.index",  compact(
@@ -114,7 +138,7 @@ class TenantController extends Controller
 
         $menuItems = $request['menuItems'];
         $account_status = Usr::getAccountStatuses();
-        $payment_status = Usr::getAccountStatuses();
+        $payment_status = Pay::getPaymentStatuses();
         return view("pages.it_guy.tenants.create", compact(
             'menuItems',
             'account_status',
@@ -181,46 +205,128 @@ class TenantController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function edit(string $id)
+    public function edit(Request $request, $id)
     {
-        $id = Qs::decodeHash($id);
-        $data["tenant"] = $this->tenant->find($id);
 
-        return view("pages.it_guy.tenants.edit", $data);
+        if (request()->ajax()) {
+
+            $tenant = ModelsTenant::with('domain')->where('id', $id)->first();
+            $account_status = Usr::getAccountStatuses();
+            $payment_status = Pay::getPaymentStatuses();
+            $menuItems = $request->menuItems;
+
+            // dd($tenant);
+            // dd($tenant,$account_status,$payment_status);
+
+            return view('pages.it_guy.tenants.edit')
+                ->with(compact(
+                    'tenant',
+                    'account_status',
+                    'payment_status',
+                    'menuItems'
+                ));
+        }
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update(TenantRequest $request, string $id)
+    public function update(Request $request, $id)
     {
-        $id = Qs::decodeHash($id);
-        $domain = $request->domain;
-        $tenant = $this->tenant->find($id);
 
-        $tenant->domain = $domain; // Try to update domain
-        // If domain appear to change
-        if ($tenant->isDirty('domain')) {
-            // Invalidate the cached domain for this tenant
-            app(\Stancl\Tenancy\Resolvers\DomainTenantResolver::class)->invalidateCache($tenant);
-            $this->tenant->updateDomain(['tenant_id' => $tenant->id], ['domain' => $domain]); // Update the domain
+
+        if (request()->ajax()) {
+            // try {
+            //     $input = $request->only(['actual_name', 'short_name', 'allow_decimal']);
+            //     $business_id = $request->session()->get('user.business_id');
+
+            //     $store = Store::where('business_id', $business_id)->findOrFail($id);
+            //     $store->actual_name = $input['actual_name'];
+            //     $store->short_name = $input['short_name'];
+            //     $store->allow_decimal = $input['allow_decimal'];
+            //     if ($request->has('define_base_store')) {
+            //         if (! empty($request->input('base_store_id')) && ! empty($request->input('base_store_multiplier'))) {
+            //             $base_store_multiplier = $this->commonUtil->num_uf($request->input('base_store_multiplier'));
+            //             if ($base_store_multiplier != 0) {
+            //                 $store->base_store_id = $request->input('base_store_id');
+            //                 $store->base_store_multiplier = $base_store_multiplier;
+            //             }
+            //         }
+            //     } else {
+            //         $store->base_store_id = null;
+            //         $store->base_store_multiplier = null;
+            //     }
+
+            //     $store->save();
+
+            //     $output = [
+            //         'success' => true,
+            //         'msg' => __("store.updated_success")
+            //     ];
+            // } catch (\Exception $e) {
+            //     \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            //     $output = [
+            //         'success' => false,
+            //         'msg' => __("messages.something_went_wrong")
+            //     ];
+            // }
+
+            // return $output;
         }
-
-        $data = $request->only(['account_status', 'payment_status', 'remarks', 'domain']);
-        $this->tenant->update($id, $data);
-
-        return Qs::json(null, null, ['msg' => __('msg.update_ok'), 'ok' => TRUE, 'pop' => TRUE]);
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $id = Qs::decodeHash($id);
-        $this->tenant->delete($id);
 
-        return back()->with('pop_success', __('msg.del_ok'))->with('pop_timer', 0);
+
+        if (request()->ajax()) {
+            // try {
+            //     $business_id = request()->user()->business_id;
+
+            //     $store = Store::where('business_id', $business_id)->findOrFail($id);
+
+            //     //check if any product associated with the store
+            //     $exists = VariationLocationDetails::where('store_id', $store->id)
+            //         ->exists();
+            //     if (! $exists) {
+            //         $store->delete();
+            //         $output = [
+            //             'success' => true,
+            //             'msg' => __("store.deleted_success")
+            //         ];
+            //     } else {
+            //         $output = [
+            //             'success' => false,
+            //             'msg' => __("lang_v1.store_cannot_be_deleted")
+            //         ];
+            //     }
+            // } catch (\Exception $e) {
+
+            //     // dd($e->getMessage());
+            //     \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            //     $output = [
+            //         'success' => false,
+            //         'msg' => '__("messages.something_went_wrong")'
+            //     ];
+            // }
+
+            // return $output;
+        }
     }
 }

@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <br>
-                        <a href="{{ asset('files/import_sales_template.xlsx') }}" class="btn btn-success" download>
+                        <a href="{{ url('files/import_sales_template.xlsx') }}" class="btn btn-success" download>
                             <i class="fa fa-download"></i> @lang('lang_v1.download_template_file')
                         </a>
                     </div>

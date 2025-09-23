@@ -113,7 +113,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{action('\Modules\Essentials\Http\Controllers\PayrollController@index')}}",
+                    url: "{{route('payroll-index')}}",
                     data: function (d) {
                         if ($('#user_id_filter').length) {
                             d.user_id = $('#user_id_filter').val();
@@ -201,5 +201,5 @@
             });
         });
     </script>
-    <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/payment.js?v=' . $asset_v) }}"></script>
 @endsection

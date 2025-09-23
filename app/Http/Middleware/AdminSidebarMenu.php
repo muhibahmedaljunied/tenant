@@ -20,6 +20,7 @@ class AdminSidebarMenu
      */
     public function handle($request, Closure $next)
     {
+     
         if ($request->ajax()) {
             return $next($request);
         }
@@ -27,7 +28,7 @@ class AdminSidebarMenu
 
         $menuItems = [];
         // dd(auth()->user()->hasRole('Admin#' . session('business.id')));
-
+      
         $menuItems[__('home.home')] = [
             [
 
@@ -39,7 +40,7 @@ class AdminSidebarMenu
             ]
         ];
 
-
+     
         // dd(auth()->user()->hasRole('Admin#' . session('business.id')));
         // $user = Auth::user();
         // $user = User::find($user->id);
@@ -1149,8 +1150,9 @@ class AdminSidebarMenu
         $modifyAdminMenu = [];
         //Add menus from modules
         $moduleUtil = new ModuleUtil;
-        $menuItems = $moduleUtil->getModuleData('modifyAdminMenu', $menuItems);
 
+        $menuItems = $moduleUtil->getModuleData('modifyAdminMenu', $menuItems);
+      
         foreach ($menuItems as $key => $value) {
 
             if ($key == 'Essentials') {
@@ -1173,11 +1175,12 @@ class AdminSidebarMenu
                 $modifyAdminMenu[$key] = $value;
             }
         }
+
         // dd($kk);
         // dd($menuItems);
         // $request['menuItems'] = array_merge($request['menuItems'], $menuItems);
         $request['menuItems'] = $modifyAdminMenu;
-
+        // dd($modifyAdminMenu,$menuItems,$request['menuItems']);
         return $next($request);
     }
 }

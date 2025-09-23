@@ -9,24 +9,24 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{action('\Modules\Essentials\Http\Controllers\ToDoController@index')}}"><i class="fas fa-check-circle"></i> {{__('essentials::lang.essentials')}}</a>
+                <a class="navbar-brand" href="{{route('toDo-index')}}"><i class="fas fa-check-circle"></i> {{__('essentials::lang.essentials')}}</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li @if(request()->segment(2) == 'todo') class="active" @endif><a href="{{action('\Modules\Essentials\Http\Controllers\ToDoController@index')}}">@lang('essentials::lang.todo')</a></li>
+                    <li @if(request()->segment(2) == 'todo') class="active" @endif><a href="{{route('toDo-index')}}">@lang('essentials::lang.todo')</a></li>
 
-                    <li @if(request()->segment(2) == 'document' && request()->get('type') != 'memos') class="active" @endif><a href="{{action('\Modules\Essentials\Http\Controllers\DocumentController@index')}}">@lang('essentials::lang.document')</a></li>
+                    <li @if(request()->segment(2) == 'document' && request()->get('type') != 'memos') class="active" @endif><a href="{{route('document-index')}}">@lang('essentials::lang.document')</a></li>
 
-                    <li @if(request()->segment(2) == 'document' && request()->get('type') == 'memos') class="active" @endif><a href="{{action('\Modules\Essentials\Http\Controllers\DocumentController@index') .'?type=memos'}}">@lang('essentials::lang.memos')</a></li>
+                    <li @if(request()->segment(2) == 'document' && request()->get('type') == 'memos') class="active" @endif><a href="{{route('document-index') .'?type=memos'}}">@lang('essentials::lang.memos')</a></li>
 
-                    <li @if(request()->segment(2) == 'reminder') class="active" @endif><a href="{{action('\Modules\Essentials\Http\Controllers\ReminderController@index')}}">@lang('essentials::lang.reminders')</a></li>
+                    <li @if(request()->segment(2) == 'reminder') class="active" @endif><a href="{{route('reminder-index')}}">@lang('essentials::lang.reminders')</a></li>
                     @if (auth()->user()->can('essentials.view_message') || auth()->user()->can('essentials.create_message'))
-                        <li @if(request()->segment(2) == 'messages') class="active" @endif><a href="{{action('\Modules\Essentials\Http\Controllers\EssentialsMessageController@index')}}">@lang('essentials::lang.messages')</a></li>
+                        <li @if(request()->segment(2) == 'messages') class="active" @endif><a href="{{route('essentialsMessage-index')}}">@lang('essentials::lang.messages')</a></li>
                     @endif
                     @if (auth()->user()->can('edit_essentials_settings'))
-                        <li @if(request()->segment(2) == 'hrm' && request()->segment(2) == 'settings') class="active" @endif><a href="{{action('\Modules\Essentials\Http\Controllers\EssentialsSettingsController@edit')}}">@lang('business.settings')</a></li>
+                        <li @if(request()->segment(2) == 'hrm' && request()->segment(2) == 'settings') class="active" @endif><a href="{{route('essentialsSettings-edit')}}">@lang('business.settings')</a></li>
                     @endif
                 </ul>
 

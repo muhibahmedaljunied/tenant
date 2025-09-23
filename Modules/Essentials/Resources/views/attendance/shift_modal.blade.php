@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
-    <form action="{{ empty($shift) ? action('\\Modules\\Essentials\\Http\\Controllers\\ShiftController@store') : action('\\Modules\\Essentials\\Http\\Controllers\\ShiftController@update', [$shift->id]) }}" method="{{ empty($shift) ? 'post' : 'post' }}" id="add_shift_form">
+    <form action="{{ empty($shift) ? route('shift-store') : route('shift-update', [$shift->id]) }}" method="{{ empty($shift) ? 'post' : 'post' }}" id="add_shift_form">
       @csrf
       @if(!empty($shift))
         @method('PUT')

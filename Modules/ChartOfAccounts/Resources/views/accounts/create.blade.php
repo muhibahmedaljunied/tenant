@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\\Modules\\ChartOfAccounts\\Http\\Controllers\\ChartOfAccountsController@saveacount') }}" method="post">
+        <form action="{{ route('chartOfAccounts-saveacount') }}" method="post">
             @csrf
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

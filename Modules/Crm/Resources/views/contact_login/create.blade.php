@@ -1,5 +1,5 @@
 <div class="modal-dialog" role="document">
-	{!! Form::open(['url' => action('\Modules\Crm\Http\Controllers\ContactLoginController@store'), 'method' => 'post', 'id' => 'contact_login_add' ]) !!}
+	{!! Form::open(['url' => route('contactLogin-store'), 'method' => 'post', 'id' => 'contact_login_add' ]) !!}
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">

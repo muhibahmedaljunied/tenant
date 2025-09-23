@@ -153,13 +153,13 @@ class DataController extends Controller
                 'sub' => [
                     [
                         'title' => __('woocommerce::lang.sync'),
-                        'url' => action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@index'),
+                        'url' => route('woocommerce-index'),
                         'icon' => 'fa fas fa-sync',
                         'active' => request()->segment(1) == 'woocommerce' && empty(request()->segment(2))
                     ],
                     [
                         'title' => __('woocommerce::lang.sync_log'),
-                        'url' => action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@viewSyncLog'),
+                        'url' => route('woocommerce-viewSyncLog'),
                         'icon' => 'fa fas fa-history',
                         'active' => request()->segment(1) == 'woocommerce' && request()->segment(2) == 'view-sync-log'
                     ]
@@ -169,7 +169,7 @@ class DataController extends Controller
             if (auth()->user()->can('woocommerce.access_woocommerce_api_settings')) {
                 $woocommerceMenu['sub'][] = [
                     'title' => __('woocommerce::lang.api_settings'),
-                    'url' => action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@apiSettings'),
+                    'url' => route('woocommerce-apiSettings'),
                     'icon' => 'fa fas fa-cogs',
                     'active' => request()->segment(1) == 'woocommerce' && request()->segment(2) == 'api-settings'
                 ];

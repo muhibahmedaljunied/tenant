@@ -45,7 +45,7 @@
 <div class="modal fade schedule_log_modal" tabindex="-1" role="dialog"></div>
 @endsection
 @section('javascript')
-	<script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			getScheduleLog();

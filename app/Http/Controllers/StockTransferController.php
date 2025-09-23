@@ -18,6 +18,7 @@ use App\Utils\TransactionUtil;
 use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\Models\Activity;
 use App\TransactionSellLinesPurchaseLines;
+use Illuminate\Support\Facades\Log;
 
 class StockTransferController extends Controller
 {
@@ -66,6 +67,7 @@ class StockTransferController extends Controller
         if (!auth()->user()->can('purchase.view') && !auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
         }
+
 
         $this->statuses = $this->stockTransferStatuses();
 
@@ -467,6 +469,8 @@ class StockTransferController extends Controller
 
             DB::commit();
         } catch (Exception $e) {
+
+            dd($e->getMessage());
             DB::rollBack();
 
             logger()->emergency("File: {$e->getFile()} Line: {$e->getLine()} Message: {$e->getMessage()}");
@@ -1009,6 +1013,9 @@ class StockTransferController extends Controller
                             $sell_line->product_id,
                             $sell_line->variation_id,
                             $sell_transfer->location_id,
+                            // -----------
+                            $sell_transfer->store_id,
+                            // ---------
                             $sell_line->quantity
                         );
 
@@ -1047,8 +1054,10 @@ class StockTransferController extends Controller
                 'msg' => __('lang_v1.updated_succesfully')
             ];
         } catch (\Exception $e) {
+
+            dd($e->getMessage());
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
             $output = [
                 'success' => 0,

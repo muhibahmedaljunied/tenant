@@ -49,6 +49,7 @@ class AccountReportsController extends Controller
                 null,
                 $end_date
             );
+        
             $sell_details = $this->transactionUtil->getSellTotals(
                 $business_id,
                 null,

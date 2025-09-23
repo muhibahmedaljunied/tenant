@@ -62,7 +62,9 @@ class ModuleUtil extends Util
     }
     public function isModulesInstalled(array $modules)
     {
+
         $modulesKeys = array_map(function ($module) {
+
             if (Module::has($module) && $this->getModuleStatus($module)) {
                 return [
                     'name' => $module,
@@ -71,8 +73,10 @@ class ModuleUtil extends Util
             }
         }, $modules);
 
-        $modulesKeys = collect($modulesKeys)->reject(null)->pluck('name', 'version_name');
+        $rr = $modulesKeys;
 
+        $modulesKeys = collect($modulesKeys)->reject(null)->pluck('name', 'version_name');
+        // dd($rr ,$modulesKeys,$modulesKeys->keys(),$this->getProperties($modulesKeys->keys()));
         return collect($this->getProperties($modulesKeys->keys()))->mapWithKeys(function ($item) use ($modulesKeys) {
             return [$modulesKeys[strtolower($item['key'])] => $item['value']];
         })->all();
@@ -117,9 +121,12 @@ class ModuleUtil extends Util
     {
 
 
+   
+
         $moduleNames = Module::toCollection()->map(function ($module) {
             return $module->getName();
         })->values()->toArray();
+
 
 
         $installed_modules = [];
@@ -128,15 +135,17 @@ class ModuleUtil extends Util
 
 
         $data = [];
+        $i = 0;
         if (!empty($installed_modules)) {
             foreach ($installed_modules as $module => $version) {
-
 
 
                 $class = 'Modules\\' . $module . '\Http\Controllers\DataController';
 
                 if (class_exists($class)) {
+                    $i = $i+1;
                     $class_object = new $class();
+                    $fdf[$i] = $class_object;
 
                     if (method_exists($class_object, $function_name)) {
                         if (!empty($arguments)) {
@@ -149,6 +158,7 @@ class ModuleUtil extends Util
             }
         }
 
+        // dd($fdf);
         return $data;
     }
 
@@ -185,11 +195,9 @@ class ModuleUtil extends Util
     public function isSubscribed($business_id)
     {
         if ($this->isSuperadminInstalled()) {
-
             return !empty($this->userHasActiveSubcription($business_id));
         }
 
-        // dd(3);
         return false;
     }
     public function userHasActiveSubcription($business_id)
@@ -255,6 +263,8 @@ class ModuleUtil extends Util
      */
     public static function expiredResponse($redirect_url = null)
     {
+
+
         $response_array = [
             'success' => 0,
             'msg' => __(
@@ -363,6 +373,7 @@ class ModuleUtil extends Util
      */
     public function isQuotaAvailable($type, $business_id, $total_rows = 0)
     {
+
         $is_available = $this->isSuperadminInstalled();
 
         if ($is_available) {
@@ -443,6 +454,8 @@ class ModuleUtil extends Util
      */
     public function quotaExpiredResponse($type, $business_id, $redirect_url = null)
     {
+
+
         if ($type == 'locations') {
             if (request()->ajax()) {
                 if (request()->wantsJson()) {
@@ -485,8 +498,12 @@ class ModuleUtil extends Util
         }
     }
 
-    public function accountsDropdown($business_id, $prepend_none = false, $closed = false, $show_balance = false)
-    {
+    public function accountsDropdown(
+        $business_id,
+        $prepend_none = false,
+        $closed = false,
+        $show_balance = false
+    ) {
         $dropdown = [];
 
         if ($this->isModuleEnabled('account')) {

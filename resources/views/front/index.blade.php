@@ -10,24 +10,24 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{ asset('front/assets/img/favicon.png')}}" rel="icon">
-  <link href="{{ asset('front/assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+  <link href="{{ url('front/assets/img/favicon.png')}}" rel="icon">
+  <link href="{{ url('front/assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
  {{-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 --}}
   <!-- Vendor CSS Files -->
-  <link href="{{ asset('front/assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-  <link href="{{ asset('front/assets/vendor/icofont/icofont.min.css')}}" rel="stylesheet">
-  <link href="{{ asset('front/assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
-  <link href="{{ asset('front/assets/vendor/remixicon/remixicon.css')}}" rel="stylesheet">
-  <link href="{{ asset('front/assets/vendor/venobox/venobox.css')}}" rel="stylesheet">
-  <link href="{{ asset('front/assets/vendor/owl.carousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
-  <link href="{{ asset('front/assets/vendor/aos/aos.css')}}" rel="stylesheet">
+  <link href="{{ url('front/assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{ url('front/assets/vendor/icofont/icofont.min.css')}}" rel="stylesheet">
+  <link href="{{ url('front/assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
+  <link href="{{ url('front/assets/vendor/remixicon/remixicon.css')}}" rel="stylesheet">
+  <link href="{{ url('front/assets/vendor/venobox/venobox.css')}}" rel="stylesheet">
+  <link href="{{ url('front/assets/vendor/owl.carousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
+  <link href="{{ url('front/assets/vendor/aos/aos.css')}}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="{{ asset('/css/rtl.css')}}" rel="stylesheet">
-  <link href="{{ asset('front/assets/css/style.css')}}" rel="stylesheet">
+  <link href="{{ url('/css/rtl.css')}}" rel="stylesheet">
+  <link href="{{ url('front/assets/css/style.css')}}" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Arsha - v2.2.1
@@ -45,7 +45,7 @@
 
       <h1 class="logo mr-auto"><a href="index.html">AZHA ERP</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo mr-auto"><img src="{{asset('front/assets/img/logo.png')}}" alt="" class="img-fluid"></a>-->
+      <!-- <a href="index.html" class="logo mr-auto"><img src="{{url('front/assets/img/logo.png')}}" alt="" class="img-fluid"></a>-->
 
       <nav class="nav-menu d-none d-lg-block">
         <ul>
@@ -76,7 +76,7 @@
           </div>
         </div>
         <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
-          <img src="{{asset('front/assets/img/hero-img.png')}}" class="img-fluid animated" alt="">
+          <img src="{{url('front/assets/img/hero-img.png')}}" class="img-fluid animated" alt="">
         </div>
       </div>
     </div>
@@ -92,27 +92,27 @@
         <div class="row" data-aos="zoom-in">
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="{{asset('front/assets/img/clients/client-1.png')}}" class="img-fluid" alt="">
+            <img src="{{url('front/assets/img/clients/client-1.png')}}" class="img-fluid" alt="">
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="{{asset('front/assets/img/clients/client-2.png')}}" class="img-fluid" alt="">
+            <img src="{{url('front/assets/img/clients/client-2.png')}}" class="img-fluid" alt="">
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="{{asset('front/assets/img/clients/client-3.png')}}" class="img-fluid" alt="">
+            <img src="{{url('front/assets/img/clients/client-3.png')}}" class="img-fluid" alt="">
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="{{asset('front/assets/img/clients/client-4.png')}}" class="img-fluid" alt="">
+            <img src="{{url('front/assets/img/clients/client-4.png')}}" class="img-fluid" alt="">
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="{{asset('front/assets/img/clients/client-5.png')}}" class="img-fluid" alt="">
+            <img src="{{url('front/assets/img/clients/client-5.png')}}" class="img-fluid" alt="">
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="{{asset('front/assets/img/clients/client-6.png')}}" class="img-fluid" alt="">
+            <img src="{{url('front/assets/img/clients/client-6.png')}}" class="img-fluid" alt="">
           </div>
 
         </div>
@@ -137,7 +137,7 @@
             </div>
           </div>
           <div class="col-lg-5 align-items-stretch order-1 order-lg-2 "    data-aos="zoom-in" data-aos-delay="150">
-           <img  src="{{asset('front/assets/img/skills.png')}}" class="img-fluid" alt="">
+           <img  src="{{url('front/assets/img/skills.png')}}" class="img-fluid" alt="">
              </div>
 
 
@@ -166,7 +166,7 @@
           <div class="row">
             <div class="col-lg-6 col-xl-3 col-md-12 info-col info-col-1">
               <div class="img-titel">
-                <img src="{{asset('front/assets/img/kasher.png')}}" class="section-content-image" style="max-width: 150px" >
+                <img src="{{url('front/assets/img/kasher.png')}}" class="section-content-image" style="max-width: 150px" >
               </div>
 
               <div class="col-titel ">
@@ -261,91 +261,91 @@
         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-1.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-1.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>App 1</h4>
               <p>App</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-1.jpg')}}')}}" data-gall="portfolioGallery" class="venobox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-1.jpg')}}')}}" data-gall="portfolioGallery" class="venobox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-2.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-2.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>Web 3</h4>
               <p>Web</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-2.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-2.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-3.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-3.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>App 2</h4>
               <p>App</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-3.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="App 2"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-3.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="App 2"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-4.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-4.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>Card 2</h4>
               <p>Card</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-4.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Card 2"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-4.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Card 2"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-5.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-5.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>Web 2</h4>
               <p>Web</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-5.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Web 2"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-5.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Web 2"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-6.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-6.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>App 3</h4>
               <p>App</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-6.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="App 3"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-6.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="App 3"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-7.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-7.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>Card 1</h4>
               <p>Card</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-7.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Card 1"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-7.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Card 1"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-8.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-8.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>Card 3</h4>
               <p>Card</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-8.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Card 3"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-8.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Card 3"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <div class="portfolio-img"><img src="{{asset('front/assets/img/portfolio/portfolio-9.jpg')}}" class="img-fluid" alt=""></div>
+            <div class="portfolio-img"><img src="{{url('front/assets/img/portfolio/portfolio-9.jpg')}}" class="img-fluid" alt=""></div>
             <div class="portfolio-info">
               <h4>Web 3</h4>
               <p>Web</p>
-              <a href="{{asset('front/assets/img/portfolio/portfolio-9.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
+              <a href="{{url('front/assets/img/portfolio/portfolio-9.jpg')}}" data-gall="portfolioGallery" class="venobox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
               <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
@@ -368,7 +368,7 @@
 
           <div class="col-lg-6">
             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="100">
-              <div class="pic"><img src="{{asset('front/assets/img/team/team-1.jpg')}}" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="{{url('front/assets/img/team/team-1.jpg')}}" class="img-fluid" alt=""></div>
               <div class="member-info">
                 <h4>Walter White</h4>
                 <span>Chief Executive Officer</span>
@@ -385,7 +385,7 @@
 
           <div class="col-lg-6 mt-4 mt-lg-0">
             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="{{asset('front/assets/img/team/team-2.jpg')}}" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="{{url('front/assets/img/team/team-2.jpg')}}" class="img-fluid" alt=""></div>
               <div class="member-info">
                 <h4>Sarah Jhonson</h4>
                 <span>Product Manager</span>
@@ -402,7 +402,7 @@
 
           <div class="col-lg-6 mt-4">
             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="300">
-              <div class="pic"><img src="{{asset('front/assets/img/team/team-3.jpg')}}" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="{{url('front/assets/img/team/team-3.jpg')}}" class="img-fluid" alt=""></div>
               <div class="member-info">
                 <h4>William Anderson</h4>
                 <span>CTO</span>
@@ -419,7 +419,7 @@
 
           <div class="col-lg-6 mt-4">
             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="400">
-              <div class="pic"><img src="{{asset('front/assets/img/team/team-4.jpg')}}" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="{{url('front/assets/img/team/team-4.jpg')}}" class="img-fluid" alt=""></div>
               <div class="member-info">
                 <h4>Amanda Jepson</h4>
                 <span>Accountant</span>
@@ -726,18 +726,18 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="{{ asset('front/assets/vendor/jquery/jquery.min.js')}}"></script>
-  <script src="{{ asset('front/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{ asset('front/assets/vendor/jquery.easing/jquery.easing.min.js')}}"></script>
-  <script src="{{ asset('front/assets/vendor/php-email-form/validate.js')}}"></script>
-  <script src="{{ asset('front/assets/vendor/waypoints/jquery.waypoints.min.js')}}"></script>
-  <script src="{{ asset('front/assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
-  <script src="{{ asset('front/assets/vendor/venobox/venobox.min.js')}}"></script>
-  <script src="{{ asset('front/assets/vendor/owl.carousel/owl.carousel.min.js')}}"></script>
-  <script src="{{ asset('front/assets/vendor/aos/aos.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/jquery.easing/jquery.easing.min.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/php-email-form/validate.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/waypoints/jquery.waypoints.min.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/venobox/venobox.min.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/owl.carousel/owl.carousel.min.js')}}"></script>
+  <script src="{{ url('front/assets/vendor/aos/aos.js')}}"></script>
 
   <!-- Template Main JS File -->
-  <script src="{{ asset('front/assets/js/main.js')}}"></script>
+  <script src="{{ url('front/assets/js/main.js')}}"></script>
 
 </body>
 

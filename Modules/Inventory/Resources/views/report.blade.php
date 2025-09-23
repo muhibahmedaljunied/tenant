@@ -99,7 +99,9 @@
                   debugger;
                     $.ajax({
                         type: "POST",
-                          url:"{{action('StocktackingController@Stock_liquidation')}}",
+                        //   url:"{{action('StocktackingController@Stock_liquidation')}}",
+                          url:"{{route('stocktacking-Stock_liquidation')}}",
+
                        
                         data: {
                             '_token' :"{{ csrf_token() }}",

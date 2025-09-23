@@ -18,19 +18,21 @@
         "composer/semver": "*",
         "doctrine/dbal": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "hashids/hashids": "^5.0",
         "itsnasser/egyptian-e-invoice": "dev-main",
         "knox/pesapal": "*",
+        "laravel-notification-channels/fcm": "^4.3",
         "laravel/framework": "^11.0",
         "laravel/passport": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "*",
-        "laravel-notification-channels/fcm": "^4.3",
         "larswiegers/laravel-translations-checker": "^0.9",
         "livewire/livewire": "^3.4",
         "maatwebsite/excel": "^3.0",
         "milon/barcode": "^12.0",
         "mpdf/mpdf": "^8.2.3",
+        "nesbot/carbon": "3.8.4",
         "nwidart/laravel-modules": "^8.3.0",
         "owen-it/laravel-auditing": "^14.0",
         "pusher/pusher-php-server": "^7.0",
@@ -49,6 +51,8 @@
         "yajra/laravel-datatables-export": "^11",
         "yajra/laravel-datatables-oracle": "^v11.0.0"
     },
+
+    
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
         "barryvdh/laravel-ide-helper": "*",

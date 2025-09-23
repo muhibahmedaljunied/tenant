@@ -10,7 +10,9 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">@lang( 'inventory::lang.Inventory_add' )</h4>
         </div>
-             <form action="{{action('\Modules\Inventory\Http\Controllers\InventoryController@store')}}" method="POST" id="store_stock">
+             {{-- <form action="{{action('\Modules\Inventory\Http\Controllers\InventoryController@store')}}" method="POST" id="store_stock"> --}}
+                <form action="{{route('inventory-store')}}" method="POST" id="store_stock">
+
                 @csrf
                  <div class="form-group hidden" style="margin: 15px;min-width: 150px">
                      <label for="formGroupExampleInput"> تاريخ الغلق</label>

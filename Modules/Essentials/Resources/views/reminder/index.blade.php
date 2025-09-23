@@ -38,7 +38,7 @@
 @endphp
 <!-- TODO -->
 @if(file_exists(public_path() . '/plugins/fullcalendar/locale/' . $fullcalendar_lang_file))
-    <!-- <script src="{{ asset('plugins/fullcalendar/locale/' . $fullcalendar_lang_file . '?v=' . $asset_v) }}"></script> -->
+    <!-- <script src="{{ url('plugins/fullcalendar/locale/' . $fullcalendar_lang_file . '?v=' . $asset_v) }}"></script> -->
 @endif
 <script type="text/javascript">
 	$(document).ready(function(){

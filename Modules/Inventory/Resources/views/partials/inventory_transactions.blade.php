@@ -24,14 +24,22 @@
                 <td>{{$row->location_name}}</td>
                 <td>
                     @can('inventory.stocking_products')
-                        @if($row->status=='on')
+                        {{-- @if($row->status=='on')
                            <a href="{{action('\Modules\Inventory\Http\Controllers\InventoryController@stocking',['id'=>$row->id])}}" class="btn btn-danger ">جرد</a>
                            @else
                            <a href="{{action('\Modules\Inventory\Http\Controllers\InventoryController@stocking',['id'=>$row->id])}}" class="btn btn-danger " disabled="disabled"> جرد</a>
-                        @endif
+                        @endif --}}
+
+                        @if($row->status=='on')
+                        <a href="{{route('inventory-stocking',['id'=>$row->id])}}" class="btn btn-danger ">جرد</a>
+                        @else
+                        <a href="{{route('inventory-stocking',['id'=>$row->id])}}" class="btn btn-danger " disabled="disabled"> جرد</a>
+                     @endif
+
                     @endcan
 
-                        <a href="{{action('\Modules\Inventory\Http\Controllers\StocktackingController@report',['id'=>$row->id])}}" class="btn btn-primary"><i class="fa fa-file"></i>تقرير</a>
+                        {{-- <a href="{{action('\Modules\Inventory\Http\Controllers\StocktackingController@report',['id'=>$row->id])}}" class="btn btn-primary"><i class="fa fa-file"></i>تقرير</a> --}}
+                        <a href="{{route('stocktacking-report',['id'=>$row->id])}}" class="btn btn-primary"><i class="fa fa-file"></i>تقرير</a>
 
                     @can('inventory.stocking_edit')
                         @if($row->status=='on')

@@ -10,7 +10,7 @@
 
     <!-- Main content -->
     <section class="content">
-        < action="{{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceController@updateSettings') }}" method="post">
+        < action="{{ route('woocommerce-updateSettings') }}" method="post">
 
 
             <div class="row">

@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\\Modules\\Tracker\\Http\\Controllers\\DistributionAreaController@store') }}" method="POST" id="addarea">
+        <form action="{{ route('distributionArea-store') }}" method="POST" id="addarea">
             @csrf
 
         <div class="modal-header">

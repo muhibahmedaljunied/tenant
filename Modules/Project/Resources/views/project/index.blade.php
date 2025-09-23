@@ -64,16 +64,16 @@
 			<div class="box-tools pull-right">
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 				    <label class="btn btn-info btn-sm active list">
-				        <input type="radio" name="project_view" value="list_view" class="project_view" data-href="{{action('\Modules\Project\Http\Controllers\ProjectController@index').'?project_view=list_view'}}">
+				        <input type="radio" name="project_view" value="list_view" class="project_view" data-href="{{route('project-index').'?project_view=list_view'}}">
 				        @lang('project::lang.list_view')
 				    </label>
 				    <label class="btn btn-info btn-sm kanban">
-				        <input type="radio" name="project_view" value="kanban" class="project_view" data-href="{{action('\Modules\Project\Http\Controllers\ProjectController@index').'?project_view=kanban'}}">
+				        <input type="radio" name="project_view" value="kanban" class="project_view" data-href="{{route('project-index').'?project_view=kanban'}}">
 				        @lang('project::lang.kanban_board')
 				    </label>
 				</div>
 				@can('project.create_project')
-					<button type="button" class="btn btn-primary btn-sm add_new_project" data-href="{{action('\Modules\Project\Http\Controllers\ProjectController@create')}}">
+					<button type="button" class="btn btn-primary btn-sm add_new_project" data-href="{{route('project-create')}}">
 						@lang('project::lang.new_project')&nbsp;
 						<i class="fa fa-plus"></i>
 					</button>
@@ -140,10 +140,10 @@
 	<!-- /.box -->
 	<div class="modal fade" tabindex="-1" role="dialog" id="project_model"></div>
 </section>
-<link rel="stylesheet" href="{{ asset('modules/project/sass/project.css?v=' . $asset_v) }}">
+<link rel="stylesheet" href="{{ url('modules/project/sass/project.css?v=' . $asset_v) }}">
 @endsection
 @section('javascript')
-<script src="{{ asset('modules/project/js/project.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('modules/project/js/project.js?v=' . $asset_v) }}"></script>
 <!-- get list of project on load of page -->
 <script type="text/javascript">
 	$(document).ready(function() {

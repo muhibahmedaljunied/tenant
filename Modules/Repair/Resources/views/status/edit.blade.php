@@ -1,7 +1,8 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
 
-    <form action="{{ action('\\Modules\\Repair\\Http\\Controllers\\RepairStatusController@update', [$status->id]) }}" method="post" id="status_form">
+    {{-- <form action="{{ action('\\Modules\\Repair\\Http\\Controllers\\RepairStatusController@update', [$status->id]) }}" method="post" id="status_form"> --}}
+        <form action="{{ route('repairStatus-update', [$status->id]) }}" method="post" id="status_form">
       @csrf
       @method('PUT')
       <div class="modal-header">

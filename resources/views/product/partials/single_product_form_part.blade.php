@@ -35,6 +35,7 @@
 
             <td>
                 <br>
+
                 <input type="text" name="profit_percent" id="profit_percent" class="form-control input-sm input_number"
                     value="{{ @num_format($profit_percent) }}" required>
             </td>

@@ -34,6 +34,7 @@ use App\Events\TransactionPaymentUpdated;
 use App\TransactionSellLinesPurchaseLines;
 use App\Exceptions\AdvanceBalanceNotAvailable;
 use App\Services\JournalEntries\SaleEntriesPosService;
+use Nwidart\Modules\Facades\Module;
 
 class TransactionUtil extends Util
 {
@@ -1364,7 +1365,7 @@ class TransactionUtil extends Util
         if (blank($il->date_time_format)) {
             $output['invoice_date'] = $this->format_date($transaction->transaction_date, true, $business_details);
         } else {
-            $output['invoice_date'] = \Carbon::createFromFormat('Y-m-d H:i:s', $transaction->transaction_date)->format($il->date_time_format);
+            $output['invoice_date'] = Carbon::createFromFormat('Y-m-d H:i:s', $transaction->transaction_date)->format($il->date_time_format);
         }
 
         $output['hide_price'] = ! empty($il->common_settings['hide_price']) ? true : false;
@@ -1376,7 +1377,7 @@ class TransactionUtil extends Util
                 if (blank($il->date_time_format)) {
                     $output['due_date'] = $this->format_date($due_date->toDateTimeString(), true, $business_details);
                 } else {
-                    $output['due_date'] = \Carbon::createFromFormat('Y-m-d H:i:s', $due_date->toDateTimeString())->format($il->date_time_format);
+                    $output['due_date'] = Carbon::createFromFormat('Y-m-d H:i:s', $due_date->toDateTimeString())->format($il->date_time_format);
                 }
             }
         }
@@ -2525,67 +2526,62 @@ class TransactionUtil extends Util
      *
      * @return array
      */
-    public function getSellTotals($business_id, $start_date = null, $end_date = null, $location_id = null, $created_by = null)
-    {
-
-        $subquery = DB::table('transactions as t')
-            ->select([
-                't.id',
-                't.final_total',
-                't.tax_amount',
-                't.total_before_tax',
-                't.shipping_charges',
-                DB::raw("CAST(t.transaction_date AS date) as transaction_date"),
-                DB::raw("
-            (
-                SELECT COALESCE(
-                    SUM(CASE 
-                        WHEN tp.is_return = 1 THEN -1 * tp.amount 
-                        ELSE tp.amount 
-                    END), 0
-                )
-                FROM transaction_payments AS tp
-                WHERE tp.transaction_id = t.id
-            ) AS paid_amount
-        "),
-            ])
-            ->where('t.business_id', $business_id)
-            ->where('t.type', 'sell')
-            ->where('t.status', 'final')
-            ->whereBetween(DB::raw('CAST(t.transaction_date AS date)'), [$start_date, $end_date]);
-
-        $query = DB::table(DB::raw("({$subquery->toSql()}) as derived"))
-            ->mergeBindings($subquery)
-            ->select([
-                DB::raw('SUM(final_total) as total_sell'),
-                DB::raw('SUM(final_total - tax_amount) as total_exc_tax'),
-                DB::raw('SUM(final_total - paid_amount) as total_due'),
-                DB::raw('SUM(total_before_tax) as total_before_tax'),
-                DB::raw('SUM(shipping_charges) as total_shipping_charges'),
-            ]);
+    public function getSellTotals(
+        $business_id,
+        $start_date = null,
+        $end_date = null,
+        $location_id = null,
+        $created_by = null
+    ) {
 
 
+
+        // Step 1: Subquery for payments per transaction
+        $paymentSubquery = DB::table('transaction_payments as tp')
+            ->select('tp.transaction_id', DB::raw('SUM(CASE WHEN tp.is_return = 1 THEN -1 * tp.amount ELSE tp.amount END) as paid_amount'))
+            ->groupBy('tp.transaction_id');
+
+        // Step 2: Main query with join
+        $query = DB::table('transactions')
+            ->leftJoinSub($paymentSubquery, 'payments', function ($join) {
+                $join->on('transactions.id', '=', 'payments.transaction_id');
+            })
+            ->where('transactions.business_id', $business_id)
+            ->where('transactions.type', 'sell')
+            ->where('transactions.status', 'final');
+
+        // Step 3: Apply filters
         $permitted_locations = auth()->user()->permitted_locations();
-
-        // ✅ Apply filters safely on derived table
-        if ($permitted_locations != 'all') {
-            $query->whereIn('derived.location_id', $permitted_locations);
-        }
-
-        if (!empty($start_date) && !empty($end_date)) {
-            $query->whereBetween('derived.transaction_date', [$start_date, $end_date]);
-        } elseif (!empty($end_date)) {
-            $query->where('derived.transaction_date', '<=', $end_date);
+        if ($permitted_locations !== 'all') {
+            $query->whereIn('transactions.location_id', $permitted_locations);
         }
 
         if (!empty($location_id)) {
-            $query->where('derived.location_id', $location_id);
+            $query->where('transactions.location_id', $location_id);
         }
 
         if (!empty($created_by)) {
-            $query->where('derived.created_by', $created_by);
+            $query->where('transactions.created_by', $created_by);
         }
 
+        if (!empty($start_date)) {
+            $query->whereDate('transactions.transaction_date', '>=', $start_date);
+        }
+
+        if (!empty($end_date)) {
+            $query->whereDate('transactions.transaction_date', '<=', $end_date);
+        }
+
+        // Step 4: Select totals
+        $query->select([
+            DB::raw('SUM(transactions.final_total) as total_sell'),
+            DB::raw('SUM(transactions.final_total - transactions.tax_amount) as total_exc_tax'),
+            DB::raw('SUM(transactions.final_total - COALESCE(payments.paid_amount, 0)) as total_due'),
+            DB::raw('SUM(transactions.total_before_tax) as total_before_tax'),
+            DB::raw('SUM(transactions.shipping_charges) as total_shipping_charges'),
+        ]);
+
+        // Step 5: Execute
         $sell_details = $query->first();
 
 
@@ -2594,6 +2590,7 @@ class TransactionUtil extends Util
         $output['total_sell_exc_tax'] = $sell_details->total_before_tax;
         $output['invoice_due'] = $sell_details->total_due;
         $output['total_shipping_charges'] = $sell_details->total_shipping_charges;
+
 
         return $output;
     }
@@ -2757,10 +2754,18 @@ class TransactionUtil extends Util
             $query2->where('transactions.location_id', $location_id);
         }
 
-        $transaction_tax_details = $query1->groupBy('T.id')
+        $transaction_tax_details = $query1->groupBy(
+            'T.name',
+            'T.id',
+            'T.is_tax_group'
+        )
             ->get();
 
-        $product_tax_details = $query2->groupBy('T.id')
+        $product_tax_details = $query2->groupBy(
+            'T.name',
+            'T.id',
+            'T.is_tax_group'
+        )
             ->get();
         $tax_details = [];
         foreach ($transaction_tax_details as $transaction_tax) {
@@ -2863,10 +2868,18 @@ class TransactionUtil extends Util
             $query2->where('transactions.location_id', $location_id);
         }
 
-        $transaction_tax_details = $query1->groupBy('T.id')
+        $transaction_tax_details = $query1->groupBy(
+            'T.name',
+            'T.id',
+            'T.is_tax_group'
+        )
             ->get();
 
-        $product_tax_details = $query2->groupBy('T.id')
+        $product_tax_details = $query2->groupBy(
+            'T.name',
+            'T.id',
+            'T.is_tax_group'
+        )
             ->get();
         $tax_details = [];
         foreach ($transaction_tax_details as $transaction_tax) {
@@ -2943,7 +2956,11 @@ class TransactionUtil extends Util
             $query->where('transactions.location_id', $location_id);
         }
 
-        $transaction_tax_details = $query->groupBy('T.id')
+        $transaction_tax_details = $query->groupBy(
+            'T.name',
+            'T.id',
+            'T.is_tax_group'
+        )
             ->get();
 
         $tax_details = [];
@@ -3040,7 +3057,9 @@ class TransactionUtil extends Util
             $query->whereIn('transactions.location_id', $permitted_locations);
         }
 
-        $query->groupBy(DB::raw("FORMAT(transactions.transaction_date, '%Y-%m')", 'transactions.transaction_date'))
+        $query->groupBy(
+            DB::raw("FORMAT(transactions.transaction_date, '%Y-%m')", 'transactions.transaction_date')
+        )
             ->select(
                 // DB::raw("FORMAT(transactions.transaction_date, '%m-%Y') as yearmonth"),
                 DB::raw("SUM( transactions.final_total - COALESCE(SR.final_total, 0)) as total_sells")
@@ -3190,6 +3209,7 @@ class TransactionUtil extends Util
     public function updatePaymentStatus($transaction_id, $final_amount = null)
     {
         $status = $this->calculatePaymentStatus($transaction_id, $final_amount);
+
         Transaction::where('id', $transaction_id)
             ->update(['payment_status' => $status]);
 
@@ -3962,9 +3982,9 @@ class TransactionUtil extends Util
             return false;
         }
 
-        $date = \Carbon::parse($transaction->transaction_date)
-            ->addDays($edit_duration);
 
+        $date = Carbon::parse($transaction->transaction_date)
+            ->addDays($edit_duration);
         $today = today();
 
         if ($date->gte($today)) {
@@ -3992,121 +4012,148 @@ class TransactionUtil extends Util
         $by_sale_price = false,
         $filters = []
     ) {
-        $query = PurchaseLine::join(
-            'transactions as purchase',
-            'purchase_lines.transaction_id',
-            '=',
-            'purchase.id'
-        )
-            ->where('purchase.type', '!=', 'purchase_order')
-            ->where('purchase.business_id', $business_id);
 
-        $price_query_part = "(purchase_lines.purchase_price + 
-                            COALESCE(purchase_lines.item_tax, 0))";
+        // -------------------------------------------------------------------------------------------
+        // $query = PurchaseLine::join(
+        //     'transactions as purchase',
+        //     'purchase_lines.transaction_id',
+        //     '=',
+        //     'purchase.id'
+        // )
+        //     ->where('purchase.type', '!=', 'purchase_order')
+        //     ->where('purchase.business_id', $business_id);
 
-        if ($by_sale_price) {
-            $price_query_part = 'v.sell_price_inc_tax';
-        }
+        // $price_query_part = "(purchase_lines.purchase_price + 
+        //                 COALESCE(purchase_lines.item_tax, 0))";
 
-        $query->leftjoin('variations as v', 'v.id', '=', 'purchase_lines.variation_id')
-            ->leftjoin('products as p', 'p.id', '=', 'purchase_lines.product_id');
+        // if ($by_sale_price) {
+        //     $price_query_part = 'v.sell_price_inc_tax';
+        // }
 
-        if (! empty($filters['category_id'])) {
-            $query->where('p.category_id', $filters['category_id']);
-        }
-        if (! empty($filters['sub_category_id'])) {
-            $query->where('p.sub_category_id', $filters['sub_category_id']);
-        }
-        if (! empty($filters['brand_id'])) {
-            $query->where('p.brand_id', $filters['brand_id']);
-        }
-        if (! empty($filters['unit_id'])) {
-            $query->where('p.unit_id', $filters['unit_id']);
-        }
-        if (! empty($filters['user_id'])) {
-            $query->where('purchase.created_by', $filters['user_id']);
-        }
+        // $query->leftjoin('variations as v', 'v.id', '=', 'purchase_lines.variation_id')
+        //     ->leftjoin('products as p', 'p.id', '=', 'purchase_lines.product_id');
 
-        //If opening
-        if ($is_opening) {
-            $next_day = \Carbon::createFromFormat('Y-m-d', $date)->addDay()->format('Y-m-d');
+        // if (! empty($filters['category_id'])) {
+        //     $query->where('p.category_id', $filters['category_id']);
+        // }
+        // if (! empty($filters['sub_category_id'])) {
+        //     $query->where('p.sub_category_id', $filters['sub_category_id']);
+        // }
+        // if (! empty($filters['brand_id'])) {
+        //     $query->where('p.brand_id', $filters['brand_id']);
+        // }
+        // if (! empty($filters['unit_id'])) {
+        //     $query->where('p.unit_id', $filters['unit_id']);
+        // }
+        // if (! empty($filters['user_id'])) {
+        //     $query->where('purchase.created_by', $filters['user_id']);
+        // }
 
-            $query->where(function ($query) use ($date, $next_day) {
-                $query->whereRaw("CONVERT(date,transaction_date) <= '$date'")
-                    ->orWhereRaw("CONVERT(date,transaction_date) = '$next_day' AND purchase.type='opening_stock' ");
-            });
-        } else {
-            $query->whereRaw("CONVERT(date,transaction_date) <= '$date'");
-        }
+        // //If opening  
+        // if ($is_opening) {
+        //     $next_day = \Carbon::createFromFormat('Y-m-d', $date)->addDay()->format('Y-m-d');
+
+        //     $query->where(function ($query) use ($date, $next_day) {
+        //         $query->whereRaw("CONVERT(date,transaction_date) <= '$date'")
+        //             ->orWhereRaw("CONVERT(date,transaction_date) = '$next_day' AND purchase.type='opening_stock' ");
+        //     });
+        // } else {
+        //     $query->whereRaw("CONVERT(date,transaction_date) <= '$date'");
+        // }
 
         // $query->select(
         //     DB::raw("SUM((purchase_lines.quantity - purchase_lines.quantity_returned - purchase_lines.quantity_adjusted -
-        //                     (SELECT COALESCE(SUM(tspl.quantity - tspl.qty_returned), 0) FROM 
-        //                     transaction_sell_lines_purchase_lines AS tspl
-        //                     JOIN transaction_sell_lines as tsl ON 
-        //                     tspl.sell_line_id=tsl.id 
-        //                     JOIN transactions as sale ON 
-        //                     tsl.transaction_id=sale.id 
-        //                     WHERE tspl.purchase_line_id = purchase_lines.id AND 
-        //                     CONVERT(date,sale.transaction_date) <= '$date') ) * $price_query_part
-        //                 ) as stock")
+        //                 (SELECT COALESCE(SUM(tspl.quantity - tspl.qty_returned), 0) FROM 
+        //                 transaction_sell_lines_purchase_lines AS tspl
+        //                 JOIN transaction_sell_lines as tsl ON 
+        //                 tspl.sell_line_id=tsl.id 
+        //                 JOIN transactions as sale ON 
+        //                 tsl.transaction_id=sale.id 
+        //                 WHERE tspl.purchase_line_id = purchase_lines.id AND 
+        //                 CONVERT(date,sale.transaction_date) <= '$date') ) * $price_query_part
+        //             ) as stock")
         // );
 
-        // -----------------
+        // //Check for permitted locations of a user
+        // $permitted_locations = auth()->user()->permitted_locations();
+        // if ($permitted_locations != 'all') {
+        //     $query->whereIn('purchase.location_id', $permitted_locations);
+        // }
 
-        $subquery = DB::table('purchase_lines')
+        // if (! empty($location_id)) {
+        //     $query->where('purchase.location_id', $location_id);
+        // }
+
+        // $details = $query->first();
+        // -----------------------------------------------------------------------------------
+        // Subquery to get sold quantity per purchase_line
+        $soldQtySubquery = DB::table('transaction_sell_lines_purchase_lines as tspl')
+            ->join('transaction_sell_lines as tsl', 'tspl.sell_line_id', '=', 'tsl.id')
+            ->join('transactions as sale', 'tsl.transaction_id', '=', 'sale.id')
+            ->select('tspl.purchase_line_id', DB::raw('SUM(tspl.quantity - tspl.qty_returned) as sold_qty'))
+            ->whereRaw("CONVERT(date, sale.transaction_date) <= '$date'")
+            ->groupBy('tspl.purchase_line_id');
+
+        // Main query
+        $query = DB::table('purchase_lines')
             ->join('transactions as purchase', 'purchase_lines.transaction_id', '=', 'purchase.id')
             ->leftJoin('variations as v', 'v.id', '=', 'purchase_lines.variation_id')
             ->leftJoin('products as p', 'p.id', '=', 'purchase_lines.product_id')
-            ->select([
-                'purchase_lines.id',
-                DB::raw('purchase_lines.quantity'),
-                DB::raw('purchase_lines.quantity_returned'),
-                DB::raw('purchase_lines.quantity_adjusted'),
-                DB::raw('purchase_lines.purchase_price'),
-                DB::raw('COALESCE(purchase_lines.item_tax, 0) as item_tax'),
-                DB::raw("
-            (
-                SELECT COALESCE(SUM(tspl.quantity - tspl.qty_returned), 0)
-                FROM transaction_sell_lines_purchase_lines AS tspl
-                JOIN transaction_sell_lines AS tsl ON tspl.sell_line_id = tsl.id
-                JOIN transactions AS sale ON tsl.transaction_id = sale.id
-                WHERE tspl.purchase_line_id = purchase_lines.id
-                  AND CONVERT(date, sale.transaction_date) <= '$date'
-            ) AS sold_qty
-        "),
-            ])
+            ->leftJoinSub($soldQtySubquery, 'sold', function ($join) {
+                $join->on('sold.purchase_line_id', '=', 'purchase_lines.id');
+            })
             ->where('purchase.type', '!=', 'purchase_order')
-            ->where('purchase.business_id', $business_id)
-            ->where(function ($q) use ($date) {
-                $q->whereRaw("CONVERT(date, transaction_date) <= '$date'")
-                    ->orWhere(function ($q2) use ($date) {
-                        $q2->whereRaw("CONVERT(date, transaction_date) = '2025-01-01'")
-                            ->where('purchase.type', 'opening_stock');
-                    });
-            });
+            ->where('purchase.business_id', $business_id);
 
-        $query = DB::table(DB::raw("({$subquery->toSql()}) as derived"))
-            ->mergeBindings($subquery)
-            ->select(DB::raw("
-        SUM(
-            (quantity - quantity_returned - quantity_adjusted - sold_qty) * 
-            (purchase_price + item_tax)
-        ) AS stock
-    "));
-
-        // --------------------------------
-        //Check for permitted locations of a user
-        $permitted_locations = auth()->user()->permitted_locations();
-        if ($permitted_locations != 'all') {
-            $query->whereIn('purchase.location_id', $permitted_locations);
+        // Apply filters
+        if (!empty($filters['category_id'])) {
+            $query->where('p.category_id', $filters['category_id']);
+        }
+        if (!empty($filters['sub_category_id'])) {
+            $query->where('p.sub_category_id', $filters['sub_category_id']);
+        }
+        if (!empty($filters['brand_id'])) {
+            $query->where('p.brand_id', $filters['brand_id']);
+        }
+        if (!empty($filters['unit_id'])) {
+            $query->where('p.unit_id', $filters['unit_id']);
+        }
+        if (!empty($filters['user_id'])) {
+            $query->where('purchase.created_by', $filters['user_id']);
         }
 
-        if (! empty($location_id)) {
+        // Date filter
+        if ($is_opening) {
+            $next_day = \Carbon\Carbon::createFromFormat('Y-m-d', $date)->addDay()->format('Y-m-d');
+            $query->where(function ($q) use ($date, $next_day) {
+                $q->whereRaw("CONVERT(date, transaction_date) <= '$date'")
+                    ->orWhereRaw("CONVERT(date, transaction_date) = '$next_day' AND purchase.type = 'opening_stock'");
+            });
+        } else {
+            $query->whereRaw("CONVERT(date, transaction_date) <= '$date'");
+        }
+
+        // Location filters
+        $permitted_locations = auth()->user()->permitted_locations();
+        if ($permitted_locations !== 'all') {
+            $query->whereIn('purchase.location_id', $permitted_locations);
+        }
+        if (!empty($location_id)) {
             $query->where('purchase.location_id', $location_id);
         }
 
+        // Price logic
+        $price_query_part = $by_sale_price ? 'v.sell_price_inc_tax' : '(purchase_lines.purchase_price + COALESCE(purchase_lines.item_tax, 0))';
+
+        // Final select
+        $query->select(DB::raw("
+SUM(
+    (purchase_lines.quantity - purchase_lines.quantity_returned - purchase_lines.quantity_adjusted - COALESCE(sold.sold_qty, 0)) * $price_query_part
+) as stock
+"));
+
         $details = $query->first();
+
         return $details->stock;
     }
 
@@ -4436,7 +4483,7 @@ class TransactionUtil extends Util
             'status' => 'final',
             'payment_status' => 'due',
             'contact_id' => $contact_id,
-            'transaction_date' => \Carbon::now(),
+            'transaction_date' => Carbon::now(),
             'total_before_tax' => $final_amount,
             'final_total' => $final_amount,
             'created_by' => $created_by
@@ -4617,7 +4664,7 @@ class TransactionUtil extends Util
         $data['recur_interval_type'] = null;
         $data['recur_repetitions'] = 0;
         $data['recur_stopped_on'] = null;
-        $data['transaction_date'] = \Carbon::now();
+        $data['transaction_date'] = Carbon::now();
 
         if (isset($data['invoice_token'])) {
             $data['invoice_token'] = null;
@@ -4706,6 +4753,7 @@ class TransactionUtil extends Util
         $location_id = null,
         $created_by = null
     ) {
+
         $query = Transaction::where('business_id', $business_id);
 
         //Check for permitted locations of a user
@@ -4913,6 +4961,7 @@ class TransactionUtil extends Util
                 ! empty($transaction_totals->total_sell_round_off) ?
                 $transaction_totals->total_sell_round_off : 0;
         }
+
 
         return $output;
     }
@@ -5124,14 +5173,14 @@ class TransactionUtil extends Util
         $is_expired = false;
 
         if (! empty($business->rp_expiry_period)) {
-            $expiry_date = \Carbon::parse($date);
+            $expiry_date = Carbon::parse($date);
             if ($business->rp_expiry_type == 'month') {
                 $expiry_date = $expiry_date->addMonths($business->rp_expiry_period);
             } elseif ($business->rp_expiry_type == 'year') {
                 $expiry_date = $expiry_date->addYears($business->rp_expiry_period);
             }
 
-            if ($expiry_date->format('Y-m-d') >= \Carbon::now()->format('Y-m-d')) {
+            if ($expiry_date->format('Y-m-d') >= Carbon::now()->format('Y-m-d')) {
                 $is_expired = true;
             }
         }
@@ -5717,7 +5766,8 @@ class TransactionUtil extends Util
     public function getProfitLossDetails($business_id, $location_id, $start_date, $end_date, $user_id = null)
     {
         //For Opening stock date should be 1 day before
-        $day_before_start_date = \Carbon::createFromFormat('Y-m-d', $start_date)->subDay()->format('Y-m-d');
+
+        $day_before_start_date = Carbon::createFromFormat('Y-m-d', $start_date)->subDay()->format('Y-m-d');
 
         $filters = ['user_id' => $user_id];
         //Get Opening stock
@@ -5826,6 +5876,7 @@ class TransactionUtil extends Util
             'location_id' => $location_id,
             'user_id' => $user_id
         ];
+        // dd(1144);
         $modules_data = $moduleUtil->getModuleData('profitLossReportData', $module_parameters);
 
         $data['left_side_module_data'] = [];
@@ -5880,6 +5931,7 @@ class TransactionUtil extends Util
             'end_date' => $end_date,
             'location_id' => $location_id
         ];
+
         $project_module_data = $moduleUtil->getModuleData('grossProfit', $module_parameters);
 
         if (! empty($project_module_data['Project']['gross_profit'])) {
@@ -6284,7 +6336,7 @@ class TransactionUtil extends Util
         }
 
         if (empty($sell_return)) {
-            $sell_return_data['transaction_date'] = $sell_return_data['transaction_date'] ?? \Carbon::now();
+            $sell_return_data['transaction_date'] = $sell_return_data['transaction_date'] ?? Carbon::now();
             $sell_return_data['business_id'] = $business_id;
             $sell_return_data['location_id'] = $sell->location_id;
             // ------

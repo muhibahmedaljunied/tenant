@@ -19,7 +19,7 @@
 
 <!-- Main content -->
 <section class="content">
-<form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\KnowledgeBaseController@store') }}" method="post">
+<form action="{{ route('knowledgeBase-store') }}" method="post">
     @csrf
     @if(!empty($parent))
         <input type="hidden" name="kb_type" value="{{ $kb_type }}">

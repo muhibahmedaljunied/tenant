@@ -20,7 +20,7 @@
   <div class="form-group">
     <strong>{{ __('woocommerce::lang.webhook_delivery_url') }}:</strong>
     <p>
-      {{ action('\Modules\Woocommerce\Http\Controllers\WoocommerceWebhookController@orderCreated', ['business_id' => session()->get('business.id')]) }}
+      {{ route('woocommerceWebhook-orderCreated', ['business_id' => session()->get('business.id')]) }}
     </p>
   </div>
 </div>
@@ -43,7 +43,7 @@
         <div class="col-xs-8">
             <div class="form-group">
                 <strong>@lang('woocommerce::lang.webhook_delivery_url'):</strong>
-                <p>{{action('\Modules\Woocommerce\Http\Controllers\WoocommerceWebhookController@orderUpdated', ['business_id' => session()->get('business.id')])}}</p>
+                <p>{{route('woocommerceWebhook-orderUpdated', ['business_id' => session()->get('business.id')])}}</p>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
         <div class="col-xs-8">
             <div class="form-group">
                 <strong>@lang('woocommerce::lang.webhook_delivery_url'):</strong>
-                <p>{{action('\Modules\Woocommerce\Http\Controllers\WoocommerceWebhookController@orderDeleted', ['business_id' => session()->get('business.id')])}}</p>
+                <p>{{route('woocommerceWebhook-orderDeleted', ['business_id' => session()->get('business.id')])}}</p>
             </div>
         </div>
 
@@ -85,7 +85,7 @@
         <div class="col-xs-8">
             <div class="form-group">
                 <strong>@lang('woocommerce::lang.webhook_delivery_url'):</strong>
-                <p>{{action('\Modules\Woocommerce\Http\Controllers\WoocommerceWebhookController@orderRestored', ['business_id' => session()->get('business.id')])}}</p>
+                <p>{{route('woocommerceWebhook-orderRestored', ['business_id' => session()->get('business.id')])}}</p>
             </div>
         </div>
 

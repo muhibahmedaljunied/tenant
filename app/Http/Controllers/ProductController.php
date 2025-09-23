@@ -32,6 +32,7 @@ use App\Store;
 use App\StoreDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -53,8 +54,10 @@ class ProductController extends Controller
      * @param ProductUtils $product
      * @return void
      */
-    public function __construct(ProductUtil $productUtil, ModuleUtil $moduleUtil)
-    {
+    public function __construct(
+        ProductUtil $productUtil,
+        ModuleUtil $moduleUtil
+    ) {
         $this->productUtil = $productUtil;
         $this->moduleUtil = $moduleUtil;
 
@@ -69,6 +72,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+
 
 
         $user = Auth::user();
@@ -487,6 +491,9 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+
+        // dd($request->session());
+
         $business_id = request()->session()->get('user.business_id');
 
         //Check if subscribed or not, then check for products quota
@@ -508,7 +515,8 @@ class ProductController extends Controller
         $barcode_types = $this->barcode_types;
         $barcode_default = $this->productUtil->barcode_default();
 
-        $default_profit_percent = request()->session()->get('business.default_profit_percent');;
+        $default_profit_percent = request()->session()->get('business.default_profit_percent');
+        // dd($default_profit_percent);
 
         //Get all business locations
         $business_locations = BusinessLocation::forDropdown($business_id);
@@ -802,10 +810,7 @@ class ProductController extends Controller
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd(
-            //     $e,
-            //     "File:" , $e->getFile() , "Line:" , $e->getLine() , "Message:" , $e->getMessage()
-            // );
+            // dd( $e->getMessage());
             logger()->emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
             $output = [
@@ -834,13 +839,20 @@ class ProductController extends Controller
     public function getStoresByLocations(Request $request)
     {
 
-        // dd();
+        // dd($request->input('location_ids'));
         $locationIds = $request->input('location_ids');
-        // Fetch stores for these locations. Adjust logic as needed.
-        $stores = Store::where('stores.location_id', $locationIds)
-            ->get();
 
-        $stores = $stores->pluck('name', 'id');
+        $stores = [];
+
+        if ($locationIds != 'none') {
+
+            $stores = Store::where('stores.location_id', $locationIds)
+                ->get()->pluck('name', 'id');
+
+            // $stores = $stores->pluck('name', 'id');
+        }
+        // Fetch stores for these locations. Adjust logic as needed.
+
 
 
         return response()->json($stores);
@@ -921,6 +933,7 @@ class ProductController extends Controller
         //product screen view from module
         $pos_module_data = $this->moduleUtil->getModuleData('get_product_screen_top_view');
 
+        $menuItems = request()->menuItems;
         return view('product.edit')
             ->with(compact(
                 'categories',
@@ -940,7 +953,8 @@ class ProductController extends Controller
                 'product_types',
                 'common_settings',
                 'warranties',
-                'pos_module_data'
+                'pos_module_data',
+                'menuItems'
             ));
     }
 
@@ -1476,9 +1490,17 @@ class ProductController extends Controller
      */
     public function getProducts()
     {
+
+
+
+
         if (request()->ajax()) {
             $search_term = request()->input('term', '');
             $location_id = request()->input('location_id', null);
+            // -------muhib add this for stores-----
+            $store_id = request()->input('store_id', null);
+
+            // --------------------------------------
             $check_qty = request()->input('check_qty', false);
             $price_group_id = request()->input('price_group', null);
             $price_group_id = request()->input('price_group', '');
@@ -1495,6 +1517,7 @@ class ProductController extends Controller
                 $business_id,
                 $search_term,
                 $location_id,
+                $store_id,
                 $not_for_selling,
                 $price_group_id,
                 $product_types,
@@ -1782,6 +1805,11 @@ class ProductController extends Controller
      */
     public function view($id)
     {
+
+
+
+
+
         if (!auth()->user()->can('product.view')) {
             abort(403, 'Unauthorized action.');
         }
@@ -1790,8 +1818,33 @@ class ProductController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $product = Product::where('business_id', $business_id)
-                ->with(['brand', 'unit', 'category', 'sub_category', 'product_tax', 'variations', 'variations.product_variation', 'variations.group_prices', 'variations.media', 'product_locations', 'warranty', 'media'])
-                ->findOrFail($id);
+                ->with([
+                    'brand',
+                    'unit',
+                    'category',
+                    'sub_category',
+                    'product_tax',
+                    'variations',
+                    'variation_location_details' => function ($query) {
+                        $query->whereHas('store', function ($q) {
+                            $q->where('id', 2); // Filter variation_location_details by store
+                        });
+                    },
+                    'variation_location_details.location',
+                    'variation_location_details.store',
+                    'variations.product_variation',
+                    'variations.group_prices',
+                    'variations.media',
+                    'product_locations',
+                    'warranty',
+                    'media'
+                ])
+                ->findOrFail(request()->segment(3));
+
+
+            // dd($product);
+
+
 
             $price_groups = SellingPriceGroup::where('business_id', $business_id)->active()->pluck('name', 'id');
 
@@ -1827,7 +1880,8 @@ class ProductController extends Controller
                 )
             );
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            dd($e->getMessage());
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
         }
     }
 
@@ -2538,18 +2592,24 @@ class ProductController extends Controller
         return $output;
     }
 
-    public function productStockHistory($id)
+    public function productStockHistory(Request $request)
     {
+
+        
+
         if (!auth()->user()->can('product.view')) {
             abort(403, 'Unauthorized action.');
         }
+
 
         $business_id = request()->session()->get('user.business_id');
 
         if (request()->ajax()) {
 
-            $stock_details = $this->productUtil->getVariationStockDetails($business_id, $id, request()->input('location_id'));
-            $stock_history = $this->productUtil->getVariationStockHistory($business_id, $id, request()->input('location_id'));
+            $stock_details = $this->productUtil->getVariationStockDetails($business_id, $request->segment(3), request()->input('location_id'));
+
+
+            $stock_history = $this->productUtil->getVariationStockHistory($business_id, $request->segment(3), request()->input('location_id'));
             //if mismach found update stock in variation location details
             if (isset($stock_history[0]) && (float) $stock_details['current_stock'] != (float) $stock_history[0]['stock']) {
                 VariationLocationDetails::where('variation_id', $id)
@@ -2563,32 +2623,38 @@ class ProductController extends Controller
 
         $product = Product::where('business_id', $business_id)
             ->with(['variations', 'variations.product_variation'])
-            ->findOrFail($id);
+            ->findOrFail($request->segment(3));
 
         //Get all business locations
         $business_locations = BusinessLocation::forDropdown($business_id);
 
 
+        $menuItems  = request()->menuItems;
         return view('product.stock_history')
-            ->with(compact('product', 'business_locations'));
+            ->with(compact('product', 'business_locations','menuItems'));
     }
 
     /* show view for add and edit barcode 6 function*/
-    public function addbarcode($id)
+    public function addbarcode(Request $request)
     {
         if (!auth()->user()->can('product.view')) {
             abort(403, 'Unauthorized action.');
         }
+
         $business_id = request()->session()->get('user.business_id');
-        $product = Product::where('business_id', $business_id)->findOrFail($id);
-        $barcodes = Product::where('products.id', '=', $id)
+
+
+        $product = Product::where('business_id', $business_id)->findOrFail(request()->segment(3));
+
+        $barcodes = Product::where('products.id', '=', request()->segment(3))
             ->join('variations', 'products.id', '=', 'variations.product_id')
             ->get();
 
+
         if ($product->type == 'single') {
-            $variation = Variation::where('product_id', '=', $id)->value('id');
+            $variation = Variation::where('product_id', '=', request()->segment(3))->value('id');
         } else {
-            $variation = Variation::where('product_id', '=', $id)->pluck('name', 'id');
+            $variation = Variation::where('product_id', '=', request()->segment(3))->pluck('name', 'id');
             $variation->prepend('إختر', 0);
         }
 
@@ -2596,8 +2662,15 @@ class ProductController extends Controller
         $barcode_default = $this->productUtil->barcode_default();
         $barcode_types = $this->barcode_types;
 
-
-        return view('product.barcode', ['product' => $product, 'barcodes' => $barcodes, 'barcode_types' => $barcode_types, 'barcode_default' => $barcode_default, 'variation' => $variation]);
+        $menuItems  = request()->menuItems ;
+        return view('product.barcode', [
+            'product' => $product,
+            'barcodes' => $barcodes,
+            'barcode_types' => $barcode_types,
+            'barcode_default' => $barcode_default,
+            'variation' => $variation,
+            'menuItems'=>$menuItems
+        ]);
     }
 
     public function getproductbarcode(Request $request)

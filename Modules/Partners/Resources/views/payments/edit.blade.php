@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\\Modules\\Partners\\Http\\Controllers\\PaymentsController@update', $data->id) }}" method="POST">
+        <form action="{{ route('payments-update', $data->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="modal-header">

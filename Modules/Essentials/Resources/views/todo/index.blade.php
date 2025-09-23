@@ -56,7 +56,7 @@
 	@component('components.widget', ['title' => __('essentials::lang.todo_list'), 'icon' => '<i class="ion ion-clipboard"></i>', 'class' => 'box-solid'])
 		@slot('tool')
 			<div class="box-tools">
-				<button class="btn btn-block btn-primary btn-modal" data-href="{{action('\Modules\Essentials\Http\Controllers\ToDoController@create')}}" 
+				<button class="btn btn-block btn-primary btn-modal" data-href="{{route('toDo-create')}}" 
 				data-container="#task_modal">
 					<i class="fa fa-plus"></i> @lang( 'messages.add' )</a>
 				</button>

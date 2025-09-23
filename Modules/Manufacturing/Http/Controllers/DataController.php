@@ -221,6 +221,7 @@ class DataController extends Controller
         $end_date = null,
         $location_id = null
         ) {
+        
         $query = Transaction::where('business_id', $business_id)
                             ->where('type', 'production_purchase')
                             ->where('mfg_is_final', 1);
@@ -232,7 +233,7 @@ class DataController extends Controller
         }
 
         if (!empty($start_date) && !empty($end_date)) {
-            $query->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
+            $query->whereBetween(DB::raw('CONVERT(date,transaction_date)'), [$start_date, $end_date]);
         }
 
         if (empty($start_date) && !empty($end_date)) {
@@ -248,7 +249,7 @@ class DataController extends Controller
             DB::raw('SUM(final_total - ((final_total * 100) / (mfg_production_cost + 100) ) ) as total_production_cost')
             )->first();
 
-        
+         
         $total_production_cost = !empty($total->total_production_cost) ? $total->total_production_cost : 0;
 
         return $total_production_cost;

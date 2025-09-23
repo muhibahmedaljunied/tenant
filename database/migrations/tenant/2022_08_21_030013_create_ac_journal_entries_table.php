@@ -11,28 +11,36 @@ class CreateAcJournalEntriesTable extends Migration
      *
      * @return void
      */
+
     public function up()
     {
         Schema::create('ac_journal_entries', function (Blueprint $table) {
+            
             $table->id();
             $table->bigInteger('entry_no'); // entry number
             $table->date('entry_date'); // entry date
             $table->text('entry_desc')->nullable(); // entry description
-            $table->enum('entry_type',['daily','opening'])->default('daily'); // entry type 'dailyيومية عادية' Or 'openingقيد افتتاحى'
-            
+            $table->enum('entry_type', ['daily', 'opening'])->default('daily'); // entry type 'dailyيومية عادية' Or 'openingقيد افتتاحى'
+
+            $table->bigInteger('business_id')->nullable();
+
             $table->bigInteger('opening_account')->nullable();
+            // ------------------------------------------------------------------------------------------------
             // $table->foreign('opening_account')->references('account_number')->on('ac_masters');
             // $table->bigInteger('opening_account');
- 
+            // ------------------------------------------------------------------------------------------------
             // $table->foreign('opening_account')->references('account_number')->on('ac_masters');
-
+            // ------------------------------------------------------------------------------------------------
             // $table->bigInteger('opening_account_number')->nullable(); // entry description
             // $table->foreign('opening_account_number')->references('account_number')->on('ac_masters');
-            
+            // -----------------------------------------------------------------------------------------------
+
+            $table->integer('sequence')->nullable();
+            // $table->enum('type', ['product', 'account', 'vendor', 'customer'])->default(null);
+            $table->string('type')->nullable();
             $table->string('com_code')->default('111');
             $table->softDeletes();
             $table->timestamps();
-
         });
     }
 

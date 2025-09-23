@@ -9,7 +9,7 @@
 </section>
 <!-- Main content -->
 <section class="content">
-	{!! Form::open(['url' => action('\Modules\Crm\Http\Controllers\ManageProfileController@updatePassword'), 'method' => 'post', 'id' => 'update_password',
+	{!! Form::open(['url' => route('manageProfile-updatePassword'), 'method' => 'post', 'id' => 'update_password',
             'class' => 'form-horizontal' ]) !!}
 		<div class="row">
 		    <div class="col-sm-12">
@@ -59,7 +59,7 @@
 		    </div>
 		</div>
 	{!! Form::close() !!}
-	{!! Form::open(['url' => action('\Modules\Crm\Http\Controllers\ManageProfileController@updateProfile'), 'method' => 'post', 'id' => 'edit_contact_profile', 'files' => true ]) !!}
+	{!! Form::open(['url' => route('manageProfile-updateProfile'), 'method' => 'post', 'id' => 'edit_contact_profile', 'files' => true ]) !!}
 		<div class="row">
 		    <div class="col-sm-8">
 		        <div class="box box-solid"> <!--business info box start-->
@@ -145,5 +145,5 @@
 </section>
 @endsection
 @section('javascript')
-	<script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
 @endsection

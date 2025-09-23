@@ -33,7 +33,7 @@
 		            </div>
 		        </div>
 		        <div class="col-md-9 text-right">
-		            <button data-href="{{action('\Modules\Crm\Http\Controllers\LedgerController@getLedger')}}?action=pdf" class="btn btn-default btn-xs" id="create_ledger_pdf"><i class="fas fa-file-pdf"></i></button>
+		            <button data-href="{{route('Ledger-getLedger')}}?action=pdf" class="btn btn-default btn-xs" id="create_ledger_pdf"><i class="fas fa-file-pdf"></i></button>
 		        </div>
 		    </div>
 		    <div id="contact_ledger_div"></div>
@@ -42,7 +42,7 @@
 </section>
 @endsection
 @section('javascript')
-	<script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			getLedger();

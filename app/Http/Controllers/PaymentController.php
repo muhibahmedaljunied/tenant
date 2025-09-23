@@ -15,7 +15,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\AcCostCenBranche;
 use App\Models\AcCostCenFieldAdd;
 use Illuminate\Support\Facades\DB;
-
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\RedirectResponse;
 use App\Services\Payment\PaymentService;
 
@@ -28,11 +28,24 @@ class PaymentController extends Controller
     }
     public function index(Request $request, $type)
     {
+
+
+
         if (request()->ajax()) {
             $type = $type === 'sales' ? 'customer' : 'vendor';
-            $roles = Payment::where('contact_type', $type)->select('contact_id', 'reference_number', 'id', 'type', 'description', 'date', 'amount');
+            $roles = Payment::where('contact_type', $type)
+                ->select(
+                    'contact_id',
+                    'reference_number',
+                    'id',
+                    'type',
+                    'description',
+                    'date',
+                    'amount'
+                );
 
-            return \Yajra\DataTables\Facades\DataTables::of($roles)
+
+            return DataTables::of($roles)
                 ->editColumn(
                     'amount',
                     '<div style="white-space: nowrap;">@format_currency($amount)</div>'
@@ -58,16 +71,21 @@ class PaymentController extends Controller
                 ->make(false);
         }
         $menuItems = $request->menuItems;
-        return view('payments.index', compact('type', 'menuItems'));
+        return view('payments.index', compact(
+            'type',
+            'menuItems'
+        ));
     }
 
 
-    public function show(Payment $payment)
+    public function show(Request $request, Payment $payment)
     {
-        return view('payments.show', compact('payment'));
+
+        $menuItems = $request->menuItems;
+        return view('payments.show', compact('payment','menuItems'));
     }
 
-    public function create(Request $request,$type)
+    public function create(Request $request, $type)
     {
         $business_id = request()->session()->get('user.business_id');
         $payment = Payment::max('reference_number');
@@ -89,7 +107,7 @@ class PaymentController extends Controller
         $types = ['receive' => __('payment.receive'), 'send' => __('payment.send')];
         $branch_cost_centers = AcCostCenBranche::forDropdown($business_id);
         $extra_cost_centers  = AcCostCenFieldAdd::forDropdown($business_id);
-           $menuItems = $request->menuItems;
+        $menuItems = $request->menuItems;
         return view('payments.create', compact(
             'ref_num',
             'debtAges',
@@ -123,15 +141,23 @@ class PaymentController extends Controller
                 $contact_type = ($contact->type === 'customer') ? 'customer' : 'vendor';
             }
 
-            $this->paymentService->createPayment($request, $date, $contact_type, $amount, $account);
+            $this->paymentService->createPayment(
+                $request,
+                $date,
+                $contact_type,
+                $amount,
+                $account
+            );
             $ac_journal_entry_inv['entry_no'] = 1;
             $ac_journal_entry_inv['entry_date'] = $date;
             $description = "سند: {$description}";
 
 
 
+
             if ($request->has('debtAges')) {
                 $deptRangesPay = $this->paymentService->debtAges($account_number, $amount, $request->input('type'), $account->account_type);
+
                 $entry = $this->paymentService->entryDeptPay($ac_journal_entry_inv, $account, $type, $request, $description, $account_number, $contact_type, $amount, $date);
                 foreach ($deptRangesPay as $date => $pay) {
                     $this->paymentService->createDeptPay($entry, $type, $pay, $contact_type, $request, $date);
@@ -149,6 +175,7 @@ class PaymentController extends Controller
             return redirect()->action('PaymentController@index', ['type' => $type])->with('status', $output);
         } catch (Exception $e) {
 
+            dd($e->getMessage());
             DB::rollBack();
             logger()->emergency("File: {$e->getFile()} Line: {$e->getLine()} Message: {$e->getMessage()}");
 

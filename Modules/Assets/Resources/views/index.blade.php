@@ -7,7 +7,7 @@
 
                     <div class="box-tools">
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                                data-href="{{action('BrandController@create')}}"
+                                data-href="{{route('brand-create')}}"
                                 data-container=".brands_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>

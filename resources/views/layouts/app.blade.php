@@ -134,6 +134,8 @@
             @includeIf($additional_view)
         @endforeach
     @endif
+
+    
     @stack('scripts')
 </body>
 

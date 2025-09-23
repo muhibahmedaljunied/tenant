@@ -22,7 +22,7 @@
 	<!-- /.chat -->
 	@can('essentials.create_message')
 	<div class="box-footer">
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\EssentialsMessageController@store') }}" method="post" id="add_essentials_msg_form">
+    <form action="{{ route('essentialsMessage-store') }}" method="post" id="add_essentials_msg_form">
         @csrf
         <div class="input-group">
             <textarea name="message" id="chat-msg" class="form-control" required placeholder="{{ __('essentials::lang.type_message') }}" rows="1">{{ old('message') }}</textarea>
@@ -61,7 +61,7 @@
 				var ladda = Ladda.create(document.querySelector('.ladda-button'));
 				ladda.start();
 				$.ajax({
-					url: "{{action('\Modules\Essentials\Http\Controllers\EssentialsMessageController@store')}}",
+					url: "{{route('essentialsMessage-store')}}",
 					data: data,
 					method: 'post',
 					dataType: "json",
@@ -117,7 +117,7 @@
 	function getNewMessages() {
 		var last_chat_time =  $('div.msg-box').length ? $('div.msg-box:last').data('delivered-at') : '';
 		$.ajax({
-            url: "{{action('\Modules\Essentials\Http\Controllers\EssentialsMessageController@getNewMessages')}}?last_chat_time=" + last_chat_time,
+            url: "{{route('essentialsMessage-getNewMessages')}}?last_chat_time=" + last_chat_time,
             dataType: 'html',
             global: false,
             success: function(result) {

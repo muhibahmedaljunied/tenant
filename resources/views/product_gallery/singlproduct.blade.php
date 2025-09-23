@@ -87,9 +87,9 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/product.js?v=' . $asset_v) }}"></script>
 
-    {{--  <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>--}}
+    {{--  <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script>--}}
     <script type="text/javascript">
         $(document).ready( function(){
             getproducts();

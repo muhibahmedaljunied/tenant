@@ -28,6 +28,8 @@ use App\Models\AcJournalEntryDetail;
 use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\Facades\DataTables;
 use App\Notifications\CustomerNotification;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
@@ -438,9 +440,9 @@ class ContactController extends Controller
     public function create()
     {
 
-     
 
-    
+
+
 
         if (
             !auth()->user()->can('supplier.create') &&
@@ -460,7 +462,7 @@ class ContactController extends Controller
             // dd(11111);
             return $this->moduleUtil->expiredResponse();
         }
-     
+
 
         $types = [];
         if (
@@ -519,7 +521,12 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('supplier.create') && !auth()->user()->can('customer.create') && !auth()->user()->can('customer.view_own') && !auth()->user()->can('supplier.view_own')) {
+        if (
+            !auth()->user()->can('supplier.create') &&
+            !auth()->user()->can('customer.create') &&
+            !auth()->user()->can('customer.view_own') &&
+            !auth()->user()->can('supplier.view_own')
+        ) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -683,13 +690,15 @@ class ContactController extends Controller
             }
 
 
+            // dd(11);
             $this->moduleUtil->getModuleData('after_contact_saved', ['contact' => $output['data'], 'input' => $request->input()]);
 
             $this->contactUtil->activityLog($output['data'], 'added');
         } catch (Exception $e) {
 
             // dd($e->getMessage());
-            logger()->emergency("File: {$e->getFile()} Line: {$e->getLine()} Message: {$e->getMessage()}");
+            // Log::info('hebooooooooooooooo',$e->getMessage(),'gggggggggggggggggggggggggggg');
+            // logger()->emergency("File: {$e->getFile()} Line: {$e->getLine()} Message: {$e->getMessage()}");
             $output = [
                 'success' => false,
                 'msg' => __("messages.something_went_wrong")
@@ -705,20 +714,25 @@ class ContactController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+
+
         if (!auth()->user()->can('supplier.view') && !auth()->user()->can('customer.view') && !auth()->user()->can('customer.view_own') && !auth()->user()->can('supplier.view_own')) {
             abort(403, 'Unauthorized action.');
         }
 
+
         $business_id = request()->session()->get('user.business_id');
+        // dd($business_id);
         $contact = $this->contactUtil->getContactInfo($business_id, $id);
 
         $reward_enabled = (request()->session()->get('business.enable_rp') == 1 && in_array($contact->type, ['customer', 'both'])) ? true : false;
 
         $contact_dropdown = Contact::contactDropdown($business_id, false, false);
-
+        // dd($contact_dropdown);
         $business_locations = BusinessLocation::forDropdown($business_id, true);
+
 
         //get contact view type : ledger, notes etc.
         $view_type = request()->get('view');
@@ -728,11 +742,28 @@ class ContactController extends Controller
 
         $contact_view_tabs = $this->moduleUtil->getModuleData('get_contact_view_tabs');
 
-        $activities = Activity::forSubject($contact)
-            ->with(['causer', 'subject'])
-            ->latest()
-            ->get();
 
+
+     
+
+        if ($contact instanceof \Illuminate\Database\Eloquent\Model) {
+            $activities = Activity::forSubject($contact)
+                ->with(['causer', 'subject'])
+                ->latest()
+                ->get();
+        } else {
+            $activities = collect(); // or handle gracefully
+        }
+
+        
+
+
+        // $activities = Activity::forSubject($contact)
+        //     ->with(['causer', 'subject'])
+        //     ->latest()
+        //     ->get();
+
+        $menuItems = $request['menuItems'];
         return view('contact.show')
             ->with(compact(
                 'contact',
@@ -741,7 +772,8 @@ class ContactController extends Controller
                 'business_locations',
                 'view_type',
                 'contact_view_tabs',
-                'activities'
+                'activities',
+                'menuItems'
             ));
     }
 
@@ -860,6 +892,7 @@ class ContactController extends Controller
                     $ac_master->update($customer);
                 }
                 if (isset($input['type']) && $input['type'] == 'supplier') {
+
                     $suppliers['account_name_ar'] = $output['data']->name;
                     $ac_master = AcMaster::where('account_number', $contact->account_number_supplier)->first();
                     $ac_master->update($suppliers);
@@ -972,7 +1005,12 @@ class ContactController extends Controller
 
             $contacts->select(
                 'contacts.id',
-                DB::raw("IF(contacts.contact_id IS NULL OR contacts.contact_id='', contacts.name, CONCAT(contacts.name, ' (', contacts.contact_id, ')')) AS text"),
+                // DB::raw("IF(contacts.contact_id IS NULL OR contacts.contact_id='', contacts.name, CONCAT(contacts.name, ' (', contacts.contact_id, ')')) AS text"),
+                DB::raw("CASE 
+            WHEN contacts.contact_id IS NULL OR contacts.contact_id = '' 
+            THEN contacts.name 
+            ELSE contacts.name + ' (' + contacts.contact_id + ')' 
+         END AS text"),
                 'mobile',
                 'address_line_1',
                 'address_line_2',
@@ -1613,7 +1651,26 @@ class ContactController extends Controller
                     'transaction_payments.id as DT_RowId',
                     'parent_payment.payment_ref_no as parent_payment_ref_no'
                 )
-                ->groupBy('transaction_payments.id')
+                ->groupBy(
+                    'transaction_payments.id',
+                    'transaction_payments.amount',
+                    'transaction_payments.is_return',
+                    'transaction_payments.method',
+                    'transaction_payments.paid_on',
+                    'transaction_payments.payment_ref_no',
+                    'transaction_payments.parent_id',
+                    'transaction_payments.transaction_no',
+                    't.invoice_no',
+                    't.ref_no',
+                    't.type',
+                    't.return_parent_id',
+                    't.id',
+                    'transaction_payments.cheque_number',
+                    'transaction_payments.card_transaction_number',
+                    'transaction_payments.bank_account_number',
+                    'transaction_payments.id',
+                    'parent_payment.payment_ref_no'
+                )
                 ->orderByDesc('transaction_payments.paid_on')
                 ->paginate();
 

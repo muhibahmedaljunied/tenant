@@ -38,7 +38,7 @@
 	</section>
 @endsection
 @section('javascript')
-<script src="{{ asset('modules/project/js/project.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('modules/project/js/project.js?v=' . $asset_v) }}"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
     	getProjectTimeLogReport();

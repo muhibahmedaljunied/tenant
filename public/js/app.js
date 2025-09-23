@@ -445,7 +445,6 @@ $(document).ready(function () {
             });
         });
     });
-
     $(document).on('click', 'button.delete_store_button', function () {
         swal({
             title: LANG.sure,
@@ -475,6 +474,179 @@ $(document).ready(function () {
             }
         });
     });
+    $(document).on('submit', 'form#tenant_add_form', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var data = form.serialize();
+
+        $.ajax({
+            method: 'POST',
+            url: $(this).attr('action'),
+            dataType: 'json',
+            data: data,
+            beforeSend: function (xhr) {
+                __disable_submit_button(form.find('button[type="submit"]'));
+            },
+            success: function (result) {
+                if (result.success == true) {
+                    $('div.tenant_modal').modal('hide');
+                    toastr.success(result.msg);
+                    stores_table.ajax.reload();
+                } else {
+                    toastr.error(result.msg);
+                }
+            },
+        });
+    });
+
+    $(document).on('click', 'button.edit_tenant_button', function () {
+        $('div.tenant_modal').load($(this).data('href'), function () {
+            $(this).modal('show');
+
+            $('form#tenant_edit_form').submit(function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var data = form.serialize();
+
+                $.ajax({
+                    method: 'POST',
+                    url: $(this).attr('action'),
+                    dataType: 'json',
+                    data: data,
+                    beforeSend: function (xhr) {
+                        __disable_submit_button(form.find('button[type="submit"]'));
+                    },
+                    success: function (result) {
+                        if (result.success == true) {
+                            $('div.tenant_modal').modal('hide');
+                            toastr.success(result.msg);
+                            stores_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            });
+        });
+    });
+
+    $(document).on('click', 'button.delete_tenant_button', function () {
+        swal({
+            title: LANG.sure,
+            text: LANG.confirm_delete_tenant,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                var href = $(this).data('href');
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'DELETE',
+                    url: href,
+                    dataType: 'json',
+                    data: data,
+                    success: function (result) {
+                        if (result.success == true) {
+                            toastr.success(result.msg);
+                            stores_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('submit', 'form#user_add_form', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var data = form.serialize();
+
+        $.ajax({
+            method: 'POST',
+            url: $(this).attr('action'),
+            dataType: 'json',
+            data: data,
+            beforeSend: function (xhr) {
+                __disable_submit_button(form.find('button[type="submit"]'));
+            },
+            success: function (result) {
+                if (result.success == true) {
+                    $('div.user_modal').modal('hide');
+                    toastr.success(result.msg);
+                    stores_table.ajax.reload();
+                } else {
+                    toastr.error(result.msg);
+                }
+            },
+        });
+    });
+
+    $(document).on('click', 'button.edit_user_button', function () {
+        $('div.user_modal').load($(this).data('href'), function () {
+            $(this).modal('show');
+
+            $('form#user_edit_form').submit(function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var data = form.serialize();
+
+                $.ajax({
+                    method: 'POST',
+                    url: $(this).attr('action'),
+                    dataType: 'json',
+                    data: data,
+                    beforeSend: function (xhr) {
+                        __disable_submit_button(form.find('button[type="submit"]'));
+                    },
+                    success: function (result) {
+                        if (result.success == true) {
+                            $('div.user_modal').modal('hide');
+                            toastr.success(result.msg);
+                            stores_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            });
+        });
+    });
+
+    $(document).on('click', 'button.delete_user_button', function () {
+        swal({
+            title: LANG.sure,
+            text: LANG.confirm_delete_user,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                var href = $(this).data('href');
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'DELETE',
+                    url: href,
+                    dataType: 'json',
+                    data: data,
+                    success: function (result) {
+                        if (result.success == true) {
+                            toastr.success(result.msg);
+                            stores_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+
 
     //Start: CRUD for Contacts
     //contacts table
@@ -1854,15 +2026,33 @@ $(document).ready(function () {
     var customer_groups_table = $('#tenants_table').DataTable({
         processing: true,
         serverSide: true,
+        // ajax: {
+        //     url: '/tenants/index',
+        //     type: 'GET',
+        //     dataSrc: function (json) {
+        //         console.log('AJAX response:', json); // 👈 Logs the full response
+        //         // return json.data;
+        //     }
+        // },
+
         ajax: '/tenants/index',
+        columns: [
+        
+            { data: 'name' },
+            { data: 'domain' },
+            { data: 'account_status' },
+            { data: 'payment_status' },
+            { data: 'created_at' },
+            { data: 'updated_at' },
+            { data: 'action' }
+        ],
         columnDefs: [
             {
-                targets: [4],
+                targets: [0],
                 orderable: false,
                 searchable: false,
             },
         ],
-     
     });
 
     $(document).on('click', 'button.edit_customer_group_button', function () {
@@ -2915,10 +3105,10 @@ $(document).ready(function () {
 
             const $icon = $(this).find('span i');
 
-            if ($icon.hasClass('fa-chevron-up')) {
-                $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+            if ($icon.hasClass('fa-chevron-left')) {
+                $icon.removeClass('fa-chevron-left').addClass('fa-chevron-down');
             } else {
-                $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                $icon.removeClass('fa-chevron-down').addClass('fa-chevron-left');
             }
         }
     });

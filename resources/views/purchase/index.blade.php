@@ -120,8 +120,8 @@
     <!-- /.content -->
 @stop
 @section('javascript')
-    <script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-    <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/purchase.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/payment.js?v=' . $asset_v) }}"></script>
     <script>
         $('#purchase_list_filter_location_id').on('change', function() {
 

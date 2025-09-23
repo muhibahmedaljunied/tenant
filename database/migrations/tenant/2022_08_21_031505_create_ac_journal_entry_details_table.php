@@ -16,7 +16,7 @@ class CreateAcJournalEntryDetailsTable extends Migration
         Schema::create('ac_journal_entry_details', function (Blueprint $table) {
             $table->id();
 
-            $table->bigInteger('account_number'); // account_number foreign to ac_masters
+            $table->bigInteger('account_number')->nullable(); // account_number foreign to ac_masters
             // $table->foreign('account_number')->references('account_number')->on('ac_masters');
 
             $table->unsignedBigInteger('ac_journal_entries_id');

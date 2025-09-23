@@ -25,7 +25,7 @@ class CreateBusinessTable extends Migration
             $table->string('tax_label_1', 10)->nullable();
             $table->string('tax_number_2', 100)->nullable();
             $table->string('tax_label_2', 10)->nullable();
-            $table->float('default_profit_percent', 5, 2)->default(0);
+            $table->decimal('default_profit_percent', 5, 2)->default(0);
             $table->integer('owner_id')->unsigned();
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('time_zone')->default('Asia/Kolkata');

@@ -231,8 +231,8 @@
     </div> <!-- /box -->
 </form> <!-- /form close -->
 </section>
-<link rel="stylesheet" href="{{ asset('modules/project/sass/project.css?v=' . $asset_v) }}">
+<link rel="stylesheet" href="{{ url('modules/project/sass/project.css?v=' . $asset_v) }}">
 @endsection
 @section('javascript')
-<script src="{{ asset('modules/project/js/project.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('modules/project/js/project.js?v=' . $asset_v) }}"></script>
 @endsection

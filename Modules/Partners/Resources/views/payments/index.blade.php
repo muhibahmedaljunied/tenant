@@ -169,7 +169,7 @@
     function getdata() {
 
         $.ajax({
-            url: "{{action('\Modules\Partners\Http\Controllers\PaymentsController@getpayments')}}",
+            url: "{{route('payments-getpayments')}}",
             method: 'GET',
             data: {
                 partner_id:$('#partner_id').val()

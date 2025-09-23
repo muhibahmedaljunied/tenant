@@ -76,7 +76,7 @@
                     <div class="tab-pane active" id="pending_job_sheet_tab">
                         <div class="row">
                             <div class="col-md-12 mb-12">
-                                <a type="button" class="btn btn-sm btn-primary pull-right m-5" href="{{action('\Modules\Repair\Http\Controllers\GuaranteeController@create')}}" id="add_job_sheet">
+                                <a type="button" class="btn btn-sm btn-primary pull-right m-5" href="{{route('guarantee-create')}}" id="add_job_sheet">
                                     <i class="fa fa-plus"></i> @lang('messages.add')
                                 </a>
                             </div>
@@ -382,6 +382,6 @@
             });
         });
     </script>
-    <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/payment.js?v=' . $asset_v) }}"></script>
 
 @endsection

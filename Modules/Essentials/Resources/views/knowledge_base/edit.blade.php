@@ -16,7 +16,7 @@
 
 <!-- Main content -->
 <section class="content">
-<form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\KnowledgeBaseController@update', [$kb->id]) }}" method="post">
+<form action="{{ route('knowledgeBase-update', [$kb->id]) }}" method="post">
     @csrf
     @method('PUT')
     @component('components.widget', ['title' => $page_title])

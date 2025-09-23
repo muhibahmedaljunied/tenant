@@ -245,7 +245,9 @@
                 var  pagsize=$('#pagsize').val();
             $.ajax({
                 type:'get',
-                url:"{{action('\Modules\Inventory\Http\Controllers\StocktackingController@details_report')}}",
+                // url:"{{action('\Modules\Inventory\Http\Controllers\StocktackingController@details_report')}}",
+                url:"{{route('stocktacking-details_report')}}",
+
                 data: {
                     type : $('#product_list_filter_type').val(),
                     category_id : $('#product_list_filter_category_id').val(),
@@ -303,7 +305,9 @@
                     var old_val = $(`#old_${product_id}`).val();
                     $.ajax({
                         type: 'GET',
-                        url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@stock_line_save')}}",
+                        // url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@stock_line_save')}}",
+                        url: "{{route('inventory-stock_line_save')}}",
+
                         data: {
                             '_token': "{{ csrf_token() }}",
                             product_id: product_id,
@@ -330,7 +334,9 @@
             var transaction_id=0;
             var location_id=$('#location_id').val();
             $.ajax({
-                url:"{{action('\Modules\Inventory\Http\Controllers\InventoryController@getproduct')}}",
+                // url:"{{action('\Modules\Inventory\Http\Controllers\InventoryController@getproduct')}}",
+                url:"{{route('inventory-getproduct')}}",
+
                 dataType: 'html',
                 data:{
                     transaction_id:transaction_id,
@@ -391,7 +397,9 @@
             }).then(willSave => {
                 if (willSave) {
                     $.ajax({
-                        url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@deletstock')}}",
+                        // url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@deletstock')}}",
+                        url: "{{route('inventory-deletstock')}}",
+
                         dataType: 'html',
                         data: {
                             transaction_id: transaction_id

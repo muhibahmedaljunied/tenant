@@ -3,7 +3,7 @@
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
 
-	    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\PayrollController@create') }}" method="get" id="add_payroll_step1">
+	    <form action="{{ route('payroll-create') }}" method="get" id="add_payroll_step1">
 
 	    <div class="modal-body">
 	      	<div class="form-group">

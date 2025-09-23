@@ -18,7 +18,8 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->integer('business_id')->unsigned();
             $table->foreign('business_id')->references('id')->on('business');
-            $table->enum('type', ['single','variable','modifier','combo']);
+            // $table->enum('type', ['single','variable','modifier','combo'])->default(NULL);
+            $table->string('type')->nullable();
             $table->integer('unit_id')->unsigned()->default(NULL);
             $table->foreign('unit_id')->references('id')->on('units');
             $table->integer('brand_id')->unsigned()->nullable();
@@ -29,10 +30,16 @@ class CreateProductsTable extends Migration
             $table->foreign('sub_category_id')->references('id')->on('categories');
             $table->integer('tax')->unsigned()->nullable();
             $table->foreign('tax')->references('id')->on('tax_rates');
-            $table->enum('tax_type', ['inclusive', 'exclusive']);
+            // $table->enum('tax_type', ['inclusive', 'exclusive']);
+            $table->string('tax_type')->nullable();
             $table->boolean('enable_stock')->default(0);
             $table->decimal('alert_quantity', 22, 4)->default(0);
             $table->string('sku');
+            $table->string('sku2')->nullable();
+            $table->string('fixed_amount')->nullable();
+            $table->integer('max_in_invoice')->nullable();
+            $table->integer('max_discount')->nullable();
+
             $table->enum('barcode_type', ['C39','C128','EAN13','EAN8','UPCA','UPCE'])->default('C128');
             $table->integer('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users');

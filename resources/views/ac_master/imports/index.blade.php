@@ -55,7 +55,7 @@
                     <br><br>
                     <div class="row">
                         <div class="col-sm-4">
-                            <a href="{{ asset('files/accounting/masters.xlsx') }}" class="btn btn-success" download><i
+                            <a href="{{ url('files/accounting/masters.xlsx') }}" class="btn btn-success" download><i
                                     class="fa fa-download"></i> @lang('lang_v1.download_template_file')</a>
                         </div>
                     </div>

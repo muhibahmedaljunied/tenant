@@ -15,7 +15,7 @@
                     @slot('tool')
                         <div class="box-tools">
                             <button type="button" class="btn btn-block btn-primary btn-modal"
-                                data-href="{{ action('\Modules\Essentials\Http\Controllers\EssentialsAllowanceAndDeductionController@create') }}"
+                                data-href="{{ route('essentialsAllowanceAndDeduction-create') }}"
                                 data-container="#add_allowance_deduction_modal">
                                 <i class="fa fa-plus"></i> @lang('messages.add')</button>
                         </div>
@@ -82,7 +82,7 @@
             ad_table = $('#ad_table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ action('\Modules\Essentials\Http\Controllers\EssentialsAllowanceAndDeductionController@index') }}",
+                ajax: "{{ route('essentialsAllowanceAndDeduction-index') }}",
                 columns: [{
                         data: 'description',
                         name: 'description'

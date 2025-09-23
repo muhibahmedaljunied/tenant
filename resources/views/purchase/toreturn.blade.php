@@ -103,8 +103,8 @@
 <!-- /.content -->
 @stop
 @section('javascript')
-<script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-<script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/purchase.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/payment.js?v=' . $asset_v) }}"></script>
 <script>
         //Date range as a button
     $('#purchase_list_filter_date_range').daterangepicker(

@@ -134,6 +134,7 @@ class AcAssetClassController extends Controller
                 $asset_class['useful_life_type'] = $input['useful_life_type'];
                 $asset_class['useful_life'] = $input['useful_life'];
             }
+            // dd($asset_class);
             $asset_class_record = AcAssetClass::create($asset_class);
             $output = [
                 'success' => true,

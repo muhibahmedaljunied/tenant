@@ -87,7 +87,7 @@
                 scrollCollapse: true,
                 fixedHeader: false,
                 'ajax': {
-                    url: "{{action('\Modules\Crm\Http\Controllers\ReportController@followUpsByUser')}}"
+                    url: "{{route('report-followUpsByUser')}}"
                 },
                 columns: [
                     { data: 'full_name', name: 'full_name' },
@@ -108,7 +108,7 @@
                 scrollCollapse: true,
                 fixedHeader: false,
                 'ajax': {
-                    url: "{{action('\Modules\Crm\Http\Controllers\ReportController@followUpsContact')}}"
+                    url: "{{route('report-followUpsContact')}}"
                 },
                 columns: [
                     { data: 'contact_name', name: 'contact_name' },
@@ -130,7 +130,7 @@
                 fixedHeader: false,
                 aaSorting: [[1, 'desc']],
                 'ajax': {
-                    url: "{{action('\Modules\Crm\Http\Controllers\ReportController@leadToCustomerConversion')}}"
+                    url: "{{route('report-leadToCustomerConversion')}}"
                 },
                 columns: [
                     {

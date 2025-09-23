@@ -58,7 +58,7 @@
                              <i class="fa fa-plus"></i>@lang( 'messages.add' )
                          </a>--}}
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                                data-href="{{action('\\Modules\\Assets\\Http\\Controllers\\AssetsController@create')}}"
+                                data-href="{{route('assets-create')}}"
                                 data-container=".brands_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>
@@ -114,7 +114,7 @@
     </div>
 @endsection
 
-<script type="text/javascript" src="{{ asset('Assets/Resources/assets/js/app.js')}}"></script>
+<script type="text/javascript" src="{{ url('Assets/Resources/assets/js/app.js')}}"></script>
 <script>
 
     function assetedit(id) {

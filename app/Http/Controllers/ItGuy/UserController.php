@@ -53,30 +53,51 @@ class UserController extends Controller
                 ->editColumn('username', '{{$username}}')
                 ->addColumn(
                     'name',
-               '{{$first_name}}'
+                    '{{$first_name}}'
                 )
                 ->addColumn(
                     'role',
-                3
+                    3
                 )
                 ->addColumn(
                     'email',
-                  '{{$email}}'
+                    '{{$email}}'
                 )
-                ->addColumn(
-                    'action',
-                    '
-                        <a href="#" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</a>
+
+                ->addColumn('action', function ($users) {
+                    $editUrl = route('users.edit', $users->id);
+                    $deleteUrl = route('users.destroy', $users->id);
+                    // $vieweUrl = route('users.view', $users->id);
+
+                    return '
+                        <button data-href="' . $editUrl . '" class="btn btn-xs btn-primary edit_user_button">
+                            <i class="glyphicon glyphicon-edit"></i> ' . __('messages.edit') . '
+                        </button>
+                        &nbsp;
+                                 <button data-href="' . $editUrl . '" class="btn btn-xs btn-info view_user_button">
+                            <i class="fa fa-eye"></i>> ' . __('messages.delete') . '
+                        </button>
+                                &nbsp;
+                        <button data-href="' . $deleteUrl . '" class="btn btn-xs btn-danger delete_user_button">
+                            <i class="glyphicon glyphicon-trash"></i> ' . __('messages.view') . '
+                        </button>
+                    ';
+                })
+
+                // ->addColumn(
+                //     'action',
+                //     '
+                //         <a href="#" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</a>
                   
                     
-                    <a href="{#" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> @lang("messages.view")</a>
+                //     <a href="{#" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> @lang("messages.view")</a>
                    
                  
              
-                        <button data-href="#" class="btn btn-xs btn-danger delete_user_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
-                   '
-                )
-             
+                //         <button data-href="#" class="btn btn-xs btn-danger delete_user_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
+                //    '
+                // )
+
                 ->removeColumn('id')
                 ->rawColumns(['action'])
                 ->make(true);
@@ -100,20 +121,87 @@ class UserController extends Controller
 
 
 
-    public function edit($id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Request $request, $id)
     {
-        $id = Qs::decodeHash($id);
-        $ut = $this->user->getAllNotStudentType();
-        $ut2 = $ut->where('level', '>', 2);
 
-        $d['user_types'] = Qs::userIsAdmin() ? $ut2 : $ut;
-        $d['user'] = $this->user->find($id);
-        $d['staff_rec'] = $this->user->getStaffRecord(['user_id' => $id])->first();
-        $d['users'] = $this->user->getPTAUsers();
-        $d['blood_groups'] = $this->user->getBloodGroups();
-        $d['nationals'] = $this->loc->getAllNationals();
 
-        return view('pages.it_guy.users.edit', $d);
+
+
+
+        if (request()->ajax()) {
+            $business_id = request()->session()->get('user.business_id');
+            $user = User::find($id);
+
+            // $locations = BusinessLocation::forDropdown($business_id);
+            $menuItems = $request->menuItems;
+
+            // dd($store);
+
+            return view('pages.it_guy.users.edit')
+                ->with(compact(
+                    'user',
+                    // 'locations',
+                    'menuItems'
+                ));
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+
+
+        if (request()->ajax()) {
+            // try {
+            //     $input = $request->only(['actual_name', 'short_name', 'allow_decimal']);
+            //     $business_id = $request->session()->get('user.business_id');
+
+            //     $store = Store::where('business_id', $business_id)->findOrFail($id);
+            //     $store->actual_name = $input['actual_name'];
+            //     $store->short_name = $input['short_name'];
+            //     $store->allow_decimal = $input['allow_decimal'];
+            //     if ($request->has('define_base_store')) {
+            //         if (! empty($request->input('base_store_id')) && ! empty($request->input('base_store_multiplier'))) {
+            //             $base_store_multiplier = $this->commonUtil->num_uf($request->input('base_store_multiplier'));
+            //             if ($base_store_multiplier != 0) {
+            //                 $store->base_store_id = $request->input('base_store_id');
+            //                 $store->base_store_multiplier = $base_store_multiplier;
+            //             }
+            //         }
+            //     } else {
+            //         $store->base_store_id = null;
+            //         $store->base_store_multiplier = null;
+            //     }
+
+            //     $store->save();
+
+            //     $output = [
+            //         'success' => true,
+            //         'msg' => __("store.updated_success")
+            //     ];
+            // } catch (\Exception $e) {
+            //     \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            //     $output = [
+            //         'success' => false,
+            //         'msg' => __("messages.something_went_wrong")
+            //     ];
+            // }
+
+            // return $output;
+        }
     }
 
     public function reset_pass($id)
@@ -170,37 +258,7 @@ class UserController extends Controller
         return Qs::jsonStoreOk();
     }
 
-    public function update(UserRequest $req, $id)
-    {
-        $id = (int) Qs::decodeHash($id);
-        $user_type_id = (int) Qs::decodeHash($req->user_type_id);
-        $user = $this->user->find($id);
-        $user_type = $this->user->findType($user_type_id)->title ?? $user->user_type;
-        $except = array_merge(Qs::getStaffRecord(), ['_token', '_method', 'user_type_id']);
-        $data = $req->except($except);
 
-        $data['name'] = $name = ucwords(strtolower($req->name));
-        $data['user_type'] = $user_type;
-        $data['message_media_heading_color'] = '#' . substr(md5($name), 0, 6); // Use a unique text color based on the name
-
-        if ($req->hasFile('photo')) {
-            $photo = $req->file('photo');
-            $f = Qs::getFileMetaData($photo);
-            $f['name'] = 'photo.' . $f['ext'];
-            $f['path'] = $photo->storeAs(Qs::getUploadPath($user_type) . $user->code, $f['name']);
-            $data['photo'] = 'storage/' . $f['path'];
-        }
-
-        $this->user->update($id, $data);   /* Update user record */
-
-        /* Update staff record */
-        $d2 = $req->only(Qs::getStaffRecord());
-        $d2['code'] = $user->code;
-        $d2['subjects_studied'] = isset($d2['subjects_studied']) ? json_encode(explode(",", $d2['subjects_studied'])) : NULL;
-        $this->user->updateStaffRecord(['user_id' => $id], $d2);
-
-        return Qs::jsonUpdateOk();
-    }
 
     public function create(Request $request)
     {

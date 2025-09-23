@@ -22,7 +22,7 @@
 	@component('components.widget', ['class' => 'box-primary', 'title' => __('crm::lang.all_campaigns')])
         @slot('tool')
         	<div class="box-tools">
-                <a class="btn btn-sm btn-primary pull-right m-5" href="{{action('\Modules\Crm\Http\Controllers\CampaignController@create')}}">
+                <a class="btn btn-sm btn-primary pull-right m-5" href="{{route('campaign-create')}}">
                     <i class="fa fa-plus"></i> @lang('messages.add')
                 </a>
             </div>
@@ -46,7 +46,7 @@
 </section>
 @endsection
 @section('javascript')
-	<script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			initializeCampaignDatatable();

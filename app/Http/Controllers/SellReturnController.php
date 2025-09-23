@@ -371,29 +371,32 @@ class SellReturnController extends Controller
     {
 
         return Datatables::of($this->sells)
-            ->addColumn(
-                'action',
-                '<div class="btn-group">
-                         <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
-                             data-toggle="dropdown" aria-expanded="false">' .
-                    __("messages.actions") .
-                    '<span class="caret"></span><span class="sr-only">Toggle Dropdown
-                             </span>
-                         </button>
-                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                             <li><a href="#" class="btn-modal" data-container=".view_modal" data-href="{{action(\'SellReturnController@show\', [$parent_sale_id])}}"><i class="fas fa-eye" aria-hidden="true"></i> @lang("messages.view")</a></li>
-                             <li><a href="{{action(\'SellReturnController@add\', [$parent_sale_id])}}" ><i class="fa fa-edit" aria-hidden="true"></i> @lang("messages.edit")</a></li>
-                             <li><a href="{{action(\'SellReturnController@destroy\', [$id])}}" class="delete_sell_return" ><i class="fa fa-trash" aria-hidden="true"></i> @lang("messages.delete")</a></li>
-                             <li><a href="#" class="print-invoice" data-href="{{action(\'SellReturnController@printInvoice\', [$id])}}"><i class="fa fa-print" aria-hidden="true"></i> @lang("messages.print")</a></li>
-    
-                         @if($payment_status != "paid")
-                             <li><a href="{{action(\'TransactionPaymentController@addPayment\', [$id])}}" class="add_payment_modal"><i class="fas fa-money-bill-alt"></i> @lang("purchase.add_payment")</a></li>
-                         @endif
-    
-                         <li><a href="{{action(\'TransactionPaymentController@show\', [$id])}}" class="view_payment_modal"><i class="fas fa-money-bill-alt"></i> @lang("purchase.view_payments")</a></li>
-                         </ul>
-                         </div>'
-            )
+            ->addColumn('action', function ($row) {
+                $viewUrl = action('SellReturnController@show', [$row->parent_sale_id]);
+                $editUrl = action('SellReturnController@add', [$row->parent_sale_id]);
+                $deleteUrl = action('SellReturnController@destroy', [$row->id]);
+                $printUrl = action('SellReturnController@printInvoice', [$row->id]);
+                $addPaymentUrl = action('TransactionPaymentController@addPayment', [$row->id]);
+                $viewPaymentUrl = action('TransactionPaymentController@show', [$row->id]);
+
+                return '
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">
+                        ' . __("messages.actions") . '
+                        <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a href="#" class="btn-modal" data-container=".view_modal" data-href="' . $viewUrl . '"><i class="fas fa-eye"></i> ' . __("messages.view") . '</a></li>
+                        <li><a href="' . $editUrl . '"><i class="fa fa-edit"></i> ' . __("messages.edit") . '</a></li>
+                        <li><a href="' . $deleteUrl . '" class="delete_sell_return"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>
+                        <li><a href="#" class="print-invoice" data-href="' . $printUrl . '"><i class="fa fa-print"></i> ' . __("messages.print") . '</a></li>
+                        <li><a href="' . $addPaymentUrl . '" class="add_payment_modal"><i class="fas fa-money-bill-alt"></i> ' . __("purchase.add_payment") . '</a></li>
+                        <li><a href="' . $viewPaymentUrl . '" class="view_payment_modal"><i class="fas fa-money-bill-alt"></i> ' . __("purchase.view_payments") . '</a></li>
+                    </ul>
+                </div>';
+            })
+
+
             ->removeColumn('id')
             ->editColumn(
                 'final_total',
@@ -461,6 +464,8 @@ class SellReturnController extends Controller
         }
 
         $business_id = request()->session()->get('user.business_id');
+        $id = $request->segment(3);
+
         //Check if subscribed or not
         if (!$this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
@@ -574,12 +579,13 @@ class SellReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         if (!auth()->user()->can('access_sell_return')) {
             abort(403, 'Unauthorized action.');
         }
 
+        $id = $request->segment(3);
         $business_id = request()->session()->get('user.business_id');
         $sell = Transaction::where('business_id', $business_id)
             ->where('id', $id)

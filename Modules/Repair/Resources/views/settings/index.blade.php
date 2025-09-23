@@ -174,7 +174,7 @@
         var status_table = $('#status_table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{action('\Modules\Repair\Http\Controllers\RepairStatusController@index')}}",
+                ajax: "{{route('repairStatus-index')}}",
                 aaSorting: [[2, 'desc']],
                 columnDefs: [ {
                     "targets": 3,

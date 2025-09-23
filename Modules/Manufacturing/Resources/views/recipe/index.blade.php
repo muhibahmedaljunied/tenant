@@ -14,8 +14,12 @@
         @can("manufacturing.add_recipe")
         @slot('tool')
             <div class="box-tools">
-                <button class="btn btn-block btn-primary btn-modal" data-container="#recipe_modal" data-href="{{action('\Modules\Manufacturing\Http\Controllers\RecipeController@create')}}">
-                    <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
+                {{-- <button class="btn btn-block btn-primary btn-modal" data-container="#recipe_modal" data-href="{{action('\Modules\Manufacturing\Http\Controllers\RecipeController@create')}}">
+                    <i class="fa fa-plus"></i> @lang( 'messages.add' )</button> --}}
+
+                    <button class="btn btn-block btn-primary btn-modal" data-container="#recipe_modal" data-href="{{route('recipe-create')}}">
+                        <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
+
             </div>
         @endslot
         @endcan

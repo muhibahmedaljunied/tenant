@@ -1,4 +1,4 @@
-<a class="btn btn-sm btn-primary pull-right contact-login-add" data-href="{{action('\Modules\Crm\Http\Controllers\ContactLoginController@create')}}" >
+<a class="btn btn-sm btn-primary pull-right contact-login-add" data-href="{{route('contactLogin-create')}}" >
 	<i class="fa fa-plus"></i>
 	@lang( 'messages.add' )
 </a>

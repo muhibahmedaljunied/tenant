@@ -73,6 +73,6 @@
 </section>
 @endsection
 @section('javascript')
-<script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-<script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/purchase.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
 @endsection

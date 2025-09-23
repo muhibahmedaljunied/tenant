@@ -53,7 +53,7 @@
 			    <div class="tab-content">
 			    	<div class="tab-pane active" id="comments_tab">
 			    		<div class="row">
-							<form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\ToDoController@addComment') }}" id="task_comment_form" method="post">
+							<form action="{{ route('toDo-addComment') }}" id="task_comment_form" method="post">
 							    @csrf
 							    <div class="col-md-6">
 							        <div class="form-group">
@@ -84,7 +84,7 @@
 
 			    	<div class="tab-pane" id="documents_tab">
 			    		<div class="row">
-							<form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\ToDoController@uploadDocument') }}" id="task_upload_doc_form" method="post" enctype="multipart/form-data">
+							<form action="{{ route('toDo-uploadDocument') }}" id="task_upload_doc_form" method="post" enctype="multipart/form-data">
 							    @csrf
 							    <div class="col-md-12">
 							        <div class="form-group">
@@ -123,7 +123,7 @@
 												<td><a href="{{$media->display_url}}" download class="btn btn-success btn-xs">@lang('lang_v1.download')</a>
 
 												@if(in_array(auth()->user()->id, [$media->uploaded_by, $todo->created_by]))
-													<a href="{{action('\Modules\Essentials\Http\Controllers\ToDoController@deleteDocument', $media->id)}}" class="btn btn-danger btn-xs delete-document" data-media_id="{{$media->id}}"><i class="fa fa-trash"></i> @lang('messages.delete')</a>
+													<a href="{{route('toDo-deleteDocument', $media->id)}}" class="btn btn-danger btn-xs delete-document" data-media_id="{{$media->id}}"><i class="fa fa-trash"></i> @lang('messages.delete')</a>
 												@endif
 												</td>
 											</tr>

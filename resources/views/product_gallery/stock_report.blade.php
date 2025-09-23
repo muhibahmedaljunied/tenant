@@ -9,9 +9,9 @@
             <small>@lang('lang_v1.manage_products')</small>
         </h1>
         <!-- <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-            <li class="active">Here</li>
-        </ol> -->
+                                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                                <li class="active">Here</li>
+                            </ol> -->
     </section>
 
     <!-- Main content -->
@@ -19,154 +19,187 @@
         <div class="row">
             <div class="col-md-12">
                 @component('components.filters', ['title' => __('report.filters')])
-<div class="col-md-3" id="location_filter">
-    <div class="form-group">
-        <label for="location_id">@lang('purchase.business_location'):</label>
-        <select name="location_id" id="location_id" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            @foreach ($business_locations as $key => $value)
-                <option value="{{ $key }}">{{ $value }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                    <div class="col-md-3" id="location_filter">
+                        <div class="form-group">
+                            <label for="location_id">@lang('purchase.business_location'):</label>
+                            <select name="location_id" id="location_id" class="form-control select2" style="width:100%;"
+                                placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
+                                @foreach ($business_locations as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-<div class="col-md-3">
-    <div class="form-group">
-        <label for="type">@lang('product.product_type'):</label>
-        <select name="type" id="product_list_filter_type" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            <option value="single">@lang('lang_v1.single')</option>
-            <option value="variable">@lang('lang_v1.variable')</option>
-            <option value="combo">@lang('lang_v1.combo')</option>
-        </select>
-    </div>
-</div>
+                    <div class="col-md-3" id="store_filter">
+                        <div class="form-group">
+                            <label for="store_id">@lang('store.store'):</label>
 
-<div class="col-md-3">
-    <div class="form-group">
-        <label for="category_id">@lang('product.category'):</label>
-        <select name="category_id" id="product_list_filter_category_id" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            @foreach ($categories as $key => $value)
-                <option value="{{ $key }}">{{ $value }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                            <select name="store_id" id="store_id" class="form-control select2" style="width:100%;"
+                                placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
 
-<div class="col-md-3" style="display: none;">
-    <div class="form-group">
-        <label for="unit_id">@lang('product.unit'):</label>
-        <select name="unit_id" id="product_list_filter_unit_id" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            @foreach ($units as $key => $value)
-                <option value="{{ $key }}">{{ $value }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                            </select>
+                        </div>
+                    </div>
 
-<div class="col-md-3" style="display: none;">
-    <div class="form-group">
-        <label for="tax_id">@lang('product.tax'):</label>
-        <select name="tax_id" id="product_list_filter_tax_id" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            @foreach ($taxes as $key => $value)
-                <option value="{{ $key }}">{{ $value }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="type">@lang('product.product_type'):</label>
+                            <select name="type" id="product_list_filter_type" class="form-control select2"
+                                style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
+                                <option value="single">@lang('lang_v1.single')</option>
+                                <option value="variable">@lang('lang_v1.variable')</option>
+                                <option value="combo">@lang('lang_v1.combo')</option>
+                            </select>
+                        </div>
+                    </div>
 
-<div class="col-md-3">
-    <div class="form-group">
-        <label for="brand_id">@lang('product.brand'):</label>
-        <select name="brand_id" id="product_list_filter_brand_id" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            @foreach ($brands as $key => $value)
-                <option value="{{ $key }}">{{ $value }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="category_id">@lang('product.category'):</label>
+                            <select name="category_id" id="product_list_filter_category_id" class="form-control select2"
+                                style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
+                                @foreach ($categories as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-<div class="col-md-3">
-    <div class="form-group">
-        <label for="pricegroup">@lang('lang_v1.selling_price_group'):</label>
-        <select name="pricegroup" id="pricegroup" class="form-control select2" style="width:100%;">
-            @foreach ($price_groups as $key => $value)
-                <option value="{{ $key }}">{{ $value }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                    <div class="col-md-3" style="display: none;">
+                        <div class="form-group">
+                            <label for="unit_id">@lang('product.unit'):</label>
+                            <select name="unit_id" id="product_list_filter_unit_id" class="form-control select2"
+                                style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
+                                @foreach ($units as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-               
-{{-- -- --}}
-            
-<div class="col-md-3" style="display: none;">
-    <br>
-    <div class="form-group">
-        <select name="active_state" id="active_state" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            <option value="active">@lang('business.is_active')</option>
-            <option value="inactive">@lang('lang_v1.inactive')</option>
-        </select>
-    </div>
-</div>
+                    <div class="col-md-3" style="display: none;">
+                        <div class="form-group">
+                            <label for="tax_id">@lang('product.tax'):</label>
+                            <select name="tax_id" id="product_list_filter_tax_id" class="form-control select2"
+                                style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
+                                @foreach ($taxes as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-<div class="col-md-3" style="display: none;">
-    <div class="form-group">
-        <label for="product_list_filter_image">@lang('lang_v1.image'):</label>
-        <select name="type" id="product_list_filter_image" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            <option value="default">بدون صورة</option>
-            <option value="image">@lang('lang_v1.image')</option>
-        </select>
-    </div>
-</div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="brand_id">@lang('product.brand'):</label>
+                            <select name="brand_id" id="product_list_filter_brand_id" class="form-control select2"
+                                style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
+                                @foreach ($brands as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-<div class="col-md-3" style="display: none;">
-    <div class="form-group">
-        <label for="product_list_filter_current_stock">@lang('report.current_stock'):</label>
-        <select name="current_stock" id="product_list_filter_current_stock" class="form-control select2" style="width:100%;" placeholder="@lang('lang_v1.all')">
-            <option value="zero">Zero</option>
-            <option value="gtzero">اكبر من الصفر</option>
-            <option value="lszero">اقل من الصفر</option>
-        </select>
-    </div>
-</div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="pricegroup">@lang('lang_v1.selling_price_group'):</label>
+                            <select name="pricegroup" id="pricegroup" class="form-control select2" style="width:100%;">
+                                <option value="">@lang('lang_v1.all')</option>
+                                @foreach ($price_groups as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-{{-- Include module filter --}}
-@if(!empty($pos_module_data))
-    @foreach($pos_module_data as $key => $value)
-        @if(!empty($value['view_path']))
-            @includeIf($value['view_path'], ['view_data' => $value['view_data']])
-        @endif
-    @endforeach
-@endif
 
-<div class="col-md-3" style="display: none;">
-    <div class="form-group">
-        <br>
-        <label>
-            <input type="checkbox" name="not_for_selling" value="1" class="input-icheck" id="not_for_selling">
-            <strong>@lang('lang_v1.not_for_selling')</strong>
-        </label>
-    </div>
-</div>
+                    {{-- -- --}}
 
-@if($is_woocommerce)
-    <div class="col-md-3" style="display: none;">
-        <div class="form-group">
-            <br>
-            <label>
-                <input type="checkbox" name="woocommerce_enabled" value="1" class="input-icheck" id="woocommerce_enabled">
-                @lang('lang_v1.woocommerce_enabled')
-            </label>
-        </div>
-    </div>
-@endif
+                    <div class="col-md-3" style="display: none;">
+                        <br>
+                        <div class="form-group">
+                            <select name="active_state" id="active_state" class="form-control select2" style="width:100%;"
+                                placeholder="@lang('lang_v1.all')">
+                                <option value="active">@lang('business.is_active')</option>
+                                <option value="inactive">@lang('lang_v1.inactive')</option>
+                            </select>
+                        </div>
+                    </div>
 
-                    <div class="col-md-3"  >
+                    <div class="col-md-3" style="display: none;">
+                        <div class="form-group">
+                            <label for="product_list_filter_image">@lang('lang_v1.image'):</label>
+                            <select name="type" id="product_list_filter_image" class="form-control select2"
+                                style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="default">بدون صورة</option>
+                                <option value="image">@lang('lang_v1.image')</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" style="display: none;">
+                        <div class="form-group">
+                            <label for="product_list_filter_current_stock">@lang('report.current_stock'):</label>
+                            <select name="current_stock" id="product_list_filter_current_stock" class="form-control select2"
+                                style="width:100%;" placeholder="@lang('lang_v1.all')">
+                                <option value="">@lang('lang_v1.all')</option>
+
+                                <option value="zero">Zero</option>
+                                <option value="gtzero">اكبر من الصفر</option>
+                                <option value="lszero">اقل من الصفر</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Include module filter --}}
+                    {{-- @if (!empty($pos_module_data))
+                        @foreach ($pos_module_data as $key => $value)
+                            @if (!empty($value['view_path']))
+                                @includeIf($value['view_path'], ['view_data' => $value['view_data']])
+                            @endif
+                        @endforeach
+                    @endif --}}
+
+                    <div class="col-md-3" style="display: none;">
+                        <div class="form-group">
+                            <br>
+                            <label>
+                                <input type="checkbox" name="not_for_selling" value="1" class="input-icheck"
+                                    id="not_for_selling">
+                                <strong>@lang('lang_v1.not_for_selling')</strong>
+                            </label>
+                        </div>
+                    </div>
+
+                    @if ($is_woocommerce)
+                        <div class="col-md-3" style="display: none;">
+                            <div class="form-group">
+                                <br>
+                                <label>
+                                    <input type="checkbox" name="woocommerce_enabled" value="1" class="input-icheck"
+                                        id="woocommerce_enabled">
+                                    @lang('lang_v1.woocommerce_enabled')
+                                </label>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>@lang('lang_v1.search')</label>
                             <div>
-                                <input type="text" name="productname" id="productname" class="form-control" style="width: 80%;float: left; ">
-                                <button type="button" class="btn-search"><i class="fa fa-search" ></i></button>
+                                <input type="text" name="productname" id="productname" class="form-control"
+                                    style="width: 80%;float: left; ">
+                                <button type="button" class="btn-search"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                     </div>
@@ -174,21 +207,21 @@
 
 
 
-                   {{-- <div class="col-md-12">
+                    {{-- <div class="col-md-12">
                         <div class="mt-15">
                             @can('product.create')
                                 <a class="btn btn-primary  " href="{{action('ProductController@create')}}">
                                     <i class="fa fa-plus"></i> @lang('product.add_new_product')</a>
                             @endcan
                         </div>
-                    </div>--}}
+                    </div> --}}
                 @endcomponent
             </div>
         </div>
 
 
-        <input type="hidden" id="rem" name="rem" value="true" >
-        <input type="hidden" id="offset" name="offset" value="0" >
+        <input type="hidden" id="rem" name="rem" value="true">
+        <input type="hidden" id="offset" name="offset" value="0">
         <div class="main-prduct container" id="products">
 
 
@@ -206,45 +239,47 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
-    <script src="{{ asset('js/opening_stock.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/product.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/opening_stock.js?v=' . $asset_v) }}"></script>
 
-    {{--  <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>--}}
+    {{--  <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script> --}}
 
     <script>
-        $(document).ready( function() {
+        $(document).ready(function() {
             getproducts();
         });
 
-        $('#pricegroup,#location_id ,#product_list_filter_type,#product_list_filter_category_id,#product_list_filter_brand_id').change(function () {
-            getproducts();
-        });
+        $(`#pricegroup,#location_id ,#product_list_filter_type,#product_list_filter_category_id,#product_list_filter_brand_id`)
+            .change(function() {
+                getproducts();
+            });
 
-        $('#productname').keyup(function () {
+        $('#productname').keyup(function() {
             getproducts();
         });
 
         function getproducts() {
-             $.ajax({
+            $.ajax({
                 url: "/gallery/stock_report",
                 type: 'GET',
                 data: {
                     type: $('#product_list_filter_type').val(),
-                    category_id : $('#product_list_filter_category_id').val(),
-                    brand_id : $('#product_list_filter_brand_id').val(),
-                    unit_id : $('#product_list_filter_unit_id').val(),
-                    tax_id : $('#product_list_filter_tax_id').val(),
-                    active_state : $('#active_state').val(),
-                    not_for_selling : $('#not_for_selling').is(':checked'),
-                    location_id : $('#location_id').val(),
-                    current_stock:$("#product_list_filter_current_stock").val(),
-                    image_type:$("#product_list_filter_image").val(),
-                    productname:$('#productname').val(),
-                    pricegroup:$('#pricegroup').val()
+                    category_id: $('#product_list_filter_category_id').val(),
+                    brand_id: $('#product_list_filter_brand_id').val(),
+                    unit_id: $('#product_list_filter_unit_id').val(),
+                    tax_id: $('#product_list_filter_tax_id').val(),
+                    active_state: $('#active_state').val(),
+                    not_for_selling: $('#not_for_selling').is(':checked'),
+                    location_id: $('#location_id').val(),
+                    store_id: $('#store_id').val(),
+                    current_stock: $("#product_list_filter_current_stock").val(),
+                    image_type: $("#product_list_filter_image").val(),
+                    productname: $('#productname').val(),
+                    pricegroup: $('#pricegroup').val()
                 },
-                success: function (data) {
-                    var products=document.getElementById("products");
-                    products.innerHTML =data['product'];
+                success: function(data) {
+                    var products = document.getElementById("products");
+                    products.innerHTML = data['product'];
 
 
                 }
@@ -254,6 +289,42 @@
 
 
         }
+
+
+        $('#location_id').on('change', function() {
+
+            console.log('hebo_change');
+            var locationIds = $(this).val();
+            if (!locationIds) {
+                $('#store_id').html(
+                    '<option value="">{{ __('messages.please_select') }}</option>');
+                $('#store_id').trigger('change');
+                return;
+            }
+            $.ajax({
+                url: '{{ route('getStoresByLocations') }}',
+                type: 'POST',
+                data: {
+                    location_ids: locationIds,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    var options =
+                        '<option value="">{{ __('messages.please_select') }}</option>';
+                    $.each(data, function(key, value) {
+                        options += '<option value="' + key + '">' +
+                            value + '</option>';
+                    });
+
+
+
+                    $('#store_id').html(options).trigger('change');
+
+                }
+            });
+        });
     </script>
+
+
 
 @endsection

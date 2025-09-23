@@ -130,7 +130,7 @@
                             </div>
                             @if($is_admin)
                             <div class="col-md-6 spacer">
-                                <button type="button" class="btn btn-primary btn-modal pull-right" data-href="{{action('\Modules\Essentials\Http\Controllers\AttendanceController@create')}}" data-container="#attendance_modal">
+                                <button type="button" class="btn btn-primary btn-modal pull-right" data-href="{{route('attendance-create')}}" data-container="#attendance_modal">
                                     <i class="fa fa-plus"></i>
                                     @lang( 'essentials::lang.add_latest_attendance' )
                                 </button>
@@ -205,7 +205,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    "url": "{{action('\Modules\Essentials\Http\Controllers\AttendanceController@index')}}",
+                    "url": "{{route('attendance-index')}}",
                     "data" : function(d) {
                         if ($('#employee_id').length) {
                             d.employee_id = $('#employee_id').val();
@@ -284,7 +284,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    "url": "{{action('\Modules\Essentials\Http\Controllers\ShiftController@index')}}",
+                    "url": "{{route('shift-index')}}",
                 },
                 columnDefs: [
                     {
@@ -465,7 +465,7 @@
             var start = $('#date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
             var end = $('#date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
             $.ajax({
-                url: '{{action("\Modules\Essentials\Http\Controllers\AttendanceController@getUserAttendanceSummary")}}?user_id=' + user_id + '&start_date=' + start + '&end_date=' + end ,
+                url: '{{route("attendance-getUserAttendanceSummary")}}?user_id=' + user_id + '&start_date=' + start + '&end_date=' + end ,
                 dataType: 'html',
                 success: function(response) {
                     $('#total_work_hours').html(response);
@@ -533,7 +533,7 @@
     function get_attendance_by_shift() {
         data = {date: $('#attendance_by_shift_date_filter').val()};
         $.ajax({
-            url: "{{action('\Modules\Essentials\Http\Controllers\AttendanceController@getAttendanceByShift')}}",
+            url: "{{route('attendance-getAttendanceByShift')}}",
             data: data,
             dataType: 'html',
             success: function(result) {
@@ -547,7 +547,7 @@
                 end_date: $('#attendance_by_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD')
             };
         $.ajax({
-            url: "{{action('\Modules\Essentials\Http\Controllers\AttendanceController@getAttendanceByDate')}}",
+            url: "{{route('attendance-getAttendanceByDate')}}",
             data: data,
             dataType: 'html',
             success: function(result) {

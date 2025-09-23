@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-md-12">
             @component('components.filters', ['title' => __('report.filters')])
-                <form method="GET" action="{{ action('ReportController@getStockReport') }}" id="stock_report_filter_form">
+                <form method="GET" action="{{ route('report-getStockReport') }}" id="stock_report_filter_form">
                     @csrf
                     <div class="col-md-3">
                         <div class="form-group">
@@ -149,7 +149,7 @@
 
 
 @section('javascript')
-    {{--   <script  src='{{Module::asset('installment:js/app.js?v=' . $asset_v)}}'></script> --}}
+    {{--   <script  src='{{Module::url('installment:js/app.js?v=' . $asset_v)}}'></script> --}}
     @include('installment::layouts.partials.javascripts')
 
 

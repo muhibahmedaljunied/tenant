@@ -27,7 +27,7 @@
                          </a>--}}
 
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                                data-href="{{action('\Modules\Partners\Http\Controllers\AssetsController@create')}}"
+                                data-href="{{route('assets-create')}}"
                                 data-container=".brands_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                     </div>

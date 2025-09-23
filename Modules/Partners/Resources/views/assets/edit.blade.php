@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <form action="{{ action('\\Modules\\Partners\\Http\\Controllers\\AssetsController@update', $asset->id) }}" method="POST">
+        <form action="{{ route('assets-update', $asset->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="modal-header">

@@ -413,7 +413,7 @@ class SellController extends Controller
             'transactions.id',
             'transactions.woocommerce_order_id',
             'transactions.is_recurring',
-            'transactions.recur_parent_id', 
+            'transactions.recur_parent_id',
             'transactions.is_export',
             'transactions.service_custom_field_1',
             'transactions.transaction_date',
@@ -840,6 +840,9 @@ class SellController extends Controller
 
         $trackers = $this->get_track($isEnabledModuleTracker);
         $menuItems = $request->menuItems;
+
+        // var_dump($commission_agent);
+        // dd($walk_in_customer);
         return view('sell.create')
             ->with(
                 compact(
@@ -908,11 +911,12 @@ class SellController extends Controller
      */
     public function show(Request $request, $id)
     {
-        // if (!auth()->user()->can('sell.view') && !auth()->user()->can('direct_sell.access') && !auth()->user()->can('view_own_sell_only')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('sell.view') && !auth()->user()->can('direct_sell.access') && !auth()->user()->can('view_own_sell_only')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $business_id = request()->session()->get('user.business_id');
+        $id = $request->segment(2);
         $taxes = TaxRate::where('business_id', $business_id)
             ->pluck('name', 'id');
         $query = Transaction::where('business_id', $business_id)
@@ -1014,8 +1018,10 @@ class SellController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+
         //Check if the transaction can be edited or not.
-        $edit_days = request()->session()->get('business.transaction_edit_days');
+        $edit_days = (int)request()->session()->get('business.transaction_edit_days');
+
         if (!$this->transactionUtil->canBeEdited($id, $edit_days)) {
             return back()
                 ->with('status', [
@@ -1046,33 +1052,81 @@ class SellController extends Controller
         $location_id = $transaction->location_id;
         $location_printer_type = BusinessLocation::find($location_id)->receipt_printer_type;
 
-        $sell_details = TransactionSellLine::join(
-            'products AS p',
-            'transaction_sell_lines.product_id',
-            '=',
-            'p.id'
-        )
-            ->join(
-                'variations AS variations',
-                'transaction_sell_lines.variation_id',
-                '=',
-                'variations.id'
-            )
-            ->join(
-                'product_variations AS pv',
-                'variations.product_variation_id',
-                '=',
-                'pv.id'
-            )
-            ->leftjoin('variation_location_details AS vld', function ($join) use ($location_id) {
+        // $sell_details = TransactionSellLine::join(
+        //     'products AS p',
+        //     'transaction_sell_lines.product_id',
+        //     '=',
+        //     'p.id'
+        // )
+        //     ->join(
+        //         'variations AS variations',
+        //         'transaction_sell_lines.variation_id',
+        //         '=',
+        //         'variations.id'
+        //     )
+        //     ->join(
+        //         'product_variations AS pv',
+        //         'variations.product_variation_id',
+        //         '=',
+        //         'pv.id'
+        //     )
+        //     ->leftjoin('variation_location_details AS vld', function ($join) use ($location_id) {
+        //         $join->on('variations.id', '=', 'vld.variation_id')
+        //             ->where('vld.location_id', '=', $location_id);
+        //     })
+        //     ->leftjoin('units', 'units.id', '=', 'p.unit_id')
+        //     ->where('transaction_sell_lines.transaction_id', $id)
+        //     ->with(['warranties'])
+        //     ->select(
+        //         DB::raw("IF(pv.is_dummy = 0, CONCAT(p.name, ' (', pv.name, ':',variations.name, ')'), p.name) AS product_name"),
+        //         'p.id as product_id',
+        //         'p.enable_stock',
+        //         'p.name as product_actual_name',
+        //         'p.type as product_type',
+        //         'pv.name as product_variation_name',
+        //         'pv.is_dummy as is_dummy',
+        //         'variations.name as variation_name',
+        //         'variations.sub_sku',
+        //         'p.barcode_type',
+        //         'p.enable_sr_no',
+        //         'variations.id as variation_id',
+        //         'units.short_name as unit',
+        //         'units.allow_decimal as unit_allow_decimal',
+        //         'transaction_sell_lines.tax_id as tax_id',
+        //         'transaction_sell_lines.item_tax as item_tax',
+        //         'transaction_sell_lines.unit_price as default_sell_price',
+        //         'transaction_sell_lines.unit_price_inc_tax as sell_price_inc_tax',
+        //         'transaction_sell_lines.unit_price_before_discount as unit_price_before_discount',
+        //         'transaction_sell_lines.id as transaction_sell_lines_id',
+        //         'transaction_sell_lines.id',
+        //         'transaction_sell_lines.quantity as quantity_ordered',
+        //         'transaction_sell_lines.sell_line_note as sell_line_note',
+        //         'transaction_sell_lines.parent_sell_line_id',
+        //         'transaction_sell_lines.lot_no_line_id',
+        //         'transaction_sell_lines.line_discount_type',
+        //         'transaction_sell_lines.line_discount_amount',
+        //         'transaction_sell_lines.res_service_staff_id',
+        //         'units.id as unit_id',
+        //         'transaction_sell_lines.sub_unit_id',
+        //         DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available')
+        //     )
+        //     ->get();
+
+
+
+        // ---------------------------------------------------------
+        $sell_details = TransactionSellLine::join('products as p', 'transaction_sell_lines.product_id', '=', 'p.id')
+            ->join('variations as variations', 'transaction_sell_lines.variation_id', '=', 'variations.id')
+            ->join('product_variations as pv', 'variations.product_variation_id', '=', 'pv.id')
+            ->leftJoin('variation_location_details as vld', function ($join) use ($location_id) {
                 $join->on('variations.id', '=', 'vld.variation_id')
                     ->where('vld.location_id', '=', $location_id);
             })
-            ->leftjoin('units', 'units.id', '=', 'p.unit_id')
+            ->leftJoin('units', 'units.id', '=', 'p.unit_id')
             ->where('transaction_sell_lines.transaction_id', $id)
-            ->with(['warranties'])
-            ->select(
-                DB::raw("IF(pv.is_dummy = 0, CONCAT(p.name, ' (', pv.name, ':',variations.name, ')'), p.name) AS product_name"),
+            ->with(['warranties']) // assuming warranties relationship exists
+            ->select([
+                DB::raw("CASE WHEN pv.is_dummy = 0 THEN CONCAT(p.name, ' (', pv.name, ':', variations.name, ')') ELSE p.name END AS product_name"),
                 'p.id as product_id',
                 'p.enable_stock',
                 'p.name as product_actual_name',
@@ -1102,9 +1156,12 @@ class SellController extends Controller
                 'transaction_sell_lines.res_service_staff_id',
                 'units.id as unit_id',
                 'transaction_sell_lines.sub_unit_id',
-                DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available')
-            )
+                DB::raw('ISNULL(vld.qty_available, 0) + transaction_sell_lines.quantity AS qty_available')
+            ])
             ->get();
+
+        // ------------------
+
         if (!empty($sell_details)) {
             foreach ($sell_details as $key => $value) {
                 //If modifier or combo sell line then unset

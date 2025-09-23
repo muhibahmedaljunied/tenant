@@ -40,6 +40,9 @@ class SellController extends Controller
     protected $businessUtil;
     protected $transactionUtil;
     protected $productUtil;
+    protected $moduleUtil;
+    protected $dummyPaymentLine;
+    protected $shipping_status_colors;
 
 
     /**

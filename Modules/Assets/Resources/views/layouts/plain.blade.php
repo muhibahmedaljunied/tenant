@@ -13,8 +13,8 @@
 
         <title>@yield('title') - {{ Session::get('business.name') }}</title> 
 
-        <script src="{{ asset('AdminLTE/plugins/pace/pace.min.js?v=' . $asset_v) }}"></script>
-        <link rel="stylesheet" href="{{ asset('AdminLTE/plugins/pace/pace.css?v='.$asset_v) }}">
+        <script src="{{ url('AdminLTE/plugins/pace/pace.min.js?v=' . $asset_v) }}"></script>
+        <link rel="stylesheet" href="{{ url('AdminLTE/plugins/pace/pace.css?v='.$asset_v) }}">
 
         @include('layouts.partials.css')
 

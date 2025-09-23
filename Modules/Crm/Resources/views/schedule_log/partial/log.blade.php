@@ -39,7 +39,7 @@
                 </span>
 
                 <h3 class="timeline-header">
-                    <a class="cursor-pointer view_a_schedule_log" data-href="{{action('\Modules\Crm\Http\Controllers\ScheduleLogController@show', ['id' => $schedule_log->id, 'schedule_id' => $schedule_log->schedule_id])}}">
+                    <a class="cursor-pointer view_a_schedule_log" data-href="{{route('scheduleLog-show', ['id' => $schedule_log->id, 'schedule_id' => $schedule_log->schedule_id])}}">
                         {{$schedule_log->subject}}
                     </a>
                 </h3>
@@ -50,13 +50,13 @@
 
                 <div class="timeline-footer">
                     
-                    <i class="fa fa-eye cursor-pointer m-5 text-info view_a_schedule_log" data-href="{{action('\Modules\Crm\Http\Controllers\ScheduleLogController@show', ['id' => $schedule_log->id, 'schedule_id' => $schedule_log->schedule_id])}}"></i>
+                    <i class="fa fa-eye cursor-pointer m-5 text-info view_a_schedule_log" data-href="{{route('scheduleLog-show', ['id' => $schedule_log->id, 'schedule_id' => $schedule_log->schedule_id])}}"></i>
                 
                 
-                    <i class="fa fa-edit cursor-pointer m-5 text-primary edit_schedule_log" data-href="{{action('\Modules\Crm\Http\Controllers\ScheduleLogController@edit', ['id' => $schedule_log->id, 'schedule_id' => $schedule_log->schedule_id])}}"></i>
+                    <i class="fa fa-edit cursor-pointer m-5 text-primary edit_schedule_log" data-href="{{route('scheduleLog-edit', ['id' => $schedule_log->id, 'schedule_id' => $schedule_log->schedule_id])}}"></i>
             
               
-                    <i class="fas fa-trash cursor-pointer m-5 text-danger delete_schedule_log" data-href="{{action('\Modules\Crm\Http\Controllers\ScheduleLogController@destroy', ['id' => $schedule_log->id, 'schedule_id' => $schedule_log->schedule_id])}}"></i>
+                    <i class="fas fa-trash cursor-pointer m-5 text-danger delete_schedule_log" data-href="{{route('scheduleLog-destroy', ['id' => $schedule_log->id, 'schedule_id' => $schedule_log->schedule_id])}}"></i>
                     
                 </div>
             </div>

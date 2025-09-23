@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\EssentialsHolidayController@store') }}" method="post" id="add_holiday_form">
+    <form action="{{ route('essentialsHoliday-store') }}" method="post" id="add_holiday_form">
       @csrf
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

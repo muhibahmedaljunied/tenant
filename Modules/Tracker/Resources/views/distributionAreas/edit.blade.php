@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <form action="{{ action('\\Modules\\Tracker\\Http\\Controllers\\DistributionAreaController@update', ['distributionArea' => $distributionArea]) }}" method="POST" id="editarea">
+        <form action="{{ route('distributionArea-update', ['distributionArea' => $distributionArea]) }}" method="POST" id="editarea">
             @csrf
             @method('PUT')
 

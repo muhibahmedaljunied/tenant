@@ -18,6 +18,9 @@ class InstallController extends Controller
      * @return Response
      */
 
+     public $module_name;
+     public $appVersion;
+
     public function __construct()
     {
         $this->module_name = 'installment';

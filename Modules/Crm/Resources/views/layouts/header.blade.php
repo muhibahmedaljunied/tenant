@@ -1,7 +1,7 @@
 @inject('request', 'Illuminate\Http\Request')
 <!-- Main Header -->
 <header class="main-header no-print">
-    <a href="{{action('\Modules\Crm\Http\Controllers\DashboardController@index')}}" class="logo">
+    <a href="{{route('dashboard-index')}}" class="logo">
         <span class="logo-lg">{{ Session::get('business.name') }}</span>
     </a>
 
@@ -56,7 +56,7 @@
                         </li>
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="{{action('\Modules\Crm\Http\Controllers\ManageProfileController@getProfile')}}" class="btn btn-default btn-flat">
+                                <a href="{{route('manageProfile-getProfile')}}" class="btn btn-default btn-flat">
                                     @lang('lang_v1.profile')
                                 </a>
                             </div>

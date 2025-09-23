@@ -21,6 +21,7 @@ class CreateAcCostCenFieldAddTable extends Migration
             $table->tinyInteger('cost_level')->default(1);
             $table->integer('business_id')->unsigned()->default(1);
             $table->foreign('business_id')->references('id')->on('business');
+            $table->integer('sequence')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

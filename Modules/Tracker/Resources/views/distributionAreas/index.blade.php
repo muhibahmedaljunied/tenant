@@ -192,7 +192,7 @@
         function getdata() {
 
             $.ajax({
-                url: "{{action('\Modules\Tracker\Http\Controllers\DistributionAreaController@index')}}",
+                url: "{{route('distributionArea-index')}}",
                 method: 'GET',
                 success: function (data) {
                     document.getElementById("datatable").innerHTML = data;

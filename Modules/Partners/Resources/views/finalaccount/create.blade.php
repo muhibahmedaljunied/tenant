@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <form action="{{ action('\\Modules\\Partners\\Http\\Controllers\\FinalAccountController@store') }}" id="addnew" method="POST">
+        <form action="{{ route('finalAccount-store') }}" id="addnew" method="POST">
             @csrf
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

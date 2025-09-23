@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\\Modules\\Tracker\\Http\\Controllers\\SectorController@update', ['sector' => $sector]) }}" method="POST" id="editsector">
+        <form action="{{ route('sector-update', ['sector' => $sector]) }}" method="POST" id="editsector">
             @csrf
             @method('PUT')
 

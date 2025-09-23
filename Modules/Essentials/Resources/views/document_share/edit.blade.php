@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\DocumentShareController@update', [$id]) }}" id="share_document_form" method="post">
+    <form action="{{ route('documentShare-update', [$id]) }}" id="share_document_form" method="post">
       @csrf
       @method('PUT')
       <div class="modal-header">

@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\\Modules\\Tracker\\Http\\Controllers\\ProvinceController@store') }}" method="POST" id="addprovince">
+        <form action="{{ route('province-store') }}" method="POST" id="addprovince">
             @csrf
 
         <div class="modal-header">

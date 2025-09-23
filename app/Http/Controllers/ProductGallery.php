@@ -68,12 +68,13 @@ class ProductGallery extends Controller
      */
     public function gallery(Request $request)
     {
-
+        // dd($request->all());
         if (!auth()->user()->can('product.view') && !auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
         $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
+
 
         // -------------------------------muhib add this--------------------
         $store = collect(BusinessLocation::all()->toArray());
@@ -88,12 +89,17 @@ class ProductGallery extends Controller
             $i = $i + 1;
         }
 
-        // ---------------------------------------------------
+        // dd($ss);
 
+        // ---------------------------------------------------
+        // $store_id = request()->get('store_id', null);
+        // dd($store_id);
 
         if (request()->ajax()) {
 
             // ------------------------muhib add this------------------------------------
+            $store_id = request()->get('store_id', null);
+
 
             $query = Product::with(['media'])
                 ->leftJoin('brands', 'products.brand_id', '=', 'brands.id')
@@ -103,40 +109,42 @@ class ProductGallery extends Controller
                 ->leftJoin('tax_rates', 'products.tax', '=', 'tax_rates.id')
                 ->join('variations as v', 'v.product_id', '=', 'products.id')
                 ->join('variation_location_details as vld', 'vld.variation_id', '=', 'v.id')
-                ->join('stores', 'vld.store_id', '=', 'stores.id')
-                ->Join('business_locations as bl', 'vld.location_id', '=', 'bl.id')
+                ->join('stores', 'vld.store_id', '=', 'stores.id');
+
+            if (is_numeric($store_id)) {
+
+                $query  = $query->where('vld.store_id', '=', $store_id);
+            }
+            $query  = $query->Join('business_locations as bl', 'vld.location_id', '=', 'bl.id')
                 ->where('products.business_id', $business_id)
                 ->where('products.type', '!=', 'modifier');
 
+
             //Filter by location
             $location_id = request()->get('location_id', null);
-            // --------------------add this---
-            $store_id = request()->get('store_id', null);
-            // --------------------
+
+
+
             $permitted_locations = auth()->user()->permitted_locations();
 
+
             $default_selling_price = request()->get('default_selling_price') ? request()->get('default_selling_price') : 0;
-            if ($default_selling_price > 0) {
+
+            // -----------------------muhib add this---------------------
+            if (is_numeric($default_selling_price) && $default_selling_price > 0) {
                 $query->where('v.sell_price_inc_tax', '=', $default_selling_price);
             }
 
+            // --------------------------------
 
-
-            if ($location_id > 0) {
+            if (is_numeric($location_id)) {
 
                 $query->where('vld.location_id', '=', $location_id);
             }
+            // ----------------------
             if ($permitted_locations == 'all') {
 
                 $query->whereIn('vld.location_id', $ss);
-            }
-
-
-
-            // ---------------------------------
-            if ($store_id > 0) {
-
-                $query->where('vld.store_id', '=', $store_id);
             }
 
             // ---------------------------------------------
@@ -146,7 +154,7 @@ class ProductGallery extends Controller
                 'products.name as product',
                 'products.type',
                 'bl.name as business_location',
-                'stores.name as store_name',
+                // 'stores.name as store_name',
                 'c1.name as category',
                 'c2.name as sub_category',
                 'units.actual_name as unit',
@@ -161,15 +169,41 @@ class ProductGallery extends Controller
                 'products.product_custom_field2',
                 'products.product_custom_field3',
                 'products.product_custom_field4',
-                'vld.qty_available as current_stock',
-                // DB::raw('SUM(vld.qty_available) as current_stock'),
+                // 'vld.qty_available as current_stock',
+                DB::raw('SUM(vld.qty_available) as current_stock'),
                 DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                 DB::raw('MIN(v.sell_price_inc_tax) as min_price'),
                 DB::raw('MAX(v.dpp_inc_tax) as max_purchase_price'),
                 DB::raw('MIN(v.dpp_inc_tax) as min_purchase_price')
 
-            )->orderBy('products.name')->groupBy('products.id')->offset($offset)
+            )
+                ->orderBy('products.name')
+                ->groupBy(
+                    'products.id',
+                    'products.name',
+                    'products.type',
+                    // 'stores.name',
+                    'c1.name',
+                    'c2.name',
+                    'units.actual_name',
+                    'brands.name',
+                    'bl.name',
+                    'tax_rates.name',
+                    'products.sku',
+                    'products.image',
+                    'products.enable_stock',
+                    'products.is_inactive',
+                    'products.not_for_selling',
+                    'products.product_custom_field1',
+                    'products.product_custom_field2',
+                    'products.product_custom_field3',
+                    'products.product_custom_field4',
+
+
+                )->offset($offset)
                 ->limit(12);
+
+            // ---------------------------------------------
 
             $productname = request()->get('productname', null);
             $products->where('products.name', 'like', '%' . $productname . '%');
@@ -188,37 +222,48 @@ class ProductGallery extends Controller
             }
 
 
+
             $current_stock = request()->get('current_stock', null);
-            //dd($products);
-            if ($current_stock == 'zero') {
-                $products->having('current_stock', '0');
-            }
-            if ($current_stock == 'gtzero') {
-                $products->having('current_stock', '>', 0);
-            }
-            if ($current_stock == 'lszero') {
-                $products->having('current_stock', '<', 0);
+
+            // // ---------------------------muhib add this -------------------
+
+            // dd($current_stock);
+            if (in_array($current_stock, ['zero', 'gtzero', 'lszero'])) {
+
+                if ($current_stock == 'zero') {
+                    $products->havingRaw('SUM(vld.qty_available) = 0');
+                }
+                if ($current_stock == 'gtzero') {
+                    $products->havingRaw('SUM(vld.qty_available) > 0');
+                }
+                if ($current_stock == 'lszero') {
+                    $products->havingRaw('SUM(vld.qty_available) < 0');
+                }
             }
 
+            // ----------------------------------------------
+
             $category_id = request()->get('category_id', null);
-            if (!empty($category_id)) {
+            if (is_numeric($category_id)) {
                 $products->where('products.category_id', $category_id);
             }
 
             $brand_id = request()->get('brand_id', null);
-            if (!empty($brand_id)) {
+            if (is_numeric($brand_id)) {
                 $products->where('products.brand_id', $brand_id);
             }
 
             $unit_id = request()->get('unit_id', null);
-            if (!empty($unit_id)) {
+            if (is_numeric($unit_id)) {
                 $products->where('products.unit_id', $unit_id);
             }
 
             $tax_id = request()->get('tax_id', null);
-            if (!empty($tax_id)) {
+            if (is_numeric($tax_id)) {
                 $products->where('products.tax', $tax_id);
             }
+
+            // ---------------------------------------------------------------------------
 
             $active_state = request()->get('active_state', null);
             if ($active_state == 'active') {
@@ -241,7 +286,9 @@ class ProductGallery extends Controller
                 $products->where('products.repair_model_id', request()->get('repair_model_id'));
             }
 
+
             $products = $products->get();
+
             //added just for limte number of product
             $output['product'] = view('product_gallery.product', ['products' => $products, 'from' => 'gallery'])->render();
             $output['count'] = $products->count();
@@ -252,19 +299,23 @@ class ProductGallery extends Controller
         $rack_enabled = (request()->session()->get('business.enable_racks') || request()->session()->get('business.enable_row') || request()->session()->get('business.enable_position'));
 
         $categories = Category::forDropdown($business_id, 'product');
-
         $brands = Brands::forDropdown($business_id);
-
+        $brands->prepend(__('lang_v1.none'), 'none');
         $units = Unit::forDropdown($business_id);
 
         $tax_dropdown = TaxRate::forBusinessDropdown($business_id, false);
         $taxes = $tax_dropdown['tax_rates'];
+        $taxes->prepend(__('lang_v1.none'), 'none');
 
         $business_locations = BusinessLocation::forDropdown($business_id);
         $business_locations->prepend(__('lang_v1.none'), 'none');
 
 
-        if ($this->moduleUtil->isModuleInstalled('Manufacturing') && (auth()->user()->can('superadmin') || $this->moduleUtil->hasThePermissionInSubscription($business_id, 'manufacturing_module'))) {
+        if (
+            $this->moduleUtil->isModuleInstalled('Manufacturing') &&
+            (auth()->user()->can('superadmin') ||
+                $this->moduleUtil->hasThePermissionInSubscription($business_id, 'manufacturing_module'))
+        ) {
             $show_manufacturing_data = true;
         } else {
             $show_manufacturing_data = false;
@@ -293,6 +344,9 @@ class ProductGallery extends Controller
                 'menuItems'
             ));
     }
+
+
+
 
 
     public function getStoresByLocations(Request $request)
@@ -365,7 +419,27 @@ class ProductGallery extends Controller
                 DB::raw('MAX(v.dpp_inc_tax) as max_purchase_price'),
                 DB::raw('MIN(v.dpp_inc_tax) as min_purchase_price')
 
-            )->orderBy('products.name')->groupBy('products.id')->offset($offset)
+            )->orderBy('products.name')
+                ->groupBy(
+                    'products.id',
+                    'products.name',
+                    'products.type',
+                    'c1.name',
+                    'c2.name',
+                    'units.actual_name',
+                    'brands.name',
+                    'tax_rates.name',
+                    'products.sku',
+                    'products.image',
+                    'products.enable_stock',
+                    'products.is_inactive',
+                    'products.not_for_selling',
+                    'products.product_custom_field1',
+                    'products.product_custom_field2',
+                    'products.product_custom_field3',
+                    'products.product_custom_field4',
+                )
+                ->offset($offset)
                 ->limit(12);
 
             $productname = request()->get('productname', null);
@@ -480,6 +554,7 @@ class ProductGallery extends Controller
 
     public function stock_report(Request $request)
     {
+        // dd(request()->all());
         if (!auth()->user()->can('product.view') && !auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -487,6 +562,22 @@ class ProductGallery extends Controller
         $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
 
 
+        // -------------------------------muhib add this--------------------
+        $store = collect(BusinessLocation::all()->toArray());
+
+        $ss = [];
+
+        $i = 0;
+        foreach ($store as $key => $value) {
+
+
+            $ss[$key] = $value['id'];
+            $i = $i + 1;
+        }
+
+        // dd($ss);
+
+        // ---------------------------------------------------
 
 
 
@@ -494,44 +585,84 @@ class ProductGallery extends Controller
 
             $query = Product::with(['media'])
                 ->leftJoin('brands', 'products.brand_id', '=', 'brands.id')
+
                 ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
                 ->leftJoin('categories as c2', 'products.sub_category_id', '=', 'c2.id')
                 ->join('variations as v', 'v.product_id', '=', 'products.id')
+                // ---------muhib add this ------------------
+                ->join('variation_location_details as vld', 'vld.variation_id', '=', 'v.id')
+                ->join('stores', 'vld.store_id', '=', 'stores.id')
+                // ---------------------------
+
                 ->where('products.business_id', $business_id)
                 ->where('products.type', '!=', 'modifier');
+
+
+
+
 
             if ($request->pricegroup > 0) {
                 $query->leftJoin('variation_group_prices', 'v.id', '=', 'variation_group_prices.variation_id')
                     ->leftJoin('selling_price_groups', 'selling_price_groups.id', '=', 'variation_group_prices.price_group_id');
             }
 
+            //Filter by store
+            $store_id = request()->get('store_id', null);
+            if (is_numeric($store_id)) {
+
+                $query  = $query->where('vld.store_id', '=', $store_id);
+            }
+
             //Filter by location
+
+
+            // --------------------------------
+
             $location_id = request()->get('location_id', null);
+
             $permitted_locations = auth()->user()->permitted_locations();
 
-            if (!empty($location_id) && $location_id != 'none') {
-                if ($permitted_locations == 'all' || in_array($location_id, $permitted_locations)) {
-                    $query->whereHas('product_locations', function ($query) use ($location_id) {
-                        $query->where('product_locations.location_id', '=', $location_id);
-                    });
-                }
-            } elseif ($location_id == 'none') {
-                $query->doesntHave('product_locations');
-            } else {
-                if ($permitted_locations != 'all') {
-                    $query->whereHas('product_locations', function ($query) use ($permitted_locations) {
-                        $query->whereIn('product_locations.location_id', $permitted_locations);
-                    });
-                } else {
-                    $query->with('product_locations');
-                }
+
+            if (is_numeric($location_id)) {
+
+                $query->where('vld.location_id', '=', $location_id);
             }
+            if ($permitted_locations == 'all') {
+
+                $query->whereIn('vld.location_id', $ss);
+            }
+
+
+
+            // --------------------------muhib comment this ------------------------------------
+            // $location_id = request()->get('location_id', null);
+            // $permitted_locations = auth()->user()->permitted_locations();
+
+            // if (!empty($location_id) && $location_id != 'none') {
+            //     if ($permitted_locations == 'all' || in_array($location_id, $permitted_locations)) {
+            //         $query->whereHas('product_locations', function ($query) use ($location_id) {
+            //             $query->where('product_locations.location_id', '=', $location_id);
+            //         });
+            //     }
+            // } elseif ($location_id == 'none') {
+            //     $query->doesntHave('product_locations');
+            // } else {
+            //     if ($permitted_locations != 'all') {
+            //         $query->whereHas('product_locations', function ($query) use ($permitted_locations) {
+            //             $query->whereIn('product_locations.location_id', $permitted_locations);
+            //         });
+            //     } else {
+            //         $query->with('product_locations');
+            //     }
+            // }
 
             $offset = request()->get('offset', 0);
             $products = $query->select(
                 'products.id',
                 'products.name as product',
                 'products.type',
+                'stores.name as store_name',
+                'stores.id as store_id',
                 'c1.name as category',
                 'c2.name as sub_category',
                 'brands.name as brand',
@@ -544,7 +675,15 @@ class ProductGallery extends Controller
                 'v.dpp_inc_tax  as min_purchase_price'
 
 
-            )->orderBy('products.name');
+            )->orderBy(
+
+                'products.name',
+
+
+
+            );
+
+
 
 
             if ($request->pricegroup > 0) {
@@ -567,6 +706,8 @@ class ProductGallery extends Controller
             if (!empty($type)) {
                 $products->where('products.type', $type);
             }
+
+
             $image_type = request()->get('image_type', null);
             if ($image_type == 'default') {
                 $products->whereNull('products.image');
@@ -589,32 +730,34 @@ class ProductGallery extends Controller
             }
 
             $category_id = request()->get('category_id', null);
-            if (!empty($category_id)) {
+            if (is_numeric($category_id)) {
                 $products->where('products.category_id', $category_id);
             }
 
             $brand_id = request()->get('brand_id', null);
-            if (!empty($brand_id)) {
+            if (is_numeric($brand_id)) {
                 $products->where('products.brand_id', $brand_id);
             }
 
             $unit_id = request()->get('unit_id', null);
             if (!empty($unit_id)) {
-                $products->where('products.unit_id', $unit_id);
+                $products = $products->where('products.unit_id', $unit_id);
             }
 
             $tax_id = request()->get('tax_id', null);
             if (!empty($tax_id)) {
-                $products->where('products.tax', $tax_id);
+                $products = $products->where('products.tax', $tax_id);
             }
-
             $active_state = request()->get('active_state', null);
             if ($active_state == 'active') {
                 $products->Active();
             }
+
             if ($active_state == 'inactive') {
                 $products->Inactive();
             }
+
+
             $not_for_selling = request()->get('not_for_selling', null);
             if ($not_for_selling == 'true') {
                 $products->ProductNotForSales();
@@ -629,6 +772,18 @@ class ProductGallery extends Controller
                 $products->where('products.repair_model_id', request()->get('repair_model_id'));
             }
 
+
+            // --------------------for testing -----------------------------------------
+            // dd(request()->get('tax_id'), request()->get('unit_id'), request()->get('brand_id'), request()->get('category_id'), request()->get('active_state'));
+            // dd($products->toSql());
+            // $products = $products->get();
+            // dd($products);
+            // // dd(request()->get('tax_id', null),request()->get('unit_id', null),request()->get('active_state', null));
+            // $output['product'] = view('product_gallery.partials.stock_report', ['products' => $products, 'from' => 'gallery'])->render();
+            // $output['count'] = $products->count();
+            // return $output;
+
+            // --------------------------------------------------
             $products = $products->get();
             //added just for limte number of product
             $output['product'] = view('product_gallery.partials.stock_report', ['products' => $products, 'from' => 'gallery'])->render();
@@ -637,7 +792,10 @@ class ProductGallery extends Controller
             return $output;
         }
 
-        $rack_enabled = (request()->session()->get('business.enable_racks') || request()->session()->get('business.enable_row') || request()->session()->get('business.enable_position'));
+        $rack_enabled = (
+            request()->session()->get('business.enable_racks') ||
+            request()->session()->get('business.enable_row') ||
+            request()->session()->get('business.enable_position'));
 
         $categories = Category::forDropdown($business_id, 'product');
 
@@ -647,6 +805,8 @@ class ProductGallery extends Controller
 
         $tax_dropdown = TaxRate::forBusinessDropdown($business_id, false);
         $taxes = $tax_dropdown['tax_rates'];
+        // dd($taxes,$units);
+
 
         $business_locations = BusinessLocation::forDropdown($business_id);
         $business_locations->prepend(__('lang_v1.none'), 'none');

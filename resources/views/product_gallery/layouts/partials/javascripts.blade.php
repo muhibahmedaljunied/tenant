@@ -20,12 +20,12 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js?v=$asset_v"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js?v=$asset_v"></script>
 <![endif]-->
-<script src="{{ asset('js/vendor.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/vendor.js?v=' . $asset_v) }}"></script>
 
 @if(file_exists(public_path('js/lang/' . session()->get('user.language', config('app.locale')) . '.js')))
-    <script src="{{ asset('js/lang/' . session()->get('user.language', config('app.locale') ) . '.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/lang/' . session()->get('user.language', config('app.locale') ) . '.js?v=' . $asset_v) }}"></script>
 @else
-    <script src="{{ asset('js/lang/en.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/lang/en.js?v=' . $asset_v) }}"></script>
 @endif
 @php
     $business_date_format = session('business.date_format', config('constants.default_date_format'));
@@ -89,26 +89,26 @@
 </script>
 
 @if(file_exists(public_path('js/lang/' . session()->get('user.language', config('app.locale')) . '.js')))
-    <script src="{{ asset('js/lang/' . session()->get('user.language', config('app.locale') ) . '.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/lang/' . session()->get('user.language', config('app.locale') ) . '.js?v=' . $asset_v) }}"></script>
 @else
-    <script src="{{ asset('js/lang/en.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/lang/en.js?v=' . $asset_v) }}"></script>
 @endif
 
-<script src="{{ asset('js/functions.js?v=' . $asset_v) }}"></script>
-<script src="{{ asset('js/common.js?v=' . $asset_v) }}"></script>
-<script src="{{ asset('js/app.js?v=' . $asset_v) }}"></script>
-<script src="{{ asset('js/help-tour.js?v=' . $asset_v) }}"></script>
-<script src="{{ asset('js/documents_and_note.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/functions.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/common.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/app.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/help-tour.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('js/documents_and_note.js?v=' . $asset_v) }}"></script>
 
 <!-- TODO -->
 @if(file_exists(public_path('AdminLTE/plugins/select2/lang/' . session()->get('user.language', config('app.locale')) . '.js')))
-    <script src="{{ asset('AdminLTE/plugins/select2/lang/' . session()->get('user.language', config('app.locale') ) . '.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('AdminLTE/plugins/select2/lang/' . session()->get('user.language', config('app.locale') ) . '.js?v=' . $asset_v) }}"></script>
 @endif
 @php
     $validation_lang_file = 'messages_' . session()->get('user.language', config('app.locale') ) . '.js';
 @endphp
 @if(file_exists(public_path() . '/js/jquery-validation-1.16.0/src/localization/' . $validation_lang_file))
-    <script src="{{ asset('js/jquery-validation-1.16.0/src/localization/' . $validation_lang_file . '?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/jquery-validation-1.16.0/src/localization/' . $validation_lang_file . '?v=' . $asset_v) }}"></script>
 @endif
 
 @if(!empty($__system_settings['additional_js']))

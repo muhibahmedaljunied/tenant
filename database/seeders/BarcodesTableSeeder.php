@@ -15,7 +15,7 @@ class BarcodesTableSeeder extends Seeder
     public function run()
     {
         Barcode::create([
-            'id'=>1,
+            // 'id'=>1,
             'name'=>'20 Labels per Sheet',
             'description'=>'Sheet Size: 8.5" x 11", Label Size: 4" x 1", Labels per sheet: 20',
             'width'=>4,
@@ -36,7 +36,7 @@ class BarcodesTableSeeder extends Seeder
         ]);
             
         Barcode::create([
-            'id'=>2,
+            // 'id'=>2,
             'name'=>'30 Labels per sheet',
             'description'=>'Sheet Size: 8.5" x 11", Label Size: 2.625" x 1", Labels per sheet: 30',
             'width'=>2.625,
@@ -57,7 +57,7 @@ class BarcodesTableSeeder extends Seeder
         ]);
             
         Barcode::create([
-            'id'=>3,
+            // 'id'=>3,
             'name'=>'32 Labels per sheet',
             'description'=>'Sheet Size: 8.5" x 11", Label Size: 2" x 1.25", Labels per sheet: 32',
             'width'=>2,
@@ -78,7 +78,7 @@ class BarcodesTableSeeder extends Seeder
         ]);
             
         Barcode::create([
-            'id'=>4,
+            // 'id'=>4,
             'name'=>'40 Labels per sheet',
             'description'=>'Sheet Size: 8.5" x 11", Label Size: 2" x 1", Labels per sheet: 40',
             'width'=>2,
@@ -99,7 +99,7 @@ class BarcodesTableSeeder extends Seeder
         ]);
             
         Barcode::create([
-            'id'=>5,
+            // 'id'=>5,
             'name'=>'50 Labels per Sheet',
             'description'=>'Sheet Size: 8.5" x 11", Label Size: 1.5" x 1", Labels per sheet: 50',
             'width'=>1.5,
@@ -120,7 +120,7 @@ class BarcodesTableSeeder extends Seeder
         ]);
 
         Barcode::create([
-            'id'=>6,
+            // 'id'=>6,
             'name'=>'Continuous Rolls - 31.75mm x 25.4mm',
             'description'=>'Label Size: 31.75mm x 25.4mm, Gap: 3.18mm',
             'width'=>1.25,

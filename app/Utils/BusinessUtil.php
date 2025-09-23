@@ -90,7 +90,6 @@ class BusinessUtil extends Util
 
         $customers = $business_settings->customers;
         $next_children = $customers . '01';
-        // dd($business_id,$createAccounts,$business_settings,$customers);
         AcMaster::create([
             'account_name_ar' => "عميل قطاعي",
             "account_number" => $next_children,

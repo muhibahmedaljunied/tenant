@@ -17,9 +17,9 @@
         }
     </style>
     @if (app()->getLocale() == 'ar')
-        <link rel="stylesheet" href="{{ asset('customs/ac/custom_ar.css') }}">
+        <link rel="stylesheet" href="{{ url('customs/ac/custom_ar.css') }}">
     @else
-        <link rel="stylesheet" href="{{ asset('customs/ac/custom.css') }}">
+        <link rel="stylesheet" href="{{ url('customs/ac/custom.css') }}">
     @endif
 @endsection
 @section('content')
@@ -496,8 +496,8 @@
 
 @section('javascript')
     <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
-    <script src="{{ asset('js/set_right_left_xslx.js') }}"></script>
-    <script src="{{ asset('js/excelexport.js') }}"></script>
+    <script src="{{ url('js/set_right_left_xslx.js') }}"></script>
+    <script src="{{ url('js/excelexport.js') }}"></script>
 
     <script>
         $('.export_btn').click(function(e) {

@@ -186,6 +186,7 @@ class UnitController extends Controller
 
             $units = Unit::forDropdown($business_id);
 
+            // dd($unit,$units);
             return view('unit.edit')
                 ->with(compact('unit', 'units'));
         }

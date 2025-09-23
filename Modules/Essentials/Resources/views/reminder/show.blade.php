@@ -24,7 +24,7 @@
           <hr>
           <div class="row">
               <div class="col-md-9">
-                <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\ReminderController@update', [$reminder->id]) }}" method="post" id="update_reminder_repeat">
+                <form action="{{ route('reminder-update', [$reminder->id]) }}" method="post" id="update_reminder_repeat">
                     @csrf
                     @method('PUT')
                     <div class="input-group">
@@ -41,7 +41,7 @@
                 </form>
               </div>
               <div class="col-md-3">
-                <button type="button" class="btn btn-danger" id="delete_reminder" data-href="{{action('\Modules\Essentials\Http\Controllers\ReminderController@destroy', [$reminder->id])}}">
+                <button type="button" class="btn btn-danger" id="delete_reminder" data-href="{{route('reminder-destroy', [$reminder->id])}}">
                   @lang('essentials::lang.delete_reminder')
                 </button>
               </div>

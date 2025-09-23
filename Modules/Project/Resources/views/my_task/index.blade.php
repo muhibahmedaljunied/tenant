@@ -103,10 +103,10 @@
 </section>
 <div class="modal fade project_task_model" tabindex="-1" role="dialog"></div>
 <div class="modal fade view_project_task_model" tabindex="-1" role="dialog"></div>
-<link rel="stylesheet" href="{{ asset('modules/project/sass/project.css?v=' . $asset_v) }}">
+<link rel="stylesheet" href="{{ url('modules/project/sass/project.css?v=' . $asset_v) }}">
 @endsection
 @section('javascript')
-<script src="{{ asset('modules/project/js/project.js?v=' . $asset_v) }}"></script>
+<script src="{{ url('modules/project/js/project.js?v=' . $asset_v) }}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
 		initializeMyTaskDataTable();

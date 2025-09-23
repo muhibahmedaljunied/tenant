@@ -5,6 +5,9 @@ declare(strict_types=1);
 use App\Http\Controllers\AcMasterController;
 use Illuminate\Support\Facades\{Auth, DB, Log, Route};
 use App\Http\Controllers\AcMaster\ImportAcMasterController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\SellPosController;
+use App\Http\Controllers\TaxonomyController;
 use Modules\Superadmin\Http\Controllers\SubscriptionController;
 
 
@@ -32,37 +35,6 @@ include_once('install_r.php');
 Route::get('/qrcode', 'GenQrcode@index');
 Route::post('/qrcode', 'GenQrcode@test');
 
-
-
-// ------------------------------------------------------
-
-
-// tenancy()->routeGroup(function () {
-//     require base_path('Modules/Superadmin/Routes/web.php');
-// });
-
-// ------------------------------------------------------
-
-// Route::middleware([
-//     'SetSessionData',
-//     'auth',
-//     'language',
-//     'timezone',
-//     'AdminSidebarMenu'
-// ])->group(function () {
-
-//     Route::get('/subscription/{package_id}/paypal-express-checkout', [SubscriptionController::class, 'paypalExpressCheckout']);
-//     Route::get('/subscription/{package_id}/pesapal-callback', [SubscriptionController::class, 'pesapalCallback'])->name('pesapalCallback');
-//     Route::get('/subscription/{package_id}/pay', [SubscriptionController::class, 'pay']);
-//     Route::any('/subscription/{package_id}/confirm', [SubscriptionController::class, 'confirm'])->name('subscription-confirm');
-//     Route::get('/all-subscriptions', [SubscriptionController::class, 'allSubscriptions']);
-//     Route::get('/subscription/{package_id}/register-pay', [SubscriptionController::class, 'registerPay'])->name('register-pay');
-//     Route::get('/subscription', [SubscriptionController::class,'index'])->name('subscription-index');
-    
-// });
-
-
-
 Route::middleware(['setData'])->group(function () {
 
     Auth::routes();
@@ -86,7 +58,7 @@ Route::middleware([
     'AdminSidebarMenu',
     'CheckUserLogin'
 
- 
+
 ])->group(function () {
 
 
@@ -119,6 +91,8 @@ Route::middleware([
     Route::post('/user/update-password', 'UserController@updatePassword')->name('user.updatePassword');
 
     Route::resource('brands', 'BrandController');
+    Route::get('brands-index', [BrandController::class, 'index'])->name('brand-index');
+
 
     /*Route::resource('payment-account', 'PaymentAccountController');*/
     Route::prefix('zatca')->namespace('Zatca')->name('zatca.')->group(function () {
@@ -164,7 +138,10 @@ Route::middleware([
     Route::resource('contacts', 'ContactController');
 
     Route::get('taxonomies-ajax-index-page', 'TaxonomyController@getTaxonomyIndexPage');
-    Route::resource('taxonomies', 'TaxonomyController');
+    // Route::resource('taxonomies', 'TaxonomyController');
+    Route::get('taxonomies', [TaxonomyController::class, 'index'])->name('taxonomy-index');
+    Route::get('taxonomies-create', [TaxonomyController::class, 'create'])->name('taxonomy-create');
+
 
     Route::resource('variation-templates', 'VariationTemplateController');
 
@@ -249,6 +226,10 @@ Route::middleware([
     Route::post('/pos/get-stores-by-locations-', 'SellPosController@getStoresByLocations')->name('getStoresByLocationsPos');
 
     Route::resource('pos', 'SellPosController');
+    // Route::get('pos',[SellPosController::class,'index'])->name('SellPos-index');
+
+    Route::get('pos-create', [SellPosController::class, 'create'])->name('SellPos-create');
+
 
     Route::resource('roles', 'RoleController');
 
@@ -287,6 +268,7 @@ Route::middleware([
     Route::get('/reports/tax-sell-purchase-report', 'ReportController@getTaxSellPurchaseReport');
     Route::get('/reports/tax-details', 'ReportController@getTaxDetails');
     Route::get('/reports/trending-products', 'ReportController@getTrendingProducts');
+    Route::post('/reports/trending-products/get-stores-by-locations', 'ReportController@getStoresByLocations')->name('getStoresByLocationsTrendingProducts');
     Route::get('/reports/expense-report', 'ReportController@getExpenseReport');
     Route::get('/reports/stock-adjustment-report', 'ReportController@getStockAdjustmentReport');
     Route::get('/reports/register-report', 'ReportController@getRegisterReport');
@@ -299,7 +281,10 @@ Route::middleware([
     Route::post('/reports/stock-expiry-update', 'ReportController@updateStockExpiryReport')->name('updateStockExpiryReport');
     Route::get('/reports/customer-group', 'ReportController@getCustomerGroup');
     Route::get('/reports/product-purchase-report', 'ReportController@getproductPurchaseReport');
+    Route::post('/reports/product-purchase-report/get-stores-by-locations', 'ReportController@getStoresByLocations')->name('getStoresByLocationsProductPurchaseReport');
     Route::get('/reports/product-sell-report', 'ReportController@getproductSellReport');
+    Route::post('/reports/product-sell-report/get-stores-by-locations', 'ReportController@getStoresByLocations')->name('getStoresByLocationsProductSellReport');
+
 
     Route::get('/reports/product-sell-return-report', 'ReportController@getproductSellReturnReport');
     Route::get('/reports/product-sell-report-with-purchase', 'ReportController@getproductSellReportWithPurchase');

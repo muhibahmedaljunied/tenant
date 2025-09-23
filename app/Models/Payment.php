@@ -12,7 +12,17 @@ class Payment extends Model
 {
     use HasFactory, BelongsToBusiness;
 
-    protected $fillable = ['reference_number', 'contact_id', 'account_id', 'description', 'type', 'amount', 'date', 'contact_type'];
+    protected $fillable = [
+        'reference_number',
+        'contact_id',
+        'account_id',
+        'description',
+        'type',
+        'amount',
+        'date',
+        'contact_type',
+        
+    ];
 
     protected $casts = [
         'date' => 'date'
@@ -23,7 +33,8 @@ class Payment extends Model
         return $this->belongsTo(Contact::class);
     }
 
-    public function account(){
+    public function account()
+    {
         return $this->belongsTo(AcMaster::class, 'account_id');
     }
 }

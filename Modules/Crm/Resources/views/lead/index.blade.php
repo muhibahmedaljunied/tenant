@@ -39,17 +39,17 @@
 	@component('components.widget', ['class' => 'box-primary', 'title' => __('crm::lang.all_leads')])
         @slot('tool')
             <div class="box-tools">
-                <button type="button" class="btn btn-sm btn-primary btn-add-lead pull-right m-5" data-href="{{action('\Modules\Crm\Http\Controllers\LeadController@create')}}">
+                <button type="button" class="btn btn-sm btn-primary btn-add-lead pull-right m-5" data-href="{{route('lead-create')}}">
                     <i class="fa fa-plus"></i> @lang('messages.add')
                 </button>
 
                 <div class="btn-group btn-group-toggle pull-right m-5" data-toggle="buttons">
                     <label class="btn btn-info btn-sm active list">
-                        <input type="radio" name="lead_view" value="list_view" class="lead_view" data-href="{{action('\Modules\Crm\Http\Controllers\LeadController@index').'?lead_view=list_view'}}">
+                        <input type="radio" name="lead_view" value="list_view" class="lead_view" data-href="{{route('lead-index').'?lead_view=list_view'}}">
                         @lang('crm::lang.list_view')
                     </label>
                     <label class="btn btn-info btn-sm kanban">
-                        <input type="radio" name="lead_view" value="kanban" class="lead_view" data-href="{{action('\Modules\Crm\Http\Controllers\LeadController@index').'?lead_view=kanban'}}">
+                        <input type="radio" name="lead_view" value="kanban" class="lead_view" data-href="{{route('lead-index').'?lead_view=kanban'}}">
                         @lang('crm::lang.kanban_board')
                     </label>
                 </div>

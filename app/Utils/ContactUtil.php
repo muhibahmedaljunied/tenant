@@ -73,37 +73,150 @@ class ContactUtil extends Util
      */
     public function getContactInfo($business_id, $contact_id)
     {
-        return Contact::where('contacts.id', $contact_id)
+
+        // -------------------muhib update this query for sqlserver--------------------------------- 
+
+        return  Contact::where('contacts.id', $contact_id)
             ->where('contacts.business_id', $business_id)
             ->join('transactions AS t', 'contacts.id', '=', 't.contact_id')
+            ->leftJoin('transaction_payments AS tp', 'tp.transaction_id', '=', 't.id')
             ->with(['business'])
             ->select(
-                DB::raw("SUM(CASE WHEN t.type = 'purchase' THEN final_total ELSE 0 END) AS total_purchase"),
+                DB::raw("SUM(CASE WHEN t.type = 'purchase' THEN t.final_total ELSE 0 END) AS total_purchase"),
+                DB::raw("SUM(CASE WHEN t.type = 'sell' AND t.status = 'final' THEN t.final_total ELSE 0 END) AS total_invoice"),
+                DB::raw("SUM(CASE WHEN t.type = 'purchase' THEN tp.amount ELSE 0 END) AS purchase_paid"),
+                DB::raw("SUM(CASE WHEN t.type = 'sell' AND t.status = 'final' THEN 
+            CASE WHEN tp.is_return = 1 THEN -1 * tp.amount ELSE tp.amount END 
+        ELSE 0 END) AS invoice_received"),
+                DB::raw("SUM(CASE WHEN t.type = 'opening_balance' THEN t.final_total ELSE 0 END) AS opening_balance"),
+                DB::raw("SUM(CASE WHEN t.type = 'opening_balance' THEN tp.amount ELSE 0 END) AS opening_balance_paid"),
+                'contacts.id',
+                'contacts.business_id',
+                'contacts.type',
+                'contacts.name',
+                'contacts.prefix',
+                'contacts.first_name',
+                'contacts.last_name',
+                'contacts.contact_id',
+                'contacts.email',
+                'contacts.middle_name',
+                'contacts.created_by',
+                'contacts.supplier_business_name',
+                'contacts.contact_status',
+                'contacts.tax_number',
+                'contacts.city',
+                'contacts.state',
+                'contacts.country',
+                'contacts.address_line_1',
+                'contacts.address_line_2',
+                'contacts.zip_code',
+                'contacts.dob',
+                'contacts.mobile',
+                'contacts.landline',
+                'contacts.alternate_number',
+                'contacts.pay_term_number',
+                'contacts.pay_term_type',
+                'contacts.credit_limit',
+                'contacts.converted_by',
+                'contacts.converted_on',
+                'contacts.balance',
+                'contacts.total_rp',
+                'contacts.total_rp_used',
+                'contacts.total_rp_expired',
+                'contacts.is_default',
+                'contacts.shipping_address',
+                'contacts.position',
+                'contacts.customer_group_id',
+                'contacts.crm_source',
+                'contacts.crm_life_stage',
+                'contacts.custom_field1',
+                'contacts.custom_field2',
+                'contacts.custom_field3',
+                'contacts.custom_field4',
+                'contacts.custom_field5',
+                'contacts.custom_field6',
+                'contacts.custom_field7',
+                'contacts.custom_field8',
+                'contacts.custom_field9',
+                'contacts.custom_field10',
+                'contacts.deleted_at',
+                'contacts.created_at',
+                'contacts.updated_at',
+                'contacts.price_group_id',
+                'contacts.account_number_customer',
+                'contacts.account_number_supplier',
+                'contacts.province_id',
+                'contacts.sector_id',
+                'contacts.distribution_area_id',
+                'contacts.track_id',
+                'contacts.location',
+                'contacts.commercial_registration_number',
+            )->groupBy(
 
-                DB::raw("SUM(CASE WHEN t.type = 'sell' AND t.status = 'final' THEN final_total ELSE 0 END) AS total_invoice"),
+                'contacts.id',
+                'contacts.business_id',
+                'contacts.type',
+                'contacts.name',
+                'contacts.prefix',
+                'contacts.first_name',
+                'contacts.last_name',
+                'contacts.contact_id',
+                'contacts.email',
+                'contacts.middle_name',
+                'contacts.created_by',
+                'contacts.supplier_business_name',
+                'contacts.contact_status',
+                'contacts.tax_number',
+                'contacts.city',
+                'contacts.state',
+                'contacts.country',
+                'contacts.address_line_1',
+                'contacts.address_line_2',
+                'contacts.zip_code',
+                'contacts.dob',
+                'contacts.mobile',
+                'contacts.landline',
+                'contacts.alternate_number',
+                'contacts.pay_term_number',
+                'contacts.pay_term_type',
+                'contacts.credit_limit',
+                'contacts.converted_by',
+                'contacts.converted_on',
+                'contacts.balance',
+                'contacts.total_rp',
+                'contacts.total_rp_used',
+                'contacts.total_rp_expired',
+                'contacts.is_default',
+                'contacts.shipping_address',
+                'contacts.position',
+                'contacts.customer_group_id',
+                'contacts.crm_source',
+                'contacts.crm_life_stage',
+                'contacts.custom_field1',
+                'contacts.custom_field2',
+                'contacts.custom_field3',
+                'contacts.custom_field4',
+                'contacts.custom_field5',
+                'contacts.custom_field6',
+                'contacts.custom_field7',
+                'contacts.custom_field8',
+                'contacts.custom_field9',
+                'contacts.custom_field10',
+                'contacts.deleted_at',
+                'contacts.created_at',
+                'contacts.updated_at',
+                'contacts.price_group_id',
+                'contacts.account_number_customer',
+                'contacts.account_number_supplier',
+                'contacts.province_id',
+                'contacts.sector_id',
+                'contacts.distribution_area_id',
+                'contacts.track_id',
+                'contacts.location',
+                'contacts.commercial_registration_number',
 
-                DB::raw("SUM(CASE WHEN t.type = 'purchase' THEN (
-                    SELECT SUM(amount) 
-                    FROM transaction_payments 
-                    WHERE transaction_payments.transaction_id = t.id
-                ) ELSE 0 END) AS purchase_paid"),
-
-                DB::raw("SUM(CASE WHEN t.type = 'sell' AND t.status = 'final' THEN (
-                    SELECT SUM(CASE WHEN is_return = 1 THEN -1 * amount ELSE amount END)
-                    FROM transaction_payments 
-                    WHERE transaction_payments.transaction_id = t.id
-                ) ELSE 0 END) AS invoice_received"),
-
-                DB::raw("SUM(CASE WHEN t.type = 'opening_balance' THEN final_total ELSE 0 END) AS opening_balance"),
-
-                DB::raw("SUM(CASE WHEN t.type = 'opening_balance' THEN (
-                    SELECT SUM(amount) 
-                    FROM transaction_payments 
-                    WHERE transaction_payments.transaction_id = t.id
-                ) ELSE 0 END) AS opening_balance_paid"),
-
-                'contacts.*'
-            )->first();
+            )
+            ->first();
     }
 
     public function createNewContact($input)
@@ -114,11 +227,10 @@ class ContactUtil extends Util
             $count = Contact::where('business_id', $input['business_id'])
                 ->where('contact_id', $input['contact_id'])
                 ->count();
- 
         }
 
         if ($count == 0) {
- 
+
             //Update reference count
             $ref_count = $this->setAndGetReferenceCount('contacts', $input['business_id']);
 

@@ -4,24 +4,43 @@
 @section('content')
 
     <!-- Content Header (Page header) -->
+
+
     <section class="content-header">
-        <h1>@lang('user.users')</h1>
+        <h1>@lang( 'user.users' )
+            <small>@lang( 'user.manage_users' )</small>
+        </h1>
+        <!-- <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+            <li class="active">Here</li>
+        </ol> -->
     </section>
+
 
     <!-- Main content -->
     <section class="content">
 
 
-        <div class="row">
-            <div class="col-md-12">
+     
+        
                 @component('components.widget', ['class' => 'box-primary', 'title' => __('user.all_users')])
-                    @slot('tool')
+                    {{-- @slot('tool')
                         <div class="box-tools">
                             <a class="btn btn-block btn-primary" href="{{ action('ItGuy\UserController@create') }}">
                                 <i class="fa fa-plus"></i> @lang('messages.add')
                             </a>
                         </div>
+                    @endslot --}}
+
+                    
+                    @slot('tool')
+                        <div class="box-tools">
+                            <button type="button" class="btn btn-block btn-primary btn-modal"
+                                data-href="{{ action('ItGuy\UserController@create') }}" data-container=".user_modal">
+                                <i class="fa fa-plus"></i> @lang('messages.add')</button>
+                        </div>
                     @endslot
+
 
 
                     <div class="table-responsive">
@@ -38,23 +57,21 @@
                         </table>
                     </div>
                 @endcomponent
-            </div>
-        </div>
+         
     </section>
 
     <!-- /.content -->
     <!-- /.content -->
-    <div class="modal fade payment_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+
+    
+    <div class="modal fade user_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
     </div>
 
-    <div class="modal fade edit_payment_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-    </div>
+
 @stop
 @section('javascript')
 
     <script type="text/javascript">
-
-
         //Roles table
         $(document).ready(function() {
             var user_table = $('#user_table').DataTable({
@@ -115,6 +132,5 @@
         });
     </script>
 
-    <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
 
 @endsection

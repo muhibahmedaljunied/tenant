@@ -152,7 +152,7 @@ class DataController extends Controller
         if ($is_project_enabled) {
             $menuItems[] = [
                 'title' => __('project::lang.project'),
-                'url' => action('\Modules\Project\Http\Controllers\ProjectController@index') . '?project_view=list_view',
+                'url' => route('project-index') . '?project_view=list_view',
                 'icon' => 'fa fa-project-diagram',
                 'active' => request()->segment(1) == 'project' || request()->get('type') == 'project',
                 'style' => config('app.env') == 'demo' ? 'background-color: #fdfdfd !important;' : 'background-color:#fdfdfd',

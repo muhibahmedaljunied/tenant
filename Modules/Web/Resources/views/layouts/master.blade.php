@@ -7,14 +7,14 @@
         <title>Module Web</title>
 
        {{-- Laravel Mix - CSS File --}}
-      {{-- <link rel="stylesheet" href="{{asset('modules/web/css/app.css') }}">--}}
-        <link rel="stylesheet" href="{{asset('modules/web/css/app.css') }}">
+      {{-- <link rel="stylesheet" href="{{url('modules/web/css/app.css') }}">--}}
+        <link rel="stylesheet" href="{{url('modules/web/css/app.css') }}">
 
     </head>
     <body>
         @yield('content')
 
         {{-- Laravel Mix - JS File --}}
-       <script src="{{Module:: asset('web::js/web.js?v=' . $asset_v) }}"></script>
+       <script src="{{Module:: url('web::js/web.js?v=' . $asset_v) }}"></script>
     </body>
 </html>

@@ -125,7 +125,7 @@
 
 
 @section('javascript')
-    {{--   <script  src='{{Module::asset('installment:js/app.js?v=' . $asset_v)}}'></script>--}}
+    {{--   <script  src='{{Module::url('installment:js/app.js?v=' . $asset_v)}}'></script>--}}
     @include('installment::layouts.partials.javascripts')
 
 

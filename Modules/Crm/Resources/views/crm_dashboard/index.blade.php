@@ -155,7 +155,7 @@
                 <div class="box-header with-border">
                     <i class="fas fa fa-birthday-cake"></i>
                     <h3 class="box-title">@lang('crm::lang.birthdays')</h3>
-                    <a data-href="{{action('\Modules\Crm\Http\Controllers\CampaignController@create')}}" class="btn btn-success btn-xs" id="wish_birthday">
+                    <a data-href="{{route('campaign-create')}}" class="btn btn-success btn-xs" id="wish_birthday">
                         <i class="fas fa-paper-plane"></i>
                         @lang('crm::lang.send_wishes')
                     </a>
@@ -239,7 +239,7 @@
 </style>
 @stop
 @section('javascript')
-	<script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $(document).on('click', '#wish_birthday', function () {

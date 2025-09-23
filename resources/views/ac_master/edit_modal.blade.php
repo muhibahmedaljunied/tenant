@@ -1,12 +1,16 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-        {!! Form::open([
-            'url' => action('AcMasterController@update', [$ac_master->id]),
-            'href_redirect' => action('AcMasterController@index'),
-            'method' => 'PUT',
-            'id' => 'master_edit_form',
-        ]) !!}
+        <form action="{{ action('AcMasterController@update', [$ac_master->id]) }}" method="POST" id="master_edit_form">
+            @csrf
+            @method('PUT')
+            
+            {{-- You can include a hidden input for href_redirect if needed --}}
+            <input type="hidden" name="href_redirect" value="{{ action('AcMasterController@index') }}">
+        
+     
+   
+        
 
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -18,50 +22,54 @@
 
 
             <div class="form-group">
-                {!! Form::label('account_name_ar', __('chart_of_accounts.account_name_ar') . ':*') !!}
-                {!! Form::text('account_name_ar', $ac_master->account_name_ar, [
-                    'class' => 'form-control',
-                    'required',
-                    'placeholder' => __('chart_of_accounts.account_name_ar'),
-                ]) !!}
+                <label for="account_name_ar">{{ __('chart_of_accounts.account_name_ar') }}:*</label>
+                <input type="text" name="account_name_ar" id="account_name_ar"
+                       value="{{ old('account_name_ar', $ac_master->account_name_ar) }}"
+                       class="form-control" required
+                       placeholder="{{ __('chart_of_accounts.account_name_ar') }}">
             </div>
+            
             <div class="form-group">
-                {!! Form::label('account_name_en', __('chart_of_accounts.account_name_en')) !!}
-                {!! Form::text('account_name_en', $ac_master->account_name_en, [
-                    'class' => 'form-control',
-                    'placeholder' => __('chart_of_accounts.account_name_en'),
-                ]) !!}
+                <label for="account_name_en">{{ __('chart_of_accounts.account_name_en') }}</label>
+                <input type="text" name="account_name_en" id="account_name_en"
+                       value="{{ old('account_name_en', $ac_master->account_name_en) }}"
+                       class="form-control"
+                       placeholder="{{ __('chart_of_accounts.account_name_en') }}">
             </div>
-
+            
             <div class="form-group">
-                {!! Form::label('account_number', __('chart_of_accounts.account_number') . ':') !!}
-                {!! Form::text('account_number', $ac_master->account_number, [
-                    'class' => 'form-control',
-                    'required',
-                    'placeholder' => __('lang_v1.starts_at'),
-                    'readonly',
-                ]) !!}
+                <label for="account_number">{{ __('chart_of_accounts.account_number') }}:</label>
+                <input type="text" name="account_number" id="account_number"
+                       value="{{ old('account_number', $ac_master->account_number) }}"
+                       class="form-control" required readonly
+                       placeholder="{{ __('lang_v1.starts_at') }}">
             </div>
-
-            <div class="form-group  ">
-                {!! Form::label('parent_acct_no', __('chart_of_accounts.parent_acct_no') . ':') !!}
-
-                <select name="parent_acct_no" class="form-control select2">
-                    <option  {{ is_null($ac_master->parent_acct_no) ? 'selected':'' }} disabled>@lang('chart_of_accounts.no_have_parent')</option>
+            
+            <div class="form-group">
+                <label for="parent_acct_no">{{ __('chart_of_accounts.parent_acct_no') }}:</label>
+                <select name="parent_acct_no" id="parent_acct_no" class="form-control select2">
+                    <option value="" {{ is_null($ac_master->parent_acct_no) ? 'selected' : '' }} disabled>
+                        @lang('chart_of_accounts.no_have_parent')
+                    </option>
                     @foreach ($masters as $account)
                         <option value="{{ $account->account_number }}"
-                            @if ($account->account_number == $ac_master->parent_acct_no) selected @endif>{{ $account->account_name_ar }} ({{ $account->account_number }})</option>
+                            {{ $account->account_number == $ac_master->parent_acct_no ? 'selected' : '' }}>
+                            {{ $account->account_name_ar }} ({{ $account->account_number }})
+                        </option>
                     @endforeach
-
                 </select>
             </div>
-
+            
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        {!! Form::checkbox('pay_collect', 1, $ac_master->pay_collect, ['id' => 'pay_collect']) !!} @lang('chart_of_accounts.pay_collect')</label>
+                        <input type="checkbox" name="pay_collect" id="pay_collect" value="1"
+                            {{ $ac_master->pay_collect ? 'checked' : '' }}>
+                        @lang('chart_of_accounts.pay_collect')
+                    </label>
                 </div>
             </div>
+            
 
 
 
@@ -71,7 +79,7 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">@lang('messages.close')</button>
         </div>
 
-        {!! Form::close() !!}
+    </form>
 
 
     </div><!-- /.modal-content -->

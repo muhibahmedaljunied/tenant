@@ -20,13 +20,19 @@ use Modules\Repair\Notifications\RepairStatusUpdated;
 class RepairUtil extends Util
 {
     public function replaceModuleTags($business_id, $data, $job_sheet)
-    {   
+    {
         $id = empty($job_sheet->repair_job_sheet_id) ? $job_sheet->id : $job_sheet->repair_job_sheet_id;
 
-        $job_sheet = JobSheet::with('customer', 'technician', 'Brand',
-                        'Device', 'deviceModel', 'status')
-                        ->where('business_id', $business_id)
-                        ->findOrFail($id);
+        $job_sheet = JobSheet::with(
+            'customer',
+            'technician',
+            'Brand',
+            'Device',
+            'deviceModel',
+            'status'
+        )
+            ->where('business_id', $business_id)
+            ->findOrFail($id);
 
         $business = Business::findOrFail($business_id);
 
@@ -120,7 +126,7 @@ class RepairUtil extends Util
     public function getRepairSettings($business_id)
     {
         $repair_settings = Business::where('id', $business_id)
-                                ->value('repair_settings');
+            ->value('repair_settings');
 
         $repair_settings = !empty($repair_settings) ? json_decode($repair_settings, true) : [];
 
@@ -140,7 +146,7 @@ class RepairUtil extends Util
         $data['sms_settings'] = $business->sms_settings;
         $data['mobile_number'] = $contact->mobile;
         $data['sms_body'] = $tag_replaced_data['sms_body'];
-        
+
         //Send sms
         if (!empty($contact->mobile) && !empty($data['sms_body'])) {
             $response = $this->sendSms($data);
@@ -153,9 +159,9 @@ class RepairUtil extends Util
 
             //loging if notification sent
             activity()
-            ->performedOn($transaction)
-            ->withProperties(['sms_body' => $data['sms_body'], 'mobile_number' => $data['mobile_number'], 'sent' => $is_sent])
-            ->log('is_sent_notification');
+                ->performedOn($transaction)
+                ->withProperties(['sms_body' => $data['sms_body'], 'mobile_number' => $data['mobile_number'], 'sent' => $is_sent])
+                ->log('is_sent_notification');
 
             return $response;
         } else {
@@ -188,9 +194,9 @@ class RepairUtil extends Util
 
             //loging if notification sent
             activity()
-            ->performedOn($job_sheet)
-            ->withProperties(['sms_body' => $data['sms_body'], 'mobile_number' => $data['mobile_number'], 'sent' => $is_sent])
-            ->log('is_sent_notification');
+                ->performedOn($job_sheet)
+                ->withProperties(['sms_body' => $data['sms_body'], 'mobile_number' => $data['mobile_number'], 'sent' => $is_sent])
+                ->log('is_sent_notification');
 
             return $response;
         } else {
@@ -199,7 +205,7 @@ class RepairUtil extends Util
     }
 
     public function sendJobSheetUpdateEmailNotification($notification_data, $job_sheet)
-    {   
+    {
         $business_id = $job_sheet->business_id;
         $customer = $job_sheet->customer;
 
@@ -222,21 +228,29 @@ class RepairUtil extends Util
     public function getRepairByStatus($business_id)
     {
         $job_sheets_by_status = JobSheet::join(
-                    'repair_statuses as rs',
-                    'repair_job_sheets.status_id',
-                    '=',
-                    'rs.id'
-                )
-                ->where('repair_job_sheets.business_id', $business_id)
-                ->select(
-                    DB::raw('COUNT(repair_job_sheets.id) as total_job_sheets'),
-                    'rs.name as status_name',
-                    'rs.color',
-                    'rs.sort_order'
-                )
-                ->groupBy('rs.id')
-                ->orderBy('sort_order', 'asc')
-                ->get();
+            'repair_statuses as rs',
+            'repair_job_sheets.status_id',
+            '=',
+            'rs.id'
+        )
+            ->where('repair_job_sheets.business_id', $business_id)
+            ->select(
+                DB::raw('COUNT(repair_job_sheets.id) as total_job_sheets'),
+                'rs.name as status_name',
+                'rs.color',
+                'rs.sort_order'
+            )
+            ->groupBy(
+                'rs.id',
+                'rs.name',
+                'rs.color',
+                'rs.sort_order'
+            )
+            ->orderBy(
+                'sort_order',
+                'asc'
+            )
+            ->get();
 
         return $job_sheets_by_status;
     }
@@ -244,36 +258,46 @@ class RepairUtil extends Util
     public function getRepairByServiceStaff($business_id)
     {
         $job_sheets_by_service_staff = JobSheet::leftJoin(
-                        'users', 'repair_job_sheets.service_staff',
-                         '=',
-                         'users.id'
-                        )
-                        ->where('repair_job_sheets.business_id', $business_id)
-                        ->whereNotNull('repair_job_sheets.service_staff')
-                        ->select(DB::raw("CONCAT(COALESCE(surname, ''),' ',COALESCE(first_name, ''),' ',COALESCE(last_name,'')) as service_staff"),
-                            DB::raw('COUNT(repair_job_sheets.id) as total_job_sheets')
-                        )
-                        ->groupBy('repair_job_sheets.service_staff')
-                        ->get();
-                        
+            'users',
+            'repair_job_sheets.service_staff',
+            '=',
+            'users.id'
+        )
+            ->where('repair_job_sheets.business_id', $business_id)
+            ->whereNotNull('repair_job_sheets.service_staff')
+            ->select(
+                DB::raw("CONCAT(COALESCE(surname, ''),' ',COALESCE(first_name, ''),' ',COALESCE(last_name,'')) as service_staff"),
+                DB::raw('COUNT(repair_job_sheets.id) as total_job_sheets')
+            )
+            ->groupBy(
+                'repair_job_sheets.service_staff',
+                'users.surname',
+                'users.first_name',
+                'users.last_name'
+            )
+            ->get();
+
         return $job_sheets_by_service_staff;
     }
 
     public function getTrendingRepairBrands($business_id)
     {
-        $job_sheets = JobSheet::leftJoin('brands',
-                            'repair_job_sheets.brand_id',
-                            '=',
-                            'brands.id')
-                            ->where('repair_job_sheets.business_id', $business_id)
-                            ->whereNotNull('repair_job_sheets.brand_id')
-                            ->select('brands.name as brand',
-                                DB::raw('COUNT(repair_job_sheets.id) as job_sheets_brands')
-                            )
-                            ->limit(5)
-                            ->groupBy('brands.id')
-                            ->orderBy('job_sheets_brands', 'desc')
-                            ->get();
+        $job_sheets = JobSheet::leftJoin(
+            'brands',
+            'repair_job_sheets.brand_id',
+            '=',
+            'brands.id'
+        )
+            ->where('repair_job_sheets.business_id', $business_id)
+            ->whereNotNull('repair_job_sheets.brand_id')
+            ->select(
+                'brands.name as brand',
+                DB::raw('COUNT(repair_job_sheets.id) as job_sheets_brands')
+            )
+            ->limit(5)
+            ->groupBy('brands.id', 'brands.name',)
+            ->orderBy('job_sheets_brands', 'desc')
+            ->get();
 
         $labels = [];
         $values = [];
@@ -286,22 +310,25 @@ class RepairUtil extends Util
 
         return [];
     }
-    
+
     public function getTrendingDevices($business_id)
     {
-        $job_sheets = JobSheet::leftJoin('categories as CAT',
-                            'repair_job_sheets.device_id',
-                            '=',
-                            'CAT.id')
-                            ->where('repair_job_sheets.business_id', $business_id)
-                            ->whereNotNull('repair_job_sheets.device_id')
-                            ->select('CAT.name as device',
-                                DB::raw('COUNT(repair_job_sheets.id) as job_sheet_devices')
-                            )
-                            ->limit(5)
-                            ->groupBy('CAT.id')
-                            ->orderBy('job_sheet_devices', 'desc')
-                            ->get();
+        $job_sheets = JobSheet::leftJoin(
+            'categories as CAT',
+            'repair_job_sheets.device_id',
+            '=',
+            'CAT.id'
+        )
+            ->where('repair_job_sheets.business_id', $business_id)
+            ->whereNotNull('repair_job_sheets.device_id')
+            ->select(
+                'CAT.name as device',
+                DB::raw('COUNT(repair_job_sheets.id) as job_sheet_devices')
+            )
+            ->limit(5)
+            ->groupBy('CAT.id', 'CAT.name',)
+            ->orderBy('job_sheet_devices', 'desc')
+            ->get();
 
         $labels = [];
         $values = [];
@@ -316,26 +343,41 @@ class RepairUtil extends Util
 
     public function getTrendingDeviceModels($business_id)
     {
-        $job_sheets = JobSheet::leftJoin('repair_device_models as RDM',
-                            'repair_job_sheets.device_model_id',
-                            '=',
-                            'RDM.id')
-                            ->leftJoin('brands', 'RDM.brand_id',
-                            '=', 'brands.id')
-                            ->leftJoin('categories as CAT',
-                            'RDM.device_id',
-                            '=',
-                            'CAT.id')
-                            ->where('repair_job_sheets.business_id', $business_id)
-                            ->whereNotNull('repair_job_sheets.device_model_id')
-                            ->select('RDM.name as device_model', 'brands.name as brand',
-                                DB::raw('COUNT(repair_job_sheets.id) as job_sheet_models'),
-                                'CAT.name as device'
-                            )
-                            ->limit(5)
-                            ->groupBy('RDM.id')
-                            ->orderBy('job_sheet_models', 'desc')
-                            ->get();
+        $job_sheets = JobSheet::leftJoin(
+            'repair_device_models as RDM',
+            'repair_job_sheets.device_model_id',
+            '=',
+            'RDM.id'
+        )
+            ->leftJoin(
+                'brands',
+                'RDM.brand_id',
+                '=',
+                'brands.id'
+            )
+            ->leftJoin(
+                'categories as CAT',
+                'RDM.device_id',
+                '=',
+                'CAT.id'
+            )
+            ->where('repair_job_sheets.business_id', $business_id)
+            ->whereNotNull('repair_job_sheets.device_model_id')
+            ->select(
+                'RDM.name as device_model',
+                'brands.name as brand',
+                DB::raw('COUNT(repair_job_sheets.id) as job_sheet_models'),
+                'CAT.name as device'
+            )
+            ->limit(5)
+            ->groupBy(
+                'RDM.id',
+                'RDM.name',
+                'brands.name',
+                'CAT.name'
+            )
+            ->orderBy('job_sheet_models', 'desc')
+            ->get();
 
         $labels = [];
         $values = [];
@@ -344,11 +386,11 @@ class RepairUtil extends Util
             $brand = $job_sheet['brand'];
             $device = $job_sheet['device'];
             if (!empty($brand) && !empty($device)) {
-                $label = $job_sheet['device_model'] .' ('.$brand.' / '.$device.')';
+                $label = $job_sheet['device_model'] . ' (' . $brand . ' / ' . $device . ')';
             } elseif (!empty($brand)) {
-                $label = $job_sheet['device_model'] .' ('.$brand.')';
+                $label = $job_sheet['device_model'] . ' (' . $brand . ')';
             } elseif (!empty($device)) {
-                $label = $job_sheet['device_model'] .' ('.$device.')';
+                $label = $job_sheet['device_model'] . ' (' . $device . ')';
             }
             $labels[] = $label;
             $values[] = $job_sheet['job_sheet_models'];

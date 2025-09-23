@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Install;
 
-use \Module;
+use Nwidart\Modules\Facades\Module;
 use Exception;
 use ZipArchive;
 use App\Utils\ModuleUtil;
@@ -29,11 +29,11 @@ class ModulesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (!auth()->user()->can('manage_modules')) {
-            abort(403, 'Unauthorized action.');
-        }
+        // if (!auth()->user()->can('manage_modules')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
 
         //Get list of all modules.
         $modules = Module::toCollection()->toArray();
@@ -73,8 +73,9 @@ class ModulesController extends Controller
 
 
 
+        $menuItems = $request->menuItems;
         return view('install.modules.index')
-            ->with(compact('modules', 'is_demo', 'mods'));
+            ->with(compact('modules', 'is_demo', 'mods','menuItems'));
 
 
         //Option to uninstall

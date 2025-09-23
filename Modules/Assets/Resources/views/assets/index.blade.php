@@ -52,7 +52,7 @@
                     <div class="box-tools">
                         @if(auth()->user()->can('assets.edit'))
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                                data-href="{{action('\\Modules\\Assets\\Http\\Controllers\\AssetsController@create')}}"
+                                data-href="{{route('assets-create')}}"
                                 data-container=".brands_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                         @endif

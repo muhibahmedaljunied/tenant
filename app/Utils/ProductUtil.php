@@ -1118,7 +1118,11 @@ class ProductUtil extends Util
             'p.name as product',
             'u.short_name as unit'
         )->whereNull('tsl.parent_sell_line_id')
-            ->groupBy('tsl.product_id')
+            ->groupBy(
+                'tsl.product_id',
+                'p.name',
+                'u.short_name'
+            )
             ->orderBy('total_unit_sold', 'desc')
             ->get();
         return $products;
@@ -2090,6 +2094,7 @@ class ProductUtil extends Util
         $business_id,
         $search_term,
         $location_id = null,
+        $store_id = null,
         $not_for_selling = null,
         $price_group_id = null,
         $product_types = [],
@@ -2244,6 +2249,13 @@ class ProductUtil extends Util
         if (! empty($location_id)) {
             $query->ForLocation($location_id);
         }
+
+        // ----------------muhib add this for stores ------------
+        if (! empty($store_id)) {
+            $query->ForStore($store_id);
+        }
+
+        // ----------------------------------------
         $query->select(
 
             'products.id as product_id',
@@ -2567,7 +2579,6 @@ class ProductUtil extends Util
                 'variations.id as variation_id'
             )
             ->get()->first();
-
         // total_production_purchase  quantity comes from production
         // mfg_quantity_used  quantity used for production
 

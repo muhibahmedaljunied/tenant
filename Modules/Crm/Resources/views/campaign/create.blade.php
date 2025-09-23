@@ -14,7 +14,7 @@
 <section class="content no-print">
     <div class="box box-solid">
         <div class="box-body">
-            {!! Form::open(['url' => action('\Modules\Crm\Http\Controllers\CampaignController@store'), 'method' => 'post', 'id' => 'campaign_form' ]) !!}
+            {!! Form::open(['url' => route('campaign-store'), 'method' => 'post', 'id' => 'campaign_form' ]) !!}
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
@@ -147,7 +147,7 @@
     </div>
 @stop
 @section('javascript')
-    <script src="{{ asset('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('modules/crm/js/crm.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(function () {
 

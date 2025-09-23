@@ -74,7 +74,7 @@
 @stop
 @section('javascript')
     @php $asset_v = env('APP_VERSION'); @endphp
-    <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/product.js?v=' . $asset_v) }}"></script>
     <script>
 
 	 $(document).ready(function(){

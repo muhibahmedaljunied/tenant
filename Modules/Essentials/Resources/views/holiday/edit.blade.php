@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\EssentialsHolidayController@update', [$holiday->id]) }}" method="post" id="add_holiday_form">
+    <form action="{{ route('essentialsHoliday-update', [$holiday->id]) }}" method="post" id="add_holiday_form">
       @csrf
       @method('PUT')
       <div class="modal-header">

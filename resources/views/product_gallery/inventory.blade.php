@@ -19,7 +19,7 @@
 
     </div>
     <section class="content">
-        <form action="{{ action('\Modules\Manufacturing\Http\Controllers\ProductionController@store') }}" method="POST"
+        <form action="{{ route('production-store') }}" method="POST"
             id="production_form" enctype="multipart/form-data">
             @csrf
 
@@ -109,9 +109,9 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/product.js?v=' . $asset_v) }}"></script>
 
-    {{--  <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script> --}}
+    {{--  <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script> --}}
     <script type="text/javascript">
         $(document).ready(function() {
             getproducts();

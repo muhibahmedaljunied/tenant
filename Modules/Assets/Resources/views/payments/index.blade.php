@@ -162,7 +162,9 @@
     function getdata() {
 
         $.ajax({
-            url: "{{action('\Modules\Assets\Http\Controllers\PaymentsController@getpayments')}}",
+            // url: "{{action('\Modules\Assets\Http\Controllers\PaymentsController@getpayments')}}",
+            url: "{{route('payments-getpayments')}}",
+
             method: 'GET',
             data: {
                 partner_id:$('#partner_id').val()

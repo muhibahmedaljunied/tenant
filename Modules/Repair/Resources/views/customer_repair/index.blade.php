@@ -3,7 +3,9 @@
 @section('content')
 <div class="login-form col-md-12 col-xs-12 right-col-content">
     <p class="form-header text-white">{{__('repair::lang.repair_status')}}</p>
-    <form method="POST" action="{{action('\\Modules\\Repair\\Http\\Controllers\\CustomerRepairStatusController@postRepairStatus')}}" id="check_repair_status">
+    {{-- <form method="POST" action="{{action('\\Modules\\Repair\\Http\\Controllers\\CustomerRepairStatusController@postRepairStatus')}}" id="check_repair_status"> --}}
+        <form method="POST" action="{{route('CustomerRepairStatus-postRepairStatus')}}" id="check_repair_status">
+
         @csrf
         <div class="form-group">
             <div class="multi-input">

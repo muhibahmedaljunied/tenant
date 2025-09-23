@@ -1,8 +1,4 @@
-@php
-  $all_notifications = auth()->user()->notifications;
-  $unread_notifications = $all_notifications->where('read_at', null);
-  $total_unread = count($unread_notifications);
-@endphp
+
 <!-- Notifications: style can be found in dropdown.less -->
 <li class="dropdown notifications-menu">
   <a href="#" class="dropdown-toggle load_notifications" data-toggle="dropdown" id="show_unread_notifications" data-loaded="false">
@@ -18,11 +14,11 @@
       </ul>
     </li>
     
-    @if(count($all_notifications) > 10)
+   
       <li class="footer load_more_li">
         <a href="#" class="load_more_notifications">@lang('lang_v1.load_more')</a>
       </li>
-    @endif
+   
   </ul>
 </li>
 

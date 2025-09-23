@@ -12,8 +12,24 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([BarcodesTableSeeder::class,
-                    PermissionsTableSeeder::class,
-                    CurrenciesTableSeeder::class
-                    ]);
+        PermissionsTableSeeder::class,
+        CurrenciesTableSeeder::class,
+        UserTableSeeder::class,
+        PackageTableSeeder::class,
+
+  
+
+        
+        ]);
     }
+
+
+//     public function run()
+// {
+//     foreach (glob(database_path('seeders/*.php')) as $file) {
+//         $class = pathinfo($file, PATHINFO_FILENAME);
+//         $this->call("Database\\Seeders\\$class");
+//     }
+// }
+
 }

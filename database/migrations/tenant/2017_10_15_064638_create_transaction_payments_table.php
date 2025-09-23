@@ -22,7 +22,8 @@ class CreateTransactionPaymentsTable extends Migration
             $table->string('transaction_no')->nullable();
             $table->string('card_transaction_number')->nullable();
             $table->string('card_number')->nullable();
-            $table->enum('card_type', ['visa', 'master'])->nullable();
+            // $table->enum('card_type', ['visa', 'master'])->nullable();
+            $table->string('card_type')->nullable(); 
             $table->string('card_holder_name')->nullable();
             $table->string('card_month')->nullable();
             $table->string('card_year')->nullable();

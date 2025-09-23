@@ -10,7 +10,7 @@
 
 <!-- Main content -->
 <section class="content">
-<form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\EssentialsSettingsController@update') }}" method="post" id="essentials_settings_form">
+<form action="{{ route('essentialsSettings-update') }}" method="post" id="essentials_settings_form">
     @csrf
     <div class="row">
         <div class="col-xs-12">

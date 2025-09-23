@@ -23,5 +23,5 @@
 </section>
 @stop
 @section('javascript')
-	<script src="{{ asset('js/opening_stock.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('js/opening_stock.js?v=' . $asset_v) }}"></script>
 @endsection

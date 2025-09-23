@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\\Modules\\Tracker\\Http\\Controllers\\TrackController@update', ['track' => $track]) }}" method="POST" id="addtrack">
+        <form action="{{ route('track-update', ['track' => $track]) }}" method="POST" id="addtrack">
             @csrf
             @method('PUT')
 

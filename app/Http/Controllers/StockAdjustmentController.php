@@ -22,6 +22,7 @@ use Spatie\Activitylog\Models\Activity;
 use App\Services\JournalEntries\RecordEntriesTransaction;
 use App\Store;
 use App\StoreDetail;
+use Illuminate\Support\Facades\Log;
 
 class StockAdjustmentController extends Controller
 {
@@ -41,8 +42,11 @@ class StockAdjustmentController extends Controller
      * @param ProductUtils $product
      * @return void
      */
-    public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil, ModuleUtil $moduleUtil)
-    {
+    public function __construct(
+        ProductUtil $productUtil,
+        TransactionUtil $transactionUtil,
+        ModuleUtil $moduleUtil
+    ) {
         $this->productUtil = $productUtil;
         $this->transactionUtil = $transactionUtil;
         $this->moduleUtil = $moduleUtil;
@@ -300,13 +304,15 @@ class StockAdjustmentController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            dd($e->getMessage());
+            Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
             $msg = trans("messages.something_went_wrong");
 
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
                 $msg = $e->getMessage();
             }
-
+            //    dd($e->getMessage());
             $output = [
                 'success' => 0,
                 'msg' => $msg

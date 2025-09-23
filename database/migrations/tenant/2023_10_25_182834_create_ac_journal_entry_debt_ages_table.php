@@ -17,9 +17,14 @@ class CreateAcJournalEntryDebtAgesTable extends Migration
         Schema::create('ac_journal_entry_debt_ages', function (Blueprint $table) {
             $table->id();
             // ----------------------------------------------- //
-            $table->foreignId('ac_journal_entries_id')->constrained('ac_journal_entries')->cascadeOnDelete();
-            // $table->unsignedDecimal('amount', 13, 4);
+
+            $table->unsignedBigInteger('ac_journal_entries_id');
+            $table->foreign('ac_journal_entries_id')->references('id')->on('ac_journal_entries');
+
+            // $table->foreignId('ac_journal_entries_id')->constrained('ac_journal_entries');
+
             // -------------------
+            // $table->unsignedDecimal('amount', 13, 4);
             $table->decimal('amount', 13, 4);
 
             // ----------------------------------------------- //
@@ -28,7 +33,7 @@ class CreateAcJournalEntryDebtAgesTable extends Migration
 
             $table->timestamps();
         });
-        DB::statement('ALTER TABLE ac_journal_entry_debt_ages ADD CONSTRAINT check_amount_non_negative CHECK (amount >= 0)');
+        // DB::statement('ALTER TABLE ac_journal_entry_debt_ages ADD CONSTRAINT check_amount_non_negative CHECK (amount >= 0)');
     }
 
     /**

@@ -13,6 +13,9 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
+
+      
+
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('business_id')->unsigned();
@@ -33,10 +36,12 @@ class CreateTransactionsTable extends Migration
                 'opening_balance',
                 'purchase_return'
             ])->default(null);
-            $table->string('status');
-            $table->enum('payment_status', ['paid', 'due', 'paid', 'due', 'partial', 'installmented']);
+            $table->string('status')->default('none');
+            // $table->enum('payment_status', ['paid', 'due','partial'])->default(null);
+            $table->string('payment_status')->nullable();
+
             $table->string('adjustment_type', 20)->nullable();
-            $table->integer('contact_id')->unsigned();
+            $table->integer('contact_id')->unsigned()->nullable();
             $table->foreign('contact_id')->references('id')->on('contacts');
             $table->string('invoice_no')->nullable();
             $table->string('ref_no')->nullable();
@@ -54,7 +59,25 @@ class CreateTransactionsTable extends Migration
             $table->text('staff_note')->nullable();
             $table->decimal('final_total', 22, 4)->default(0);
             $table->integer('created_by')->unsigned();
-            $table->integer('return_parent_id')->unsigned();
+            $table->integer('return_parent_id')->unsigned()->nullable();
+
+
+
+            $table->string('additional_expense_key_1',191)->nullable();
+            $table->decimal('additional_expense_value_1',22,4)->default(0.0000);
+            $table->string('additional_expense_key_2',191)->nullable();
+            $table->decimal('additional_expense_value_2',22,4)->default(0.0000);
+            $table->string('additional_expense_key_3',191)->nullable();
+            $table->decimal('additional_expense_value_3',22,4)->default(0.0000);
+            $table->string('additional_expense_key_4',191)->nullable();
+            $table->decimal('additional_expense_value_4',22,4)->default(0.0000);
+
+           
+
+
+
+
+            // $table->decimal('essentials_duration',8,2)->nullable();
 
             $table->tinyInteger('is_export')->default(0);
 

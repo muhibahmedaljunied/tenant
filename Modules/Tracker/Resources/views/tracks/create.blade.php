@@ -1,7 +1,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
 
-        <form action="{{ action('\\Modules\\Tracker\\Http\\Controllers\\TrackController@store') }}" method="POST" id="addtrack">
+        <form action="{{ route('track-store') }}" method="POST" id="addtrack">
             @csrf
 
         <div class="modal-header">

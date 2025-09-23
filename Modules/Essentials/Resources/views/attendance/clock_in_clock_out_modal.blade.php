@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
 
-            <form action="{{ action('\Modules\Essentials\Http\Controllers\AttendanceController@clockInClockOut') }}" method="POST" id="clock_in_clock_out_form">
+            <form action="{{ route('attendance-clockInClockOut') }}" method="POST" id="clock_in_clock_out_form">
                 @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

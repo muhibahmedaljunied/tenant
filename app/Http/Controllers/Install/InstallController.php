@@ -21,6 +21,8 @@ class InstallController extends Controller
      */
     protected $outputLog;
     protected $appVersion;
+    protected $env;
+
     protected $macActivationKeyChecker;
 
     /**
@@ -34,8 +36,8 @@ class InstallController extends Controller
         $this->env = config('app.env');
 
         //Check if mac based activation key is required or not.
-        echo '123';
-        die();
+        // echo '123';
+        // die();
         $this->macActivationKeyChecker = false;
         if (file_exists(__DIR__ . '/MacActivationKeyChecker.php')) {
             include_once(__DIR__ . '/MacActivationKeyChecker.php');
@@ -63,6 +65,7 @@ class InstallController extends Controller
     private function isInstalled()
     {
         $envPath = base_path('.env');
+   
         if (file_exists($envPath)) {
             abort(404);
         }
@@ -89,8 +92,11 @@ class InstallController extends Controller
     public function index()
     {
         //Check for .env file
+        
         $this->isInstalled();
+        
         $this->installSettings();
+
 
         return view('install.index');
     }

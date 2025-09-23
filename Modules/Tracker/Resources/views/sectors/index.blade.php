@@ -96,7 +96,7 @@
         function getdata() {
 
             $.ajax({
-                url: "{{action('\Modules\Tracker\Http\Controllers\SectorController@index')}}",
+                url: "{{route('sector-index')}}",
                 method: 'GET',
                 success: function (data) {
                     document.getElementById("datatable").innerHTML = data;

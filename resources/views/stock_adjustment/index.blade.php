@@ -46,5 +46,5 @@
     <!-- /.content -->
 @stop
 @section('javascript')
-    <script src="{{ asset('js/stock_adjustment.js?v=' . $asset_v) }}"></script>
+    <script src="{{ url('js/stock_adjustment.js?v=' . $asset_v) }}"></script>
 @endsection

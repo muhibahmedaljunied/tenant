@@ -187,5 +187,5 @@
 
 @stop
 @section('javascript')
-	<script src="{{ asset('js/labels.js?v=' . $asset_v) }}"></script>
+	<script src="{{ url('js/labels.js?v=' . $asset_v) }}"></script>
 @endsection

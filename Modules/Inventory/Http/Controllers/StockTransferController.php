@@ -27,6 +27,7 @@ class StockTransferController extends Controller
     protected $productUtil;
     protected $transactionUtil;
     protected $moduleUtil;
+    protected $status_colors;
 
     /**
      * Constructor

@@ -65,7 +65,7 @@
 
                         @if(auth()->user()->can('partners.create'))
                         <button type="button" class="btn btn-block btn-primary btn-modal"
-                                data-href="{{action('\Modules\Partners\Http\Controllers\PartnersController@create')}}"
+                                data-href="{{route('partners-create')}}"
                                 data-container=".brands_modal">
                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                             @endif
@@ -138,7 +138,7 @@
 
 
 
-<script type="text/javascript" src="{{ asset('Partners/Resources/assets/js/app.js')}}"></script>
+<script type="text/javascript" src="{{ url('Partners/Resources/assets/js/app.js')}}"></script>
 <script>
 
     function assetedit(id) {

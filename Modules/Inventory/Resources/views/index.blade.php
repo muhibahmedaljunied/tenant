@@ -22,11 +22,18 @@
     @component('components.widget', ['class' => 'box-primary', 'title' => 'عمليات الجرد'])
         @can('inventory.stocking_create')
             @slot('tool')
-                <div class="box-tools">
+                {{-- <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary add_transaction"
                                 data-href="{{action('\Modules\Inventory\Http\Controllers\InventoryController@create')}}"
                                 data-container=".div_modal">
-                            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
+                            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button> --}}
+
+                            <div class="box-tools">
+                                <button type="button" class="btn btn-block btn-primary add_transaction"
+                                                data-href="{{route('inventory-create')}}"
+                                                data-container=".div_modal">
+                                            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
+
                 </div>
             @endslot
         @endcan
@@ -96,7 +103,9 @@
      $.ajax({
          type: 'GET',
          dataType: 'html',
-         url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@index')}}",
+        //  url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@index')}}",
+         url: "{{route('inventory-index')}}",
+
           data: {
              '_token': "{{ csrf_token() }}",
          },
@@ -118,7 +127,9 @@ function deletestock(transaction_id){
             if (willSave) {
                  $.ajax({
                     type: 'GET',
-                    url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@delete_stock')}}",
+                    // url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@delete_stock')}}",
+                    url: "{{route('inventory-delete_stock')}}",
+
                     data: {
                         '_token': "{{ csrf_token() }}",
                         transaction_id:transaction_id,
@@ -151,7 +162,9 @@ function changestatus(stat,transaction_id) {
             if (willSave) {
                  $.ajax({
                     type: 'GET',
-                    url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@changestatus')}}",
+                    // url: "{{action('\Modules\Inventory\Http\Controllers\InventoryController@changestatus')}}",
+                    url: "{{route('inventory-changestatus')}}",
+
                     data: {
                         '_token': "{{ csrf_token() }}",
                         transaction_id:transaction_id,

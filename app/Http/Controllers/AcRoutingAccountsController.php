@@ -20,16 +20,21 @@ class AcRoutingAccountsController extends Controller
     {
         $this->authorize('accounts_routing.access');
         $business_id = request()->session()->get('user.business_id');
+        // $business_id =1;
         $ac_setting = AcSetting::first();
+
         // $lastChildrenBranch = AcMaster::whereDoesntHave('parents')->selectRaw("account_number, concat(account_name_ar, ' (', account_number , ')') as account_name_number")->pluck('account_name_number', 'account_number')->toArray();
         $sale_accounts = AcMaster::getCashAccounts()->selectRaw("account_number, concat(account_name_ar, ' (', account_number , ')') as account_name_number")->pluck('account_name_number', 'account_number');
         $all_master = AcMaster::select([DB::raw("concat(account_name_ar, ' (', account_number , ')') as account_name_number"), 'account_number', 'parent_acct_no', 'account_type'])->get();
+
+        // dd($business_id,$ac_setting,$sale_accounts,$all_master);
         $branch_cost_centers = AcCostCenBranche::forDropdown($business_id);
         $extra_cost_centers = AcCostCenFieldAdd::forDropdown($business_id);
 
         $can_update = auth()->user()->can('accounts_routing.update');
         $debtors = $all_master->where('account_type', 'debtor');
         $creditors = $all_master->where('account_type', 'creditor');
+
         $masterByType = [
             'creditor' => [
                 'all' => $creditors->pluck('account_name_number', 'account_number')->toArray(),
@@ -51,7 +56,7 @@ class AcRoutingAccountsController extends Controller
             ],
         ];
         // dd(
-        //     $masterByType
+        //     $sale_accounts
         // );
 
         $menuItems = $request->menuItems;

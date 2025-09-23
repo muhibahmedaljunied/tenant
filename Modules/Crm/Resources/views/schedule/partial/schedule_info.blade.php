@@ -2,11 +2,11 @@
     <div class="col-md-12">
 
         <input type="hidden" name="view_type" value="schedule_info" id="view_type">
-        <button type="button" class="btn btn-sm btn-danger schedule_delete pull-right m-5" data-href="{{action('\Modules\Crm\Http\Controllers\ScheduleController@destroy', ['follow_up' => $schedule->id])}}">
+        <button type="button" class="btn btn-sm btn-danger schedule_delete pull-right m-5" data-href="{{route('schedule-destroy', ['follow_up' => $schedule->id])}}">
             <i class="fas fa-trash"></i>
             @lang('messages.delete')
         </button>
-        <button type="button" class="btn btn-sm btn-primary schedule_edit pull-right m-5" data-href="{{action('\Modules\Crm\Http\Controllers\ScheduleController@edit', ['follow_up' => $schedule->id])}}?schedule_for=schedule_info">
+        <button type="button" class="btn btn-sm btn-primary schedule_edit pull-right m-5" data-href="{{route('schedule-edit', ['follow_up' => $schedule->id])}}?schedule_for=schedule_info">
             <i class="fa fa-edit"></i>
             @lang('messages.edit')
         </button>

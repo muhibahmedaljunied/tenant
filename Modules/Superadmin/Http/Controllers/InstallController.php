@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class InstallController extends BaseController
 {
+    protected $module_name;
+    protected $appVersion;
     public function __construct()
     {
         $this->module_name = 'superadmin';
@@ -23,9 +25,9 @@ class InstallController extends BaseController
      */
     public function index()
     {
-        if (!auth()->user()->can('superadmin')) {
-            abort(403, 'Unauthorized action.');
-        }
+        // if (!auth()->user()->can('superadmin')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
 
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '512M');

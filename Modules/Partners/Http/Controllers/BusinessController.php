@@ -26,6 +26,9 @@ class BusinessController extends Controller
      * @return Response
      */
 
+     protected $transactionUtil;
+     protected $productUtil;
+
     public function __construct(TransactionUtil $transactionUtil, ProductUtil $productUtil)
     {
         $this->transactionUtil = $transactionUtil;

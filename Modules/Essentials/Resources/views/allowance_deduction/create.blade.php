@@ -1,6 +1,6 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
-    <form action="{{ action('\\Modules\\Essentials\\Http\\Controllers\\EssentialsAllowanceAndDeductionController@store') }}" method="post" id="add_allowance_form">
+    <form action="{{ route('essentialsAllowanceAndDeduction-store') }}" method="post" id="add_allowance_form">
       @csrf
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

@@ -335,6 +335,8 @@ class CashRegisterController extends Controller
      */
     public function getRegisterDetails()
     {
+
+     
         if (!auth()->user()->can('view_cash_register')) {
             abort(403, 'Unauthorized action.');
         }

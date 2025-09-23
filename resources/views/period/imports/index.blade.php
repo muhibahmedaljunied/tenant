@@ -37,7 +37,7 @@
                     <br><br>
                     <div class="row">
                         <div class="col-sm-4">
-                            <a href="{{ asset('files/accounting/journal_entries_template.xlsx') }}" class="btn btn-success"
+                            <a href="{{ url('files/accounting/journal_entries_template.xlsx') }}" class="btn btn-success"
                                 download><i class="fa fa-download"></i> @lang('lang_v1.download_template_file')</a>
                         </div>
                     </div>

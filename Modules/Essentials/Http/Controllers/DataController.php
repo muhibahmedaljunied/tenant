@@ -43,7 +43,7 @@ class DataController extends Controller
             $notification_data = [
                 'msg' => $msg,
                 'icon_class' => 'fas fa-envelope bg-green',
-                'link' => action('\Modules\Essentials\Http\Controllers\EssentialsMessageController@index'),
+                'link' => route('essentialsMessage-index'),
                 'read_at' => $notification->read_at,
                 'created_at' => $notification->created_at->diffForHumans()
             ];
@@ -61,7 +61,7 @@ class DataController extends Controller
                 $notification_data = [
                     'msg' => $msg,
                     'icon_class' => 'fas fa-user-times bg-green',
-                    'link' => action('\Modules\Essentials\Http\Controllers\EssentialsLeaveController@index'),
+                    'link' => route('essentialsLeave-index'),
                     'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans()
                 ];
@@ -80,7 +80,7 @@ class DataController extends Controller
                 $notification_data = [
                     'msg' => $msg,
                     'icon_class' => 'fas fa-user-times bg-green',
-                    'link' => action('\Modules\Essentials\Http\Controllers\EssentialsLeaveController@index'),
+                    'link' => route('essentialsLeave-index'),
                     'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans()
                 ];
@@ -108,7 +108,7 @@ class DataController extends Controller
                 $notification_data = [
                     'msg' => $msg,
                     'icon_class' => 'fas fa-money-bill-alt bg-green',
-                    'link' => action('\Modules\Essentials\Http\Controllers\PayrollController@index'),
+                    'link' => route('payroll-index'),
                     'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans()
                 ];
@@ -127,7 +127,7 @@ class DataController extends Controller
                 $notification_data = [
                     'msg' => $msg,
                     'icon_class' => 'ion ion-clipboard bg-green',
-                    'link' => action('\Modules\Essentials\Http\Controllers\ToDoController@show', $data['id']),
+                    'link' => route('toDo-show', $data['id']),
                     'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans()
                 ];
@@ -145,7 +145,7 @@ class DataController extends Controller
                 $notification_data = [
                     'msg' => $msg,
                     'icon_class' => 'fas fa-envelope bg-green',
-                    'link' => action('\Modules\Essentials\Http\Controllers\ToDoController@show', $comment->task->id),
+                    'link' => route('toDo-show', $comment->task->id),
                     'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans()
                 ];
@@ -164,7 +164,7 @@ class DataController extends Controller
                 $notification_data = [
                     'msg' => $msg,
                     'icon_class' => 'fas fa-file bg-green',
-                    'link' => action('\Modules\Essentials\Http\Controllers\ToDoController@show', $data['id']),
+                    'link' => route('toDo-show', $data['id']),
                     'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans()
                 ];
@@ -268,7 +268,7 @@ class DataController extends Controller
             $menuItems[__('essentials::lang.hrm')] =
                 [
                     'title' => __('essentials::lang.hrm'),
-                    'url' => action('\Modules\Essentials\Http\Controllers\DashboardController@hrmDashboard'),
+                    'url' => route('dashboard-hrmDashboard'),
                     'icon' => 'fa fas fa-users',
                     'active' => request()->segment(1) == 'hrm',
                     'style' => config('app.env') == 'demo' ? 'background-color: #605ca8 !important;' : '',
@@ -281,7 +281,7 @@ class DataController extends Controller
             $menuItems[__('essentials::lang.essentials')] =
                 [
                     'title' => __('essentials::lang.essentials'),
-                    'url' => action('\Modules\Essentials\Http\Controllers\ToDoController@index'),
+                    'url' => route('toDo-index'),
                     'icon' => 'fa fas fa-check-circle',
                     'active' => request()->segment(1) == 'essentials',
                     'style' => config('app.env') == 'demo' ? 'background-color: #001f3f !important;' : '',
@@ -370,6 +370,7 @@ class DataController extends Controller
         $start_date = !empty($data['start_date']) ? $data['start_date'] : null;
         $end_date = !empty($data['end_date']) ? $data['end_date'] : null;
 
+
         $total_payroll = $this->__getTotalPayroll(
             $business_id,
             $start_date,
@@ -391,6 +392,7 @@ class DataController extends Controller
             []
         ];
 
+  
         return $report_data;
     }
 
@@ -419,7 +421,8 @@ class DataController extends Controller
             $end_date,
             $location_id
         );
-
+     
         return $transaction_totals['total_payroll'];
+  
     }
 }

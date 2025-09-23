@@ -93,9 +93,9 @@
     </section>
 @endsection
 @section('css')
-    <link rel='stylesheet' href="{{ asset('css/yearpicker.css') }}" />
+    <link rel='stylesheet' href="{{ url('css/yearpicker.css') }}" />
 @endsection
 @section('javascript')
-    <script src="{{ asset('js/yearpicker.js') }}"></script>
-    <script src='{{ asset('js/depreciations.js') }}'></script>
+    <script src="{{ url('js/yearpicker.js') }}"></script>
+    <script src='{{ url('js/depreciations.js') }}'></script>
 @endsection

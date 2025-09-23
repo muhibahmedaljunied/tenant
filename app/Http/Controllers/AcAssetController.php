@@ -238,6 +238,7 @@ class AcAssetController extends Controller
                 $asset_account_input['accumulated_consumption_account'] = $accumulated_account['account_number'];
             }
             $unit = Unit::where('business_id', $business_id)->first();
+     
             $product = Product::create([
                 'name' => $input['asset_name_ar'],
                 'barcode' => $input['barcode'],
@@ -246,6 +247,7 @@ class AcAssetController extends Controller
                 'is_asset' => true,
                 'business_id' => $business_id,
                 'unit_id' => $unit->id,
+      
             ]);
             $product->product_locations()->sync($business_id);
             $product->sku = $this->productUtil->generateProductSku($product->id);

@@ -1,7 +1,9 @@
 <div class="modal-dialog" role="document">
 	<div class="modal-content">
 
-		<form action="{{ action('\\Modules\\Repair\\Http\\Controllers\\RepairController@updateRepairStatus') }}" method="post" id="update_repair_status_form">
+		{{-- <form action="{{ action('\\Modules\\Repair\\Http\\Controllers\\RepairController@updateRepairStatus') }}" method="post" id="update_repair_status_form"> --}}
+			<form action="{{ route('repair-updateRepairStatus') }}" method="post" id="update_repair_status_form">
+
 			@csrf
 			<input type="hidden" name="repair_id" id="repair_id" value="{{ $transaction->id }}">
 			<div class="modal-header">

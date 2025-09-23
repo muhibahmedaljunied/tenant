@@ -16,14 +16,14 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li @if(request()->segment(2) == 'assets') class="active" @endif>
-                        <a href="{{action('\Modules\Assets\Http\Controllers\AssetsController@index')}}">
+                        <a href="{{route('assets-index')}}">
                             <i class="fa fa-user"></i>
                           @lang('assets::lang.assets_titel')
                         </a>
                     </li>
 
                     <li @if(request()->segment(2) == 'consumed') class="active" @endif>
-                        <a href="{{action('\Modules\Assets\Http\Controllers\AssetsController@consumed')}}">
+                        <a href="{{route('assets-consumed')}}">
                             <i class="fa fa-user"></i>
 
                         </a>

@@ -11,23 +11,22 @@
 |  resource
 */
 
-Route::middleware(['web',  'SetSessionData', 'auth', 'language', 'timezone', 'AdminSidebarMenu'])
-    ->prefix('assets')->group(function()
-    {
-    Route::get('/install', 'InstallController@index');
-    Route::post('/install', 'InstallController@install');
-    Route::get('/install/uninstall', 'InstallController@uninstall');
-    Route::get('/install/update', 'InstallController@update');
+Route::middleware([
+    'web',
+    'SetSessionData',
+    'auth',
+    'language',
+    'timezone',
+    'AdminSidebarMenu'
+])
+    ->prefix('assets')->group(function () {
+        Route::get('/install', 'InstallController@index');
+        Route::post('/install', 'InstallController@install');
+        Route::get('/install/uninstall', 'InstallController@uninstall');
+        Route::get('/install/update', 'InstallController@update');
 
-    /*Assets routes  */
-   Route::resource('/assets','AssetsController');
+        /*Assets routes  */
+        Route::resource('/assets', 'AssetsController');
 
-   Route::get('/assets/consumed','AssetsController@consumed');
-
-
-
-
-
-
-});
-
+        Route::get('/assets/consumed', 'AssetsController@consumed');
+    });

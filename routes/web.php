@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ItGuy\TenantController;
+use App\Http\Controllers\ItGuy\UserController;
 use Illuminate\Support\Facades\{Auth, DB, Log, Route};
 /*
 |--------------------------------------------------------------------------
@@ -37,11 +39,28 @@ Route::middleware([
     Route::get('tenants/index', 'ItGuy\TenantController@index');
     Route::get('tenants/create', 'ItGuy\TenantController@create');
     Route::post('tenants/store', 'ItGuy\TenantController@store');
-    Route::post('tenants/edit', 'ItGuy\TenantController@edit');
-    Route::post('tenants/distroy', 'ItGuy\TenantController@destroy');
+
+    Route::get('tenants/{tenant}/edit', [TenantController::class, 'edit'])->name('tenants.edit');
+    Route::post('tenants/{tenant}/update', [TenantController::class, 'update'])->name('tenants.update');
+
+    // Route::get('tenants/edit/{id}', [TenantController::class, 'edit'])->name('tenants.edit');
+    Route::delete('tenants/{id}', [TenantController::class, 'destroy'])->name('tenants.destroy');
+
+
+
+
+    // Route::get('tenants/edit/{id}', 'ItGuy\TenantController@edit');
+    // Route::post('tenants/distroy', 'ItGuy\TenantController@destroy');
     Route::get('users/index', 'ItGuy\UserController@index');
     Route::get('users/create', 'ItGuy\UserController@create');
     Route::get('users/store', 'ItGuy\UserController@store');
+
+
+    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::post('users/{user}/update', [UserController::class, 'update'])->name('users.update');
+    Route::post('users/{user}/delete', [UserController::class, 'destroy'])->name('users.destroy');
+
+
 
     // -----------------------------------------------------------------------
     Route::resource('pos', 'SellPosController');
