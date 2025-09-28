@@ -2124,6 +2124,14 @@ class ProductUtil extends Util
                             $query->orWhereNull('VLD.location_id');
                         });
                     }
+                    // if (! empty($store_id)) {
+                    //     $join->where(function ($query) use ($store_id) {
+                    //         $query->where('VLD.store_id', '=', $store_id);
+                    //         //Check null to show products even if no quantity is available in a location.
+                    //         //TODO: Maybe add a settings to show product not available at a location or not.
+                    //         $query->orWhereNull('VLD.store_id');
+                    //     });
+                    // }
                 }
             )
             ->leftjoin(
@@ -2140,6 +2148,16 @@ class ProductUtil extends Util
                             //TODO: Maybe add a settings to show product not available at a location or not.
                         });
                     }
+                    // if (! empty($store_id)) {
+                    //     $join->where(function ($query) use ($store_id) {
+                    //         $query
+                    //             // ->whereNotNull('variations.parent_variation_id')
+                    //             ->where('P_VLD.store_id', '=', $store_id)
+                    //             ->orWhereNull('P_VLD.store_id');
+                    //         //Check null to show products even if no quantity is available in a location.
+                    //         //TODO: Maybe add a settings to show product not available at a location or not.
+                    //     });
+                    // }
                     $join->whereColumn('P_VLD.variation_id', 'variations.parent_variation_id');
                 }
             );
@@ -2268,11 +2286,10 @@ class ProductUtil extends Util
             'VLD.qty_available',
             'variations.sell_price_inc_tax as selling_price',
             'variations.sub_sku',
-            'U.short_name        as unit',
-
-            'variations.parent_variation_id       as parent_v_id',
+            'U.short_name as unit',
+            'variations.parent_variation_id as parent_v_id',
             'variations.equal_qty',
-            'VU.short_name       as va_unit',
+            'VU.short_name as va_unit',
             'variations.equal_qty',
             'P_VLD.qty_available as parent_v_qty',
         );

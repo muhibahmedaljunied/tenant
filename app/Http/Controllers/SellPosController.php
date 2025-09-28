@@ -145,6 +145,7 @@ class SellPosController extends Controller
 
         $shipping_statuses = $this->transactionUtil->shipping_statuses();
         $menuItems = $request->menuItems;
+
         return view('sale_pos.index')->with(compact(
             'business_locations',
             'customers',
@@ -191,17 +192,17 @@ class SellPosController extends Controller
         //Check if subscribed or not, then check for users quota
         if (! $this->moduleUtil->isSubscribed($business_id)) {
 
- 
+
             return $this->moduleUtil->expiredResponse(action('HomeController@index'));
-            
         } elseif (! $this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
-            
+
             return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellPosController@index'));
         }
 
         //like:repair
 
         $sub_type = request()->get('sub_type');
+
 
 
         //Check if there is a open register, if no then redirect to Create Register screen.
@@ -211,6 +212,7 @@ class SellPosController extends Controller
 
         $register_details = $this->cashRegisterUtil->getCurrentCashRegister(auth()->user()->id);
 
+        // dd($register_details);
         $walk_in_customer = $this->contactUtil->getWalkInCustomer($business_id);
 
         $business_details = $this->businessUtil->getDetails($business_id);
@@ -221,11 +223,7 @@ class SellPosController extends Controller
         $default_location = ! empty($register_details->location_id) ? BusinessLocation::findOrFail($register_details->location_id) : null;
 
         $business_locations = BusinessLocation::forDropdown($business_id, false, true);
-        // -----------------muhib add this----------------
 
-        $stores = Store::forDropdown($business_id);
-
-        // ----------------------------------
 
         $bl_attributes = $business_locations['attributes'];
         $business_locations = $business_locations['locations'];
@@ -237,6 +235,12 @@ class SellPosController extends Controller
                 break;
             }
         }
+
+        // -----------------muhib add this----------------
+
+        $stores = Store::forDropdown($business_id, $default_location->id);
+
+        // ----------------------------------
 
         $payment_types = $this->productUtil->payment_types(null, true, $business_id);
 
@@ -438,7 +442,7 @@ class SellPosController extends Controller
                 $input['exchange_rate'] = 1;
             }
 
-    
+
             //Customer group details
             $contact_id = $request->get('contact_id', null);
             $cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
@@ -461,7 +465,7 @@ class SellPosController extends Controller
                 $ref_count = $this->transactionUtil->setAndGetReferenceCount('subscription');
                 $input['subscription_no'] = $this->transactionUtil->generateReferenceNumber('subscription', $ref_count);
             }
-          
+
             if (! empty($request->input('invoice_scheme_id'))) {
                 $input['invoice_scheme_id'] = $request->input('invoice_scheme_id');
             }
@@ -555,7 +559,7 @@ class SellPosController extends Controller
                     $this->cashRegisterUtil->addSellPayments($transaction, $input['payment']);
                 }
 
-        
+
                 //Update payment status
                 $payment_status = $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);
 
@@ -1737,10 +1741,13 @@ class SellPosController extends Controller
      */
     public function getProductSuggestion(Request $request)
     {
+
+        dd($request->all());
         if ($request->ajax()) {
             $category_id = $request->get('category_id');
             $brand_id = $request->get('brand_id');
             $location_id = $request->get('location_id');
+            $store_id = $request->get('store_id');
             $term = $request->get('term');
 
             $check_qty = false;
@@ -1749,7 +1756,7 @@ class SellPosController extends Controller
             $pos_settings = empty($business->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business->pos_settings, true);
 
             $products = Variation::join('products as p', 'variations.product_id', '=', 'p.id')
-                ->join('product_locations as pl', 'pl.product_id', '=', 'p.id')
+                // ->join('product_locations as pl', 'pl.product_id', '=', 'p.id')
                 ->leftjoin(
                     'variation_location_details AS VLD',
                     function ($join) use ($location_id) {
@@ -1764,6 +1771,15 @@ class SellPosController extends Controller
                                 $query->orWhereNull('VLD.location_id');
                             });;
                         }
+                        //Include store
+                        if (! empty($store_id)) {
+                            $join->where(function ($query) use ($store_id) {
+                                $query->where('VLD.store_id', '=', $store_id);
+                                //Check null to show products even if no quantity is available in a store.
+                                //TODO: Maybe add a settings to show product not available at a store or not.
+                                $query->orWhereNull('VLD.store_id');
+                            });;
+                        }
                     }
                 )
                 ->where('p.business_id', $business_id)
@@ -1771,7 +1787,10 @@ class SellPosController extends Controller
                 ->where('p.is_inactive', 0)
                 ->where('p.not_for_selling', 0)
                 //Hide products not available in the selected location
-                ->where(fn($q) => $q->where('pl.location_id', $location_id));
+                // ->where(fn($q) => $q->where('pl.location_id', $location_id))
+                ->where(fn($q) => $q->where('VLD.location_id', $location_id))
+                //Hide products not available in the selected store
+                ->where(fn($q) => $q->where('VLD.store_id', $store_id));
 
             //Include search
             if (! empty($term)) {
@@ -2207,6 +2226,7 @@ class SellPosController extends Controller
                         $product['product_id'],
                         $product['variation_id'],
                         $order_data['location_id'],
+                        $order_data['store_id'],
                         $product['quantity']
                     );
                 }
@@ -2456,7 +2476,8 @@ class SellPosController extends Controller
                     $this->productUtil
                         ->decreaseProductQuantityCombo(
                             $combo_variations,
-                            $transaction->location_id
+                            $transaction->location_id,
+                            $transaction->store_id
                         );
                 }
             }

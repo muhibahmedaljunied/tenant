@@ -394,7 +394,7 @@ $(document).ready(function () {
     }
 
     $('#stock_adjustment_location_filter,#stock_adjustment_store_filter').change(function () {
-        console.log('almuhibbbbbbbbbbb');
+        // console.log('almuhibbbbbbbbbbb');
         updateStockAdjustmentReport();
     });
 
@@ -1642,8 +1642,13 @@ function get_stock_details(rowData) {
 function updateStockAdjustmentReport() {
     var location_id = $('#stock_adjustment_location_filter').val();
     var store_id = $('#stock_adjustment_store_filter').val();
-    var start = $('#stock_adjustment_date_filter').data('daterangepicker').startDate.format('YYYY-MM-DD');
-    var end = $('#stock_adjustment_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
+    var start = $('#stock_adjustment_date_filter')
+        .data('daterangepicker')
+        .startDate.format('YYYY-MM-DD');
+    var end = $('#stock_adjustment_date_filter')
+        .data('daterangepicker')
+        .endDate.format('YYYY-MM-DD');
+
     var data = { start_date: start, end_date: end, location_id: location_id, store_id: store_id };
 
     var loader = __fa_awesome();

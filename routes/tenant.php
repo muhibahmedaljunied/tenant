@@ -226,9 +226,9 @@ Route::middleware([
     Route::post('/pos/get-stores-by-locations-', 'SellPosController@getStoresByLocations')->name('getStoresByLocationsPos');
 
     Route::resource('pos', 'SellPosController');
-    // Route::get('pos',[SellPosController::class,'index'])->name('SellPos-index');
+    Route::get('pos-index',[SellPosController::class,'index'])->name('SellPos-index');
 
-    Route::get('pos-create', [SellPosController::class, 'create'])->name('SellPos-create');
+    Route::get('pos/create', [SellPosController::class, 'create'])->name('SellPos-create');
 
 
     Route::resource('roles', 'RoleController');

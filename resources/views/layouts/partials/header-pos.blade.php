@@ -14,6 +14,8 @@
     $pos_redirect_url = action('SellPosController@create');
 @endphp
 
+
+
 @if (!empty($pos_module_data))
     @foreach ($pos_module_data as $key => $value)
         @php
@@ -37,6 +39,7 @@
         <div class="col-md-6">
             <div class="m-6 mt-5" style="display: flex;">
                 <p><strong>@lang('sale.location'): &nbsp;</strong>
+
                     @if (empty($transaction->location_id))
                         @if (count($business_locations) > 1)
                             <div style="width: 28%;margin-bottom: 5px;">
@@ -173,33 +176,4 @@
     }
 </style>
 
-<script type="text/javascript">
-  $('#select_location_id').on('change', function() {
 
-      // console.log('hebo_change');
-      var locationIds = $(this).val();
-      if (!locationIds) {
-          $('#select_store_id').html(
-              '<option value="">{{ __('messages.please_select') }}</option>');
-          $('#select_store_id').trigger('change');
-          return;
-      }
-      $.ajax({
-          url: '{{ route('getStoresByLocationsPos') }}',
-          type: 'POST',
-          data: {
-              location_ids: locationIds,
-              _token: '{{ csrf_token() }}'
-          },
-          success: function(data) {
-              var options =
-                  '<option value="">{{ __('messages.please_select') }}</option>';
-              $.each(data, function(key, value) {
-                  options += '<option value="' + key + '">' +
-                      value + '</option>';
-              });
-              $('#select_store_id').html(options).trigger('change');
-          }
-      });
-  });
-</script>

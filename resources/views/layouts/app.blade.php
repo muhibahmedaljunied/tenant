@@ -3,6 +3,7 @@
 @if ($request->segment(1) == 'pos' && ($request->segment(2) == 'create' || $request->segment(3) == 'edit'))
     @php
         $pos_layout = true;
+      
     @endphp
 @else
     @php
@@ -46,7 +47,7 @@
 <body
     class="@if ($pos_layout) hold-transition lockscreen @else hold-transition skin-@if (!empty(session('business.theme_color'))){{ session('business.theme_color') }}@else{{ 'black-light' }} @endif sidebar-mini @endif">
 
-
+  
 
     <div class="wrapper thetop">
         <script type="text/javascript">
@@ -55,6 +56,7 @@
                 body.className += " sidebar-collapse";
             }
         </script>
+
 
         @if (!$pos_layout)
             @include('layouts.partials.header')
@@ -135,7 +137,7 @@
         @endforeach
     @endif
 
-    
+
     @stack('scripts')
 </body>
 

@@ -1094,19 +1094,25 @@ class ReportController extends Controller
         $business_id = $request->session()->get('user.business_id');
 
 
+  
+        // dd($start_date = $request->get('start_date'),$end_date = $request->get('end_date'));
+
         //Return the details in ajax call
         if ($request->ajax()) {
+
+
+
+
             $query = Transaction::where('business_id', $business_id)
                 ->where('type', 'stock_adjustment');
 
-
             //Filter by store
             $store_id = request()->get('store_id', null);
+           
             if (is_numeric($store_id)) {
 
-                // $query  = $query->where('vld.store_id', '=', $store_id);
+                $query  = $query->where('store_id', $store_id);
             }
-
 
             //Check for permitted locations of a user
             $permitted_locations = auth()->user()->permitted_locations();
@@ -1127,25 +1133,66 @@ class ReportController extends Controller
             $stock_adjustment_details = $query->select(
                 DB::raw("SUM(final_total) as total_amount"),
                 DB::raw("SUM(total_amount_recovered) as total_recovered"),
-                DB::raw("
-                SUM(
-                  CASE 
-                    WHEN adjustment_type = 'normal' THEN final_total 
-                    ELSE 0 
-                  END
-                ) AS total_normal
-              "),
-
-                DB::raw("
-              SUM(
-                CASE 
-                  WHEN adjustment_type = 'abnormal' THEN final_total 
-                  ELSE 0 
-                END
-              ) AS total_abnormal
-            ")
-
+                DB::raw("SUM(CASE WHEN adjustment_type = 'normal' THEN final_total ELSE 0 END) as total_normal"),
+                DB::raw("SUM(CASE WHEN adjustment_type = 'abnormal' THEN final_total ELSE 0 END) as total_abnormal")
             )->first();
+
+
+            // -----------------------------------------------------------------------------------
+            // $query = Transaction::where('business_id', $business_id)
+            //     ->where('type', 'stock_adjustment');
+
+
+            // //Filter by store
+            // $store_id = request()->get('store_id', null);
+            // if (is_numeric($store_id)) {
+
+            //     // $query  = $query->where('vld.store_id', '=', $store_id);
+            // }
+
+
+            // //Check for permitted locations of a user
+            // $permitted_locations = auth()->user()->permitted_locations();
+            // if ($permitted_locations != 'all') {
+            //     $query->whereIn('location_id', $permitted_locations);
+            // }
+
+            // $start_date = $request->get('start_date');
+            // $end_date = $request->get('end_date');
+            // if (! empty($start_date) && ! empty($end_date)) {
+            //     $query->whereBetween(DB::raw('CONVERT(DATE,transaction_date)'), [$start_date, $end_date]);
+            // }
+            // $location_id = $request->get('location_id');
+            // if (! empty($location_id)) {
+            //     $query->where('location_id', $location_id);
+            // }
+
+            // $stock_adjustment_details = $query->select(
+            //     DB::raw("SUM(final_total) as total_amount"),
+            //     DB::raw("SUM(total_amount_recovered) as total_recovered"),
+            //     DB::raw("
+            //     SUM(
+            //       CASE 
+            //         WHEN adjustment_type = 'normal' THEN final_total 
+            //         ELSE 0 
+            //       END
+            //     ) AS total_normal
+            //   "),
+
+            //     DB::raw("
+            //   SUM(
+            //     CASE 
+            //       WHEN adjustment_type = 'abnormal' THEN final_total 
+            //       ELSE 0 
+            //     END
+            //   ) AS total_abnormal
+            // ")
+
+            // )->first();
+            // -----------------------------------------------------------------------------------
+
+   
+
             return $stock_adjustment_details;
         }
         $business_locations = BusinessLocation::forDropdown($business_id, true);
@@ -1456,19 +1503,17 @@ class ReportController extends Controller
                 $query  = $query->where('vld.store_id', '=', $store_id);
             }
 
-            $permitted_locations = auth()->user()->permitted_locations();
+            // $permitted_locations = auth()->user()->permitted_locations();
 
-            if ($permitted_locations != 'all') {
-                $query->whereIn('t.location_id', $permitted_locations);
-            }
+            // if ($permitted_locations != 'all') {
+            //     $query->whereIn('t.location_id', $permitted_locations);
+            // }
 
 
 
             // ---------------------------------muhib add this ------------------------------------------
             $location_id = request()->get('location_id', null);
-
             $permitted_locations = auth()->user()->permitted_locations();
-
 
             if (is_numeric($location_id)) {
 

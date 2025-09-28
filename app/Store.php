@@ -25,12 +25,24 @@ class Store extends Model
 
     public static function forDropdown(
         $business_id,
+        $location_id = false
 
     ) {
 
 
-        $query = Store::where('stores.business_id', $business_id)
-            ->select();
+
+        if ($location_id) {
+
+
+            $query = Store::where(['stores.business_id' => $business_id, 'stores.location_id' => $location_id])
+                ->select();
+        } else {
+
+            $query = Store::where('stores.business_id', $business_id)
+                ->select();
+        }
+
+
         $result = $query->get();
         $stores = $result->pluck('name', 'id');
         return $stores;

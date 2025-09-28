@@ -85,6 +85,21 @@ class StockAdjustmentController extends Controller
                     DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by")
                 );
 
+
+
+
+                // ----------------------
+
+
+                   //Filter by store
+            $store_id = request()->get('store_id', null);
+           
+            if (is_numeric($store_id)) {
+
+                $stock_adjustments  = $stock_adjustments->where('transactions.store_id', $store_id);
+            }
+
+            // -----------------------------------
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
                 $stock_adjustments->whereIn('transactions.location_id', $permitted_locations);
@@ -93,8 +108,11 @@ class StockAdjustmentController extends Controller
             $hide = '';
             $start_date = request()->get('start_date');
             $end_date = request()->get('end_date');
-            if (! empty($start_date) && ! empty($end_date)) {
-                $stock_adjustments->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
+            if (!empty($start_date) && !empty($end_date)) {
+                $stock_adjustments->whereBetween(
+                    DB::raw("CAST(transaction_date AS DATE)"),
+                    [$start_date, $end_date]
+                );
                 $hide = 'hide';
             }
             $location_id = request()->get('location_id');
@@ -294,6 +312,7 @@ class StockAdjustmentController extends Controller
 
 
 
+            // dd(11111);
 
             $output = [
                 'success' => 1,

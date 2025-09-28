@@ -25,7 +25,6 @@
         <form action="{{ action('SellPosController@store') }}" method="POST" id="add_pos_sell_form">
             @csrf
             <div class="row mb-12">
-
                 <div class="col-md-12">
                     <div class="row">
                         <div
@@ -109,10 +108,10 @@
     @endif
 @stop
 @section('javascript')
-    <script src="{{ url('js/pos.js?v=' . $asset_v) }}"></script>
-    <script src="{{ url('js/printer.js?v=' . $asset_v) }}"></script>
-    <script src="{{ url('js/product.js?v=' . $asset_v) }}"></script>
-    <script src="{{ url('js/opening_stock.js?v=' . $asset_v) }}"></script>
+    <script src="{{ asset('js/pos.js?v=' . $asset_v) }}"></script>
+    <script src="{{ asset('js/printer.js?v=' . $asset_v) }}"></script>
+    <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+    <script src="{{ asset('js/opening_stock.js?v=' . $asset_v) }}"></script>
     @include('sale_pos.partials.keyboard_shortcuts')
 
 
@@ -121,7 +120,7 @@
     @if (in_array('tables', $enabled_modules) ||
             in_array('modifiers', $enabled_modules) ||
             in_array('service_staff', $enabled_modules))
-        <script src="{{ url('js/restaurant.js?v=' . $asset_v) }}"></script>
+        <script src="{{ asset('js/restaurant.js?v=' . $asset_v) }}"></script>
     @endif
     <!-- include module js -->
     @if (!empty($pos_module_data))
@@ -133,35 +132,6 @@
     @endif
 
 
-    <script type="text/javascript">
-        $('#select_location_id').on('change', function() {
 
-            // console.log('hebo_change');
-            var locationIds = $(this).val();
-            if (!locationIds) {
-                $('#select_store_id').html(
-                    '<option value="">{{ __('messages.please_select') }}</option>');
-                $('#select_store_id').trigger('change');
-                return;
-            }
-            $.ajax({
-                url: '{{ route('getStoresByLocationsPos') }}',
-                type: 'POST',
-                data: {
-                    location_ids: locationIds,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(data) {
-                    var options =
-                        '<option value="">{{ __('messages.please_select') }}</option>';
-                    $.each(data, function(key, value) {
-                        options += '<option value="' + key + '">' +
-                            value + '</option>';
-                    });
-                    $('#select_store_id').html(options).trigger('change');
-                }
-            });
-        });
-    </script>
 
 @endsection

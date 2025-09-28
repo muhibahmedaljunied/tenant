@@ -1053,27 +1053,33 @@ $(document).ready(function () {
         $('select#product_category').val(),
         $('select#product_brand').val(),
         $('input#location_id').val(),
+        // ------
+        $('input#store_id').val(),
+        // --------
         null,
         is_enabled_stock,
         device_model_id
     );
-    $('select#product_category, select#product_brand, select#select_location_id').on(
-        'change',
-        function (e) {
-            $('input#suggestion_page').val(1);
-            var location_id = $('input#location_id').val();
-            if (location_id != '' || location_id != undefined) {
-                get_product_suggestion_list(
-                    $('select#product_category').val(),
-                    $('select#product_brand').val(),
-                    $('input#location_id').val(),
-                    null
-                );
-            }
-
-            get_featured_products();
+    $(
+        'select#product_category, select#product_brand, select#select_location_id,select#select_store_id'
+    ).on('change', function (e) {
+        $('input#suggestion_page').val(1);
+        var location_id = $('input#location_id').val();
+        var store_id = $('input#store_id').val();
+        if (location_id != '' || location_id != undefined && store_id != '' || store_id != undefined) {
+            get_product_suggestion_list(
+                $('select#product_category').val(),
+                $('select#product_brand').val(),
+                $('input#location_id').val(),
+                // ------
+                $('input#store_id').val(),
+                // -----
+                null
+            );
         }
-    );
+
+        get_featured_products();
+    });
 
     $(document).on('click', 'div.product_box', function () {
         //Check if location is not set then show error message.
@@ -1347,6 +1353,7 @@ function get_product_suggestion_list(
     category_id,
     brand_id,
     location_id,
+    store_id,
     url = null,
     is_enabled_stock = null,
     repair_model_id = null
@@ -1374,6 +1381,7 @@ function get_product_suggestion_list(
             category_id: category_id,
             brand_id: brand_id,
             location_id: location_id,
+            store_id: store_id,
             page: page,
             is_enabled_stock: is_enabled_stock,
             repair_model_id: repair_model_id,
@@ -2029,6 +2037,7 @@ $('div#product_list_body').on('scroll', function () {
         page += 1;
         $('#suggestion_page').val(page);
         var location_id = $('input#location_id').val();
+        var store_id = $('input#store_id').val();
         var category_id = $('select#product_category').val();
         var brand_id = $('select#product_brand').val();
 
@@ -2046,6 +2055,9 @@ $('div#product_list_body').on('scroll', function () {
             category_id,
             brand_id,
             location_id,
+            // -----
+            store_id,
+            // -----
             null,
             is_enabled_stock,
             device_model_id

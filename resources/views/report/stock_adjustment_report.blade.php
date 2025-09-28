@@ -25,7 +25,7 @@
             <div class="col-md-3">
                 <div class="input-group">
                     <span class="input-group-addon bg-light-blue"><i class="fa fa-map-marker"></i></span>
-                    <select name="store_id" id="store_id" class="form-control select2" style="width:100%;">
+                    <select name="store_id" id="stock_adjustment_store_filter" class="form-control select2" style="width:100%;">
                         <option value="">{{ __('messages.all') }}</option>
                     </select>
                 </div>
@@ -108,6 +108,7 @@
                                     <th>@lang('messages.action')</th>
                                     <th>@lang('messages.date')</th>
                                     <th>@lang('purchase.ref_no')</th>
+                                    <th>@lang('store.store')</th>
                                     <th>@lang('business.location')</th>
                                     <th>@lang('stock_adjustment.adjustment_type')</th>
                                     <th>@lang('stock_adjustment.total_amount')</th>
@@ -127,6 +128,9 @@
     <!-- /.content -->
 @stop
 @section('javascript')
+    {{-- <script src="{{ url('js/vendor.js?v=' . $asset_v) }}"></script> --}}
+  
+
     <script src="{{ url('js/stock_adjustment.js?v=' . $asset_v) }}"></script>
     <script src="{{ url('js/report.js?v=' . $asset_v) }}"></script>
 
@@ -136,9 +140,9 @@
             console.log('hebo_change');
             var locationIds = $(this).val();
             if (!locationIds) {
-                $('#store_id').html(
+                $('#stock_adjustment_store_filter').html(
                     '<option value="">{{ __('messages.please_select') }}</option>');
-                $('#store_id').trigger('change');
+                $('#stock_adjustment_store_filter').trigger('change');
                 return;
             }
             $.ajax({
@@ -157,7 +161,7 @@
                         options += '<option value="' + value['id'] + '">' +
                             value['name'] + '</option>';
                     });
-                    $('#store_id').html(options).trigger('change');
+                    $('#stock_adjustment_store_filter').html(options).trigger('change');
                 }
             });
         });
