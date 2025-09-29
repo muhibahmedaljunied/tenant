@@ -32,10 +32,10 @@ $(document).ready(function () {
 
     // -------muhib add this-
 
-    $('select#select_store_id').change(function () {
-        // console.log('muhib add this');
-        $('input#store_id').val($('select#select_store_id').val());
-    });
+    // $('select#select_store_id').change(function () {
+    //     console.log('muhib add this',$('select#select_store_id').val());
+    //     $('select#select_store_id').val($('select#select_store_id').val());
+    // });
     // -------
 
     $('select#select_location_id').change(function () {
@@ -156,7 +156,7 @@ $(document).ready(function () {
                         {
                             price_group: price_group,
                             location_id: $('input#location_id').val(),
-                            store_id: $('input#store_id').val(),
+                            store_id: $('select#select_store_id').val(),
                             term: request.term,
                             not_for_selling: 0,
                             search_fields: search_fields,
@@ -1054,7 +1054,7 @@ $(document).ready(function () {
         $('select#product_brand').val(),
         $('input#location_id').val(),
         // ------
-        $('input#store_id').val(),
+        $('select#select_store_id').val(),
         // --------
         null,
         is_enabled_stock,
@@ -1064,15 +1064,23 @@ $(document).ready(function () {
         'select#product_category, select#product_brand, select#select_location_id,select#select_store_id'
     ).on('change', function (e) {
         $('input#suggestion_page').val(1);
+        // console.log('muhib add this',$('select#select_store_id').val());
+        // $('select#select_store_id').val($('select#select_store_id').val());
+
+        // console.log('hobesssssssssssssss',$('select#select_store_id').val());
         var location_id = $('input#location_id').val();
-        var store_id = $('input#store_id').val();
-        if (location_id != '' || location_id != undefined && store_id != '' || store_id != undefined) {
+        var store_id = $('select#select_store_id').val();
+        if (
+            location_id != '' ||
+            (location_id != undefined && store_id != '') ||
+            store_id != undefined
+        ) {
             get_product_suggestion_list(
                 $('select#product_category').val(),
                 $('select#product_brand').val(),
                 $('input#location_id').val(),
                 // ------
-                $('input#store_id').val(),
+                $('select#select_store_id').val(),
                 // -----
                 null
             );
@@ -2037,7 +2045,7 @@ $('div#product_list_body').on('scroll', function () {
         page += 1;
         $('#suggestion_page').val(page);
         var location_id = $('input#location_id').val();
-        var store_id = $('input#store_id').val();
+        var store_id = $('select#select_store_id').val();
         var category_id = $('select#product_category').val();
         var brand_id = $('select#product_brand').val();
 
@@ -2232,6 +2240,7 @@ function adjustComboQty(tr) {
 $(document).on('change', '#types_of_service_id', function () {
     var types_of_service_id = $(this).val();
     var location_id = $('#location_id').val();
+    var store_id = $('#select_store_id').val();
 
     if (types_of_service_id) {
         $.ajax({
@@ -2240,6 +2249,7 @@ $(document).on('change', '#types_of_service_id', function () {
             data: {
                 types_of_service_id: types_of_service_id,
                 location_id: location_id,
+                select_store_id: select_store_id,
             },
             dataType: 'json',
             success: function (result) {

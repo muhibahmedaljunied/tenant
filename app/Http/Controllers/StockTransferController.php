@@ -121,7 +121,7 @@ class StockTransferController extends Controller
                 'transactions.id',
                 'transactions.transaction_date',
                 'transactions.ref_no',
-                'l1.name as location_from',
+                // 'l1.name as location_from',
                 'l2.name as location_to',
                 's1.name as store_from',
                 's2.name as store_to',
@@ -381,7 +381,7 @@ class StockTransferController extends Controller
                         $purchase_line_arr['mfg_date'] = $lot_details->mfg_date;
                         $purchase_line_arr['exp_date'] = $lot_details->exp_date;
                     }
-
+                   
                     $sell_lines[] = $sell_line_arr;
                     $purchase_lines[] = $purchase_line_arr;
                 }
@@ -391,16 +391,19 @@ class StockTransferController extends Controller
             // -------------------------------Create Sell Transfer transaction--------------------------------------------------------------------------------------------
 
             $sell_transfer = Transaction::create($input_data);
+      
             // --------------------------------Create Purchase Transfer at transfer location-------------------------------------------------------------------------------------------
             $input_data['type'] = 'purchase_transfer';
-            $input_data['location_id'] = $request->input('transfer_location_id');
-            $input_data['transfer_store_id'] = $request->input('transfer_store_id');
+            // $input_data['location_id'] = $request->input('transfer_location_id');
+            $input_data['store_id'] = $request->input('transfer_store_id');
             $input_data['transfer_parent_id'] = $sell_transfer->id;
             $input_data['status'] = $status == 'completed' ? 'received' : $status;
             // ------add this muhib---
             $input_data['essentials_duration'] = 0;
             // ----------
+    
             $purchase_transfer = Transaction::create($input_data);
+       
             // --------------------------------Sell Product from first location-------------------------------------------------------------------------------------------
             if (!empty($sell_lines)) {
                 $this->transactionUtil->createOrUpdateSellLines(
@@ -414,10 +417,11 @@ class StockTransferController extends Controller
 
             if (!empty($purchase_lines)) {
 
+              
                 $purchase_transfer->purchase_lines()
                     ->createMany($purchase_lines);
             }
-
+            // dd($sell_transfer,$purchase_transfer);
             // -----------------------------------Decrease product stock from sell location And increase product stock at purchase location----------------------------------------------------------------------------------------
             if ($status == 'completed') {
                 foreach ($products as $product) {
@@ -470,7 +474,7 @@ class StockTransferController extends Controller
             DB::commit();
         } catch (Exception $e) {
 
-            dd($e->getMessage());
+            // dd($e->getMessage());
             DB::rollBack();
 
             logger()->emergency("File: {$e->getFile()} Line: {$e->getLine()} Message: {$e->getMessage()}");
@@ -496,6 +500,7 @@ class StockTransferController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+   
         $business_id = request()->session()->get('user.business_id');
 
         $sell_transfer = Transaction::where('business_id', $business_id)

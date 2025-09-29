@@ -148,7 +148,7 @@ $(document).ready(function () {
         columns: [
             { data: 'transaction_date', name: 'transaction_date' },
             { data: 'ref_no', name: 'ref_no' },
-            { data: 'location_from', name: 'l1.name' },
+            // { data: 'location_from', name: 'l1.name' },
             { data: 'location_to', name: 'l2.name' },
             { data: 'store_from', name: 's1.name' },
             { data: 'store_to', name: 's2.name' },

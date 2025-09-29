@@ -37,6 +37,8 @@
                                         data-receipt_printer_type="{{ !empty($default_location->receipt_printer_type) ? $default_location->receipt_printer_type : 'browser' }}"
                                         data-default_payment_accounts="{{ $default_location->default_payment_accounts ?? '' }}">
 
+
+
                                     <input type="hidden" name="sub_type" value="{{ $sub_type ?? '' }}">
 
                                     <input type="hidden" id="item_addition_method"
@@ -162,6 +164,10 @@
                 }
             });
         });
+
+
+
+     
     </script>
 
 @endsection

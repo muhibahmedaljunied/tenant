@@ -1741,13 +1741,14 @@ class SellPosController extends Controller
      */
     public function getProductSuggestion(Request $request)
     {
-
-        dd($request->all());
+        
+        // dd($request->all());
         if ($request->ajax()) {
             $category_id = $request->get('category_id');
             $brand_id = $request->get('brand_id');
             $location_id = $request->get('location_id');
             $store_id = $request->get('store_id');
+           
             $term = $request->get('term');
 
             $check_qty = false;
@@ -1759,11 +1760,12 @@ class SellPosController extends Controller
                 // ->join('product_locations as pl', 'pl.product_id', '=', 'p.id')
                 ->leftjoin(
                     'variation_location_details AS VLD',
-                    function ($join) use ($location_id) {
+                    function ($join) use ($location_id,$store_id) {
                         $join->on('variations.id', '=', 'VLD.variation_id');
 
                         //Include Location
                         if (! empty($location_id)) {
+                   
                             $join->where(function ($query) use ($location_id) {
                                 $query->where('VLD.location_id', '=', $location_id);
                                 //Check null to show products even if no quantity is available in a location.
@@ -1772,7 +1774,8 @@ class SellPosController extends Controller
                             });;
                         }
                         //Include store
-                        if (! empty($store_id)) {
+                        if (!empty($store_id)) {
+                   
                             $join->where(function ($query) use ($store_id) {
                                 $query->where('VLD.store_id', '=', $store_id);
                                 //Check null to show products even if no quantity is available in a store.
@@ -1858,6 +1861,8 @@ class SellPosController extends Controller
 
             return view('sale_pos.partials.product_list')->with(compact('products', 'allowed_group_prices', 'show_prices'));
         }
+
+        
     }
 
     /**

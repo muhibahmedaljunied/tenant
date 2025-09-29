@@ -8,7 +8,7 @@
 		<div class="modal-body">
 				<div class="row invoice-info">
 				  <div class="col-sm-4 invoice-col">
-				    @lang('lang_v1.location_from'):
+				    @lang('lang_v1.location'):
 				    <address>
 				      <strong>{{ $location_details['sell']->name }}</strong>
 				      
@@ -33,7 +33,7 @@
 				    </address>
 				  </div>
 
-				  <div class="col-md-4 invoice-col">
+				  {{-- <div class="col-md-4 invoice-col">
 				    @lang('lang_v1.location_to'):
 				    <address>
 				      <strong>{{ $location_details['purchase']->name }}</strong>
@@ -57,7 +57,7 @@
 				        <br>Email: {{$location_details['purchase']->email}}
 				      @endif
 				    </address>
-				  </div>
+				  </div> --}}
 
 				  <div class="col-sm-4 invoice-col">
 				    <b>@lang('purchase.ref_no'):</b> #{{ $sell_transfer->ref_no }}<br/>

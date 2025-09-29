@@ -65,7 +65,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        {{-- <div class="col-sm-3">
                             <div class="form-group">
                                 <label for="transfer_location_id">{{ __('lang_v1.location_to') }}:*</label>
                                 <select id="transfer_location_id" name="transfer_location_id" class="form-control select2"
@@ -76,7 +76,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-sm-3">
                             <div class="form-group">
@@ -206,41 +206,7 @@
                 $('#store_id').html(
                     '<option value="">{{ __('messages.please_select') }}</option>');
                 $('#store_id').trigger('change');
-
-        
-                return;
-            }
-            $.ajax({
-                url: '{{ route('getStoresByLocationsStockTransfer') }}',
-                type: 'POST',
-                data: {
-                    location_ids: locationIds,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(data) {
-                    var options_from =
-                        '<option value="">{{ __('messages.please_select') }}</option>';
-                    var options_to =
-                        '<option value="">{{ __('messages.please_select') }}</option>';
-                    $.each(data, function(key, value) {
-
-                        options_from += '<option value="' + key + '">' +
-                            value + '</option>';
-
-                        options_to += '<option value="' + key + '">' +
-                            value + '</option>';
-                    });
-                    $('#store_id').html(options_from).trigger('change');
-                }
-            });
-        });
-        $('#transfer_location_id').on('change', function() {
-
-            console.log('hebo_change');
-            var locationIds = $(this).val();
-            if (!locationIds) {
-     
-
+                // ----------------------------------------------------------------------------
                 $('#transfer_store_id').html(
                     '<option value="">{{ __('messages.please_select') }}</option>');
                 $('#transfer_store_id').trigger('change');
@@ -266,9 +232,46 @@
                         options_to += '<option value="' + key + '">' +
                             value + '</option>';
                     });
+                    $('#store_id').html(options_from).trigger('change');
                     $('#transfer_store_id').html(options_to).trigger('change');
                 }
             });
         });
+        // $('#transfer_location_id').on('change', function() {
+
+        //     console.log('hebo_change');
+        //     var locationIds = $(this).val();
+        //     if (!locationIds) {
+
+
+        //         $('#transfer_store_id').html(
+        //             '<option value="">{{ __('messages.please_select') }}</option>');
+        //         $('#transfer_store_id').trigger('change');
+        //         return;
+        //     }
+        //     $.ajax({
+        //         url: '{{ route('getStoresByLocationsStockTransfer') }}',
+        //         type: 'POST',
+        //         data: {
+        //             location_ids: locationIds,
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         success: function(data) {
+        //             var options_from =
+        //                 '<option value="">{{ __('messages.please_select') }}</option>';
+        //             var options_to =
+        //                 '<option value="">{{ __('messages.please_select') }}</option>';
+        //             $.each(data, function(key, value) {
+
+        //                 options_from += '<option value="' + key + '">' +
+        //                     value + '</option>';
+
+        //                 options_to += '<option value="' + key + '">' +
+        //                     value + '</option>';
+        //             });
+        //             $('#transfer_store_id').html(options_to).trigger('change');
+        //         }
+        //     });
+        // });
     </script>
 @endsection

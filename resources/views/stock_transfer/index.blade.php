@@ -24,8 +24,8 @@
                         <tr>
                             <th>@lang('messages.date')</th>
                             <th>@lang('purchase.ref_no')</th>
-                            <th>@lang('lang_v1.location_from')</th>
-                            <th>@lang('lang_v1.location_to')</th>
+                            <th>@lang('lang_v1.location')</th>
+                            {{-- <th>@lang('lang_v1.location_to')</th> --}}
                             <th>@lang('lang_v1.store_from')</th>
                             <th>@lang('lang_v1.store_to')</th>
                             <th>@lang('sale.status')</th>
