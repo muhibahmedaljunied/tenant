@@ -325,13 +325,14 @@ class CashRegisterUtil extends Util
             ->join('transaction_sell_lines AS TSL', 'transactions.id', '=', 'TSL.transaction_id')
             ->join('products AS P', 'TSL.product_id', '=', 'P.id')
             ->leftjoin('brands AS B', 'P.brand_id', '=', 'B.id')
-            ->groupBy('B.id')
+            ->groupBy('B.id', 'B.name')
             ->select(
                 'B.name as brand_name',
                 DB::raw('SUM(TSL.quantity) as total_quantity'),
                 DB::raw('SUM(TSL.unit_price_inc_tax*TSL.quantity) as total_amount')
             )
-            ->orderByRaw('CASE WHEN brand_name IS NULL THEN 2 ELSE 1 END, brand_name')
+            // ->orderByRaw('CASE WHEN brand_name IS NULL THEN 2 ELSE 1 END, brand_name')
+            ->orderByRaw("CASE WHEN B.name IS NULL THEN 2 ELSE 1 END, B.name")
             ->get();
 
         //If types of service
@@ -343,7 +344,7 @@ class CashRegisterUtil extends Util
                 ->where('transactions.type', 'sell')
                 ->where('transactions.status', 'final')
                 ->leftjoin('types_of_services AS tos', 'tos.id', '=', 'transactions.types_of_service_id')
-                ->groupBy('tos.id')
+                ->groupBy('tos.id','tos.id', 'tos.name')
                 ->select(
                     'tos.name as types_of_service_name',
                     DB::raw('SUM(final_total) as total_sales')

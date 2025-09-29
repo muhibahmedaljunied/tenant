@@ -3,10 +3,10 @@
     <form action="{{ action('CashRegisterController@postCloseRegister') }}" method="POST">
       @csrf
       <input type="hidden" name="user_id" value="{{ $register_details->user_id }}">
-    <div class="modal-header">
+    {{-- <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       <h3 class="modal-title">@lang( 'cash_register.current_register' ) ( {{ \Carbon::createFromFormat('Y-m-d H:i:s', $register_details->open_time)->format('jS M, Y h:i A') }} - {{ \Carbon::now()->format('jS M, Y h:i A') }})</h3>
-    </div>
+    </div> --}}
 
     <div class="modal-body">
       <div class="row">
@@ -232,6 +232,7 @@
                 @lang('مرتجع المبيعات'):
               </th>
               <td>
+                
                 <b><span class="display_currency" data-currency_symbol="true">{{ $sells_return[0]->amount_paid }}</span></b>
               </td>
             </tr>
