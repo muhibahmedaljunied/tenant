@@ -646,8 +646,6 @@ $(document).ready(function () {
         });
     });
 
-
-
     //Start: CRUD for Contacts
     //contacts table
     var contact_table_type = $('#contact_type').val();
@@ -1708,6 +1706,7 @@ $(document).ready(function () {
         ajax: {
             url: '/expenses',
             data: function (d) {
+                // console.log('f,,f,,,,,,,,,,,,,,,,,,',d);
                 d.expense_for = $('select#expense_for').val();
                 d.contact_id = $('select#expense_contact_filter').val();
                 d.location_id = $('select#location_id').val();
@@ -1754,9 +1753,16 @@ $(document).ready(function () {
         },
     });
 
+    // 🔍 Print returned data from server
+    $('#expense_table').on('xhr.dt', function (e, settings, json, xhr) {
+        console.log('Returned data:', json.data); // array of rows
+        console.log('Full response:', json); // includes draw, recordsTotal, etc.
+    });
+
     $(
         'select#location_id, select#expense_for, select#expense_contact_filter, select#expense_category_id, select#expense_payment_status'
     ).on('change', function () {
+        console.log('ffdddsdsdsdsdsdsd');
         expense_table.ajax.reload();
     });
 
@@ -2037,14 +2043,13 @@ $(document).ready(function () {
 
         ajax: '/tenants/index',
         columns: [
-        
             { data: 'name' },
             { data: 'domain' },
             { data: 'account_status' },
             { data: 'payment_status' },
             { data: 'created_at' },
             { data: 'updated_at' },
-            { data: 'action' }
+            { data: 'action' },
         ],
         columnDefs: [
             {

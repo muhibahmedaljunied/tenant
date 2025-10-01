@@ -378,6 +378,7 @@ class PurchaseController extends Controller
                 }
             })->pluck('name', 'id');
         }
+
         $menuItems = $request->menuItems;
         return view('purchase.create')
             ->with(
@@ -435,6 +436,7 @@ class PurchaseController extends Controller
         }
 
 
+        // dd($request->input('payment'));
         try {
             $business_id = $request->session()->get('user.business_id');
 
@@ -512,7 +514,7 @@ class PurchaseController extends Controller
 
 
             // ------add this muhib---
-            $transaction_data['essentials_duration'] = 0;
+            // $transaction_data['essentials_duration'] = 0;
             // ----------
             $transaction = Transaction::create($transaction_data);
 

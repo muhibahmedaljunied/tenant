@@ -590,6 +590,7 @@ class CashRegisterController extends Controller
 
             )->get();
 
+        // dd($payements_detail,$user_id,$open_time, $close_time);
         //EXPENSES
         $expenses = Transaction::leftJoin('expense_categories AS ec', 'transactions.expense_category_id', '=', 'ec.id')
             ->join(
@@ -729,41 +730,14 @@ class CashRegisterController extends Controller
 
         //Sell Return
         $sells_return = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
-
-            ->join(
-                'business_locations AS bl',
-                'transactions.location_id',
-                '=',
-                'bl.id'
-            )
-            ->join(
-                'transactions as T1',
-                'transactions.return_parent_id',
-                '=',
-                'T1.id'
-            )
-            ->leftJoin(
-                'transaction_payments AS TP',
-                'transactions.id',
-                '=',
-                'TP.transaction_id'
-            )
+            ->join('business_locations AS bl', 'transactions.location_id', '=', 'bl.id')
+            ->join('transactions as T1', 'transactions.return_parent_id', '=', 'T1.id')
+            ->leftJoin('transaction_payments AS TP', 'transactions.id', '=', 'TP.transaction_id')
             ->where('transactions.business_id', $business_id)
             ->where('transactions.type', 'sell_return')
             ->where('transactions.status', 'final')
             ->whereBetween('TP.created_at', [$open_time, $close_time])
             ->where('TP.created_by', $user_id)
-            ->groupBy(
-                'transactions.id',
-                'transactions.transaction_date',
-                'transactions.invoice_no',
-                'contacts.name',
-                'transactions.final_total',
-                'transactions.payment_status',
-                'bl.name',
-                'T1.invoice_no',
-                'T1.id',
-            )
             ->select(
                 'transactions.id',
                 'transactions.transaction_date',
@@ -775,8 +749,21 @@ class CashRegisterController extends Controller
                 'T1.invoice_no as parent_sale',
                 'T1.id as parent_sale_id',
                 DB::raw('SUM(TP.amount) as amount_paid')
-            )->get();
+            )
+            ->groupBy(
+                'transactions.id',
+                'transactions.transaction_date',
+                'transactions.invoice_no',
+                'contacts.name',
+                'transactions.final_total',
+                'transactions.payment_status',
+                'bl.name',
+                'T1.invoice_no',
+                'T1.id'
+            )
+            ->get();
 
+        // dd($sells_return);
         //Purchase Return
         $purchases_returns = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
             ->join(
@@ -801,18 +788,7 @@ class CashRegisterController extends Controller
             ->where('transactions.type', 'purchase_return')
             ->whereBetween('TP.created_at', [$open_time, $close_time])
             ->where('TP.created_by', $user_id)
-            ->groupBy(
-                'transactions.id',
-                'transactions.transaction_date',
-                'transactions.ref_no',
-                'contacts.name',
-                'transactions.status',
-                'transactions.payment_status',
-                'transactions.final_total',
-                'transactions.return_parent_id',
-                'BS.name',
-                'T.ref_no',
-            )
+
             ->select(
                 'transactions.id',
                 'transactions.transaction_date',
@@ -825,8 +801,22 @@ class CashRegisterController extends Controller
                 'BS.name as location_name',
                 'T.ref_no as parent_purchase',
                 DB::raw('SUM(TP.amount) as amount_paid')
-            )->get();
+            )
+            ->groupBy(
+                'transactions.id',
+                'transactions.transaction_date',
+                'transactions.ref_no',
+                'contacts.name',
+                'transactions.status',
+                'transactions.payment_status',
+                'transactions.final_total',
+                'transactions.return_parent_id',
+                'BS.name',
+                'T.ref_no',
+            )
+            ->get();
 
+        dd($payements_detail, $sells_return, $purchases_returns, $user_id, $open_time, $close_time);
 
         return view('cash_register.close_register_modal')
             ->with(compact(
@@ -891,6 +881,7 @@ class CashRegisterController extends Controller
                 'msg' => __("messages.something_went_wrong")
             ];
         }
+
 
         return redirect()->back()->with('status', $output);
     }

@@ -63,9 +63,16 @@ class AddAccountTransaction
     public function handle(TransactionPaymentAdded $event)
     {
         $this->formInputs = $event->formInput;
-        $isPosSale = ! in_array($event->formInput['transaction_type'], ['purchase', 'purchase_return']) !== '' && ! ($event->transactionPayment->transaction !== null ? $event->transactionPayment->transaction->is_direct_sale : false);
+        $isPosSale = ! in_array(
+            $event->formInput['transaction_type'],
+            ['purchase', 'purchase_return']
+        ) !== '' && ! ($event->transactionPayment->transaction !== null ? $event->transactionPayment->transaction->is_direct_sale : false);
         if ($event->transactionPayment->method == 'advance') {
-            $this->transactionUtil->updateContactBalance($event->transactionPayment->payment_for, $event->transactionPayment->amount, 'deduct');
+            $this->transactionUtil->updateContactBalance(
+                $event->transactionPayment->payment_for,
+                $event->transactionPayment->amount,
+                'deduct'
+            );
         }
 
         if (! $this->moduleUtil->isModuleEnabled('account')) {

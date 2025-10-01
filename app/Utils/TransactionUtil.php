@@ -989,6 +989,7 @@ class TransactionUtil extends Util
             }
         }
 
+        // dd($payments_formatted);
         //Delete the payment lines removed.
         if (! empty($edit_ids)) {
             $deleted_transaction_payments = $transaction->payment_lines()->whereNotIn('id', $edit_ids)->get();

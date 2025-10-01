@@ -62,6 +62,8 @@
 </div>
 
 @if(!empty($accounts) && !isset($pos))
+
+
     <div class="{{ $col_class }}">
         <div class="form-group {{ $readonly ? 'hide' : '' }}">
             <label for="account_{{ $row_index }}">@lang('lang_v1.payment_account'):</label>

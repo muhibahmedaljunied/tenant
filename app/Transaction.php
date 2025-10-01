@@ -11,7 +11,6 @@ class Transaction extends Model
 
     //Transaction status = ['received','pending','ordered','draft','final', 'in_transit', 'completed']
 
-
     /**
      * The attributes that aren't mass assignable.
      *

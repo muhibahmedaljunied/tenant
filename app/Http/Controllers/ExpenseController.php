@@ -117,8 +117,38 @@ class ExpenseController extends Controller
                     'c.name as contact_name',
                     'transactions.type'
                 )
-                ->with(['recurring_parent'])
-                ->groupBy('transactions.id');
+                ->with([
+                    'recurring_parent',
+              
+                ])
+                ->groupBy(
+
+                    'transactions.id',
+                    'transactions.document',
+                    'transaction_date',
+                    'ref_no',
+                    'ec.name',
+                    'payment_status',
+                    'additional_notes',
+                    'final_total',
+                    'transactions.is_recurring',
+                    'transactions.recur_interval',
+                    'transactions.recur_interval_type',
+                    'transactions.recur_repetitions',
+                    'transactions.subscription_repeat_on',
+                    'bl.name',
+                    'transactions.recur_parent_id',
+                    'c.name',
+                    'transactions.type',
+                    'U.surname',
+                    'U.first_name',
+                    'U.last_name',
+                    'tr.name',
+                    'tr.amount',
+                    'usr.surname',
+                    'usr.first_name',
+                    'usr.last_name'
+                );
 
             //Add condition for expense for,used in sales representative expense report & list of expense
             if (request()->has('expense_for')) {
@@ -185,6 +215,7 @@ class ExpenseController extends Controller
                 $expenses->where('transactions.created_by', request()->session()->get('user.id'));
             }
 
+            // 1274009975
             return Datatables::of($expenses)
                 ->addColumn(
                     'action',
@@ -228,6 +259,7 @@ class ExpenseController extends Controller
                     '<a href="{{ action("TransactionPaymentController@show", [$id])}}" class="view_payment_modal payment-status no-print" data-orig-value="{{$payment_status}}" data-status-name="{{__(\'lang_v1.\' . $payment_status)}}"><span class="label @payment_status($payment_status)">{{__(\'lang_v1.\' . $payment_status)}}
                         </span></a><span class="print_section">{{__(\'lang_v1.\' . $payment_status)}}</span>'
                 )
+                
                 ->addColumn('payment_due', function ($row) {
                     $due = $row->final_total - $row->amount_paid;
 
