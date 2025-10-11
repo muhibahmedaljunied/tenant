@@ -4405,48 +4405,86 @@ SUM(
             return false;
         }
 
+        //         $credit_limit = Contact::find($input['contact_id'])->credit_limit;
+
+        //         if ($credit_limit == null) {
+        //             return false;
+        //         }
+
+        //         $query = Contact::where('contacts.id', $input['contact_id'])
+        //             ->join('transactions AS t', 'contacts.id', '=', 't.contact_id');
+
+        //         //Exclude transaction id if update transaction
+        //         if (! empty($exclude_transaction_id)) {
+        //             $query->where('t.id', '!=', $exclude_transaction_id);
+        //         }
+
+        //         $credit_details = $query->select(
+        //             DB::raw("
+        //             SUM(
+        //               CASE 
+        //                 WHEN t.type = 'sell' THEN final_total 
+        //                 ELSE 0 
+        //               END
+        //             ) AS total_invoice
+        //           "),
+        //             DB::raw("
+        //   SUM(
+        //     CASE 
+        //       WHEN t.type = 'sell' THEN (
+        //         SELECT SUM(
+        //           CASE 
+        //             WHEN is_return = 1 THEN -1 * amount 
+        //             ELSE amount 
+        //           END
+        //         )
+        //         FROM transaction_payments 
+        //         WHERE transaction_payments.transaction_id = t.id
+        //       )
+        //       ELSE 0
+        //     END
+        //   ) AS invoice_paid
+        // ")
+
+        //         )->first();
         $credit_limit = Contact::find($input['contact_id'])->credit_limit;
 
-        if ($credit_limit == null) {
+        if ($credit_limit === null) {
             return false;
         }
 
         $query = Contact::where('contacts.id', $input['contact_id'])
-            ->join('transactions AS t', 'contacts.id', '=', 't.contact_id');
+            ->join('transactions AS t', 'contacts.id', '=', 't.contact_id')
+            ->leftJoin('transaction_payments AS tp', 'tp.transaction_id', '=', 't.id');
 
-        //Exclude transaction id if update transaction
-        if (! empty($exclude_transaction_id)) {
+        // Exclude transaction id if updating a transaction
+        if (!empty($exclude_transaction_id)) {
             $query->where('t.id', '!=', $exclude_transaction_id);
         }
 
-        $credit_details = $query->select(
+        $credit_details = $query->select([
             DB::raw("
-            SUM(
-              CASE 
-                WHEN t.type = 'sell' THEN final_total 
+        SUM(
+            CASE 
+                WHEN t.type = 'sell' THEN t.final_total 
                 ELSE 0 
-              END
-            ) AS total_invoice
-          "),
+            END
+        ) AS total_invoice
+    "),
             DB::raw("
-  SUM(
-    CASE 
-      WHEN t.type = 'sell' THEN (
-        SELECT SUM(
-          CASE 
-            WHEN is_return = 1 THEN -1 * amount 
-            ELSE amount 
-          END
-        )
-        FROM transaction_payments 
-        WHERE transaction_payments.transaction_id = t.id
-      )
-      ELSE 0
-    END
-  ) AS invoice_paid
-")
+        SUM(
+            CASE 
+                WHEN t.type = 'sell' THEN 
+                    CASE 
+                        WHEN tp.is_return = 1 THEN -1 * tp.amount 
+                        ELSE tp.amount 
+                    END
+                ELSE 0 
+            END
+        ) AS invoice_paid
+    ")
+        ])->first();
 
-        )->first();
 
         $total_invoice = ! empty($credit_details->total_invoice) ? $credit_details->total_invoice : 0;
         $invoice_paid = ! empty($credit_details->invoice_paid) ? $credit_details->invoice_paid : 0;

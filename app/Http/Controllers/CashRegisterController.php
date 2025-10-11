@@ -196,7 +196,24 @@ class CashRegisterController extends Controller
                 'c.name as contact_name'
             )
             ->with(['recurring_parent'])
-            ->groupBy('transactions.id')->get();
+            ->groupBy(
+                'transactions.id',
+                'transactions.document',
+                'transaction_date',
+                'ref_no',
+                'ec.name',
+                'payment_status',
+                'additional_notes',
+                'final_total',
+                'transactions.is_recurring',
+                'transactions.recur_interval',
+                'transactions.recur_interval_type',
+                'transactions.recur_repetitions',
+                'transactions.subscription_repeat_on',
+                'bl.name',
+                'transactions.recur_parent_id',
+                'c.name'
+            )->get();
         $sum = 0;
         foreach ($expenses as $row) {
             $sum += $row->final_total;
@@ -418,7 +435,32 @@ class CashRegisterController extends Controller
                 'c.name as contact_name'
             )
             ->with(['recurring_parent'])
-            ->groupBy('transactions.id')->get();
+            ->groupBy(
+                'transactions.id',
+                'transactions.document',
+                'transaction_date',
+                'ref_no',
+                'ec.name',
+                'payment_status',
+                'additional_notes',
+                'final_total',
+                'transactions.is_recurring',
+                'transactions.recur_interval',
+                'transactions.recur_interval_type',
+                'transactions.recur_repetitions',
+                'transactions.subscription_repeat_on',
+                'bl.name',
+                'usr.surname',
+                'U.surname',
+                'usr.first_name',
+                'U.first_name',
+                'usr.last_name',
+                'U.last_name',
+                'tr.name',
+                'tr.amount',
+                'transactions.recur_parent_id',
+                'c.name'
+            )->get();
         $sum = 0;
         foreach ($expenses as $row) {
             $sum += $row->final_total;
@@ -429,6 +471,7 @@ class CashRegisterController extends Controller
         } else {
             $total_expences = 0;
         }
+
         $purchases = DB::table('transaction_payments as tp')
             ->join('transactions as t', 't.id', 'tp.transaction_id')
             ->whereIn('t.type', ['purchase', 'opening_balance'])
@@ -438,7 +481,8 @@ class CashRegisterController extends Controller
                 'tp.*'
             )
             ->get();
-        $purchases = \DB::table('transaction_payments as TP')
+
+        $purchases = DB::table('transaction_payments as TP')
             ->join('transactions AS TR', 'TP.transaction_id', 'TR.id')
             ->join('contacts', 'TR.contact_id', 'contacts.id')
             ->whereIn('TR.type', ['purchase', 'opening_balance'])
@@ -451,8 +495,18 @@ class CashRegisterController extends Controller
                 'TR.invoice_no',
                 'contacts.name',
                 DB::raw('SUM(TP.amount) as amount_paid')
-            )->get();
-        $sells = \DB::table('transaction_payments as TP')
+            )
+            ->groupBy(
+                'TR.id',
+                'TP.payment_ref_no',
+                'TP.amount',
+                'TR.invoice_no',
+                'contacts.name',
+
+            )
+            ->get();
+
+        $sells = DB::table('transaction_payments as TP')
             ->join('transactions AS TR', 'TP.transaction_id', 'TR.id')
             ->join('contacts', 'TR.contact_id', 'contacts.id')
             ->whereIn('TR.type', ['sell'])
@@ -465,7 +519,16 @@ class CashRegisterController extends Controller
                 'TR.invoice_no',
                 'contacts.name',
                 DB::raw('SUM(TP.amount) as amount_paid')
-            )->get();
+            )
+            ->groupBy(
+                'TR.id',
+                'TP.payment_ref_no',
+                'TP.amount',
+                'TR.invoice_no',
+                'contacts.name',
+
+            )
+            ->get();
 
         //Sell Return
         $sells_return = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
@@ -504,7 +567,20 @@ class CashRegisterController extends Controller
                 'T1.invoice_no as parent_sale',
                 'T1.id as parent_sale_id',
                 DB::raw('SUM(TP.amount) as amount_paid')
-            )->get();
+            )
+            ->groupBy(
+                'transactions.id',
+                'transactions.transaction_date',
+                'transactions.invoice_no',
+                'contacts.name',
+                'transactions.final_total',
+                'transactions.payment_status',
+                'bl.name',
+                'T1.invoice_no',
+                'T1.id',
+
+            )
+            ->get();
 
         //Purchase Return
         $purchases_returns = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
@@ -542,11 +618,37 @@ class CashRegisterController extends Controller
                 'BS.name as location_name',
                 'T.ref_no as parent_purchase',
                 DB::raw('SUM(TP.amount) as amount_paid')
-            )->get();
+            )
+            ->groupBy(
+                'transactions.id',
+                'transactions.transaction_date',
+                'transactions.ref_no',
+                'contacts.name',
+                'transactions.status',
+                'transactions.payment_status',
+                'transactions.final_total',
+                'transactions.return_parent_id',
+                'BS.name',
+                'T.ref_no'
+
+            )
+            ->get();
 
 
         return view('cash_register.register_details')
-            ->with(compact('register_details', 'total_expences', 'sells_return', 'sells', 'purchases_returns', 'expenses', 'purchases', 'details', 'payment_types', 'close_time', 'payements_detail'));
+            ->with(compact(
+                'register_details',
+                'total_expences',
+                'sells_return',
+                'sells',
+                'purchases_returns',
+                'expenses',
+                'purchases',
+                'details',
+                'payment_types',
+                'close_time',
+                'payements_detail'
+            ));
     }
 
     /**
@@ -690,13 +792,7 @@ class CashRegisterController extends Controller
             ->whereIn('TR.type', ['purchase', 'opening_balance'])
             ->where('TP.created_by', $user_id)
             ->whereBetween('TP.created_at', [$open_time, $close_time])
-            ->groupBy(
-                'TR.id',
-                'TP.payment_ref_no',
-                'TP.amount',
-                'TR.invoice_no',
-                'contacts.name'
-            )
+           
             ->select(
                 'TR.id',
                 'TP.payment_ref_no',
@@ -704,6 +800,13 @@ class CashRegisterController extends Controller
                 'TR.invoice_no',
                 'contacts.name',
                 DB::raw('SUM(TP.amount) as amount_paid')
+            )
+            ->groupBy(
+                'TR.id',
+                'TP.payment_ref_no',
+                'TP.amount',
+                'TR.invoice_no',
+                'contacts.name'
             )->get();
         $sells = \DB::table('transaction_payments as TP')
             ->join('transactions AS TR', 'TP.transaction_id', 'TR.id')
@@ -711,13 +814,7 @@ class CashRegisterController extends Controller
             ->whereIn('TR.type', ['sell'])
             ->where('TP.created_by', $user_id)
             ->whereBetween('TP.created_at', [$open_time, $close_time])
-            ->groupBy(
-                'TR.id',
-                'TP.payment_ref_no',
-                'TP.amount',
-                'TR.invoice_no',
-                'contacts.name',
-            )
+           
             ->select(
                 'TR.id',
                 'TP.payment_ref_no',
@@ -725,6 +822,13 @@ class CashRegisterController extends Controller
                 'TR.invoice_no',
                 'contacts.name',
                 DB::raw('SUM(TP.amount) as amount_paid')
+            )
+            ->groupBy(
+                'TR.id',
+                'TP.payment_ref_no',
+                'TP.amount',
+                'TR.invoice_no',
+                'contacts.name',
             )
             ->get();
 
@@ -816,7 +920,7 @@ class CashRegisterController extends Controller
             )
             ->get();
 
-        dd($payements_detail, $sells_return, $purchases_returns, $user_id, $open_time, $close_time);
+        // dd($payements_detail, $sells_return, $purchases_returns, $user_id, $open_time, $close_time);
 
         return view('cash_register.close_register_modal')
             ->with(compact(

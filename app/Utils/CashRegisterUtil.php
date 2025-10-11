@@ -291,6 +291,7 @@ class CashRegisterUtil extends Util
             'bl.name as location_name'
 
         )->groupBy(
+         
             'cash_registers.created_at',
             'cash_registers.closed_at',
             'cash_registers.user_id',
