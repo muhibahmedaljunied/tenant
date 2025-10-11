@@ -435,6 +435,7 @@ Route::middleware([
     Route::post('/discount/mass-deactivate', 'DiscountController@massDeactivate');
     Route::resource('discount', 'DiscountController');
 
+    
     Route::group(['prefix' => 'account'], function () {
         Route::resource('/account', 'AccountController');
         Route::get('/fund-transfer/{id}', 'AccountController@getFundTransfer');

@@ -360,6 +360,8 @@ class SellPosController extends Controller
         }
 
 
+
+
         // dd($request->all());
         /* start save Pos */
         $is_direct_sale = $request->filled('is_direct_sale');
@@ -371,6 +373,23 @@ class SellPosController extends Controller
 
         // try {
         $input = $request->except('_token');
+        // Suppose you want to change 'old_key' to 'new_key'
+       
+     
+
+        // Transfer value from old key to new key
+        if (isset($input['select_store_id'])) {
+      
+                $input['store_id'] = $input['select_store_id'];
+        }
+
+        // Optionally remove the old key
+        unset($input['select_store_id']);
+        // dd($input);
+
+        // --------------------------------------------------
+
+
         $input['is_quotation'] = 0;
         //status is send as quotation from Add sales screen.
         if ($input['status'] == 'quotation') {
@@ -1741,14 +1760,14 @@ class SellPosController extends Controller
      */
     public function getProductSuggestion(Request $request)
     {
-        
+
         // dd($request->all());
         if ($request->ajax()) {
             $category_id = $request->get('category_id');
             $brand_id = $request->get('brand_id');
             $location_id = $request->get('location_id');
             $store_id = $request->get('store_id');
-           
+
             $term = $request->get('term');
 
             $check_qty = false;
@@ -1760,12 +1779,12 @@ class SellPosController extends Controller
                 // ->join('product_locations as pl', 'pl.product_id', '=', 'p.id')
                 ->leftjoin(
                     'variation_location_details AS VLD',
-                    function ($join) use ($location_id,$store_id) {
+                    function ($join) use ($location_id, $store_id) {
                         $join->on('variations.id', '=', 'VLD.variation_id');
 
                         //Include Location
                         if (! empty($location_id)) {
-                   
+
                             $join->where(function ($query) use ($location_id) {
                                 $query->where('VLD.location_id', '=', $location_id);
                                 //Check null to show products even if no quantity is available in a location.
@@ -1775,7 +1794,7 @@ class SellPosController extends Controller
                         }
                         //Include store
                         if (!empty($store_id)) {
-                   
+
                             $join->where(function ($query) use ($store_id) {
                                 $query->where('VLD.store_id', '=', $store_id);
                                 //Check null to show products even if no quantity is available in a store.
@@ -1861,8 +1880,6 @@ class SellPosController extends Controller
 
             return view('sale_pos.partials.product_list')->with(compact('products', 'allowed_group_prices', 'show_prices'));
         }
-
-        
     }
 
     /**

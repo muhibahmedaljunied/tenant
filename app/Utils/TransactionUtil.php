@@ -82,7 +82,7 @@ class TransactionUtil extends Util
             'location_id' => $input['location_id'],
             // -------muhib add this------
             'store_id' => $input['store_id'],
-            'essentials_duration' => 0,
+            // 'essentials_duration' => 0,
             // ----------------
             'type' => $sale_type,
             'status' => $input['status'],

@@ -42,7 +42,8 @@ class CashRegisterUtil extends Util
         $payments_formatted = [];
         foreach ($payments as $payment) {
             $payments_formatted[] = new CashRegisterTransaction([
-                'amount' => (isset($payment['is_return']) && $payment['is_return'] == 1) ? (-1 * $this->num_uf($payment['amount'])) : $this->num_uf($payment['amount']),
+                'amount' => (isset($payment['is_return']) &&
+                    $payment['is_return'] == 1) ? (-1 * $this->num_uf($payment['amount'])) : $this->num_uf($payment['amount']),
                 'pay_method' => $payment['method'],
                 'type' => 'credit',
                 'transaction_type' => 'sell',
@@ -51,6 +52,7 @@ class CashRegisterUtil extends Util
         }
 
         if (!empty($payments_formatted)) {
+
             $register->cash_register_transactions()->saveMany($payments_formatted);
         }
 
@@ -344,7 +346,7 @@ class CashRegisterUtil extends Util
                 ->where('transactions.type', 'sell')
                 ->where('transactions.status', 'final')
                 ->leftjoin('types_of_services AS tos', 'tos.id', '=', 'transactions.types_of_service_id')
-                ->groupBy('tos.id','tos.id', 'tos.name')
+                ->groupBy('tos.id', 'tos.id', 'tos.name')
                 ->select(
                     'tos.name as types_of_service_name',
                     DB::raw('SUM(final_total) as total_sales')

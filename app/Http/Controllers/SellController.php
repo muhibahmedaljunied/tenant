@@ -169,6 +169,13 @@ class SellController extends Controller
                         'transactions.res_waiter_id',
                         'transactions.additional_notes'
                     )
+                    ->groupBy(
+
+                        'transactions.is_suspend',
+                        'transactions.res_table_id',
+                        'transactions.res_waiter_id',
+                        'transactions.additional_notes'
+                    )
                     ->get();
 
                 return view('sale_pos.partials.suspended_sales_modal')->with(compact(
