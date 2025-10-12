@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\Store;
 use App\User;
 use App\Media;
 use App\Account;
 use App\Contact;
 use App\Product;
 use App\TaxRate;
-use App\Business;
 use App\Warranty;
 use App\Transaction;
 use App\Models\Zatca;
@@ -28,8 +28,6 @@ use Illuminate\Http\Request;
 use App\Utils\TransactionUtil;
 use App\Models\AcCostCenBranche;
 use App\Models\AcCostCenFieldAdd;
-use App\Store;
-use App\StoreDetail;
 use Modules\Tracker\Entities\Track;
 use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\Facades\DataTables;
@@ -101,6 +99,7 @@ class SellController extends Controller
      */
     public function index(Request $request)
     {
+
 
         $is_admin = $this->businessUtil->is_admin(auth()->user());
 
@@ -741,8 +740,10 @@ class SellController extends Controller
             'status'
         ];
 
-        return $datatable->rawColumns($rawColumns)
+        $datatable =  $datatable->rawColumns($rawColumns)
             ->make(true);
+
+        return $datatable;
     }
 
     /**
@@ -921,6 +922,8 @@ class SellController extends Controller
         if (!auth()->user()->can('sell.view') && !auth()->user()->can('direct_sell.access') && !auth()->user()->can('view_own_sell_only')) {
             abort(403, 'Unauthorized action.');
         }
+
+        dd(44);
 
         $business_id = request()->session()->get('user.business_id');
         $id = $request->segment(2);

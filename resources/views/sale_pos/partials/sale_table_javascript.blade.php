@@ -28,6 +28,8 @@ sell_table = $('#sell_table').DataTable({
         "ajax": {
             "url": "/sells",
             "data": function ( d ) {
+
+                console.log('heboooooooooooooooooooooooooooooooooooooooooooooooooooooo',d);
                 if($('#sell_list_filter_date_range').val()) {
                     var start = $('#sell_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
                     var end = $('#sell_list_filter_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
