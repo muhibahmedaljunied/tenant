@@ -1577,7 +1577,7 @@ class SellController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function duplicateSell($id)
+    public function duplicateSell(Request $request, $id)
     {
         if (!auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
@@ -1589,7 +1589,9 @@ class SellController extends Controller
 
             $transaction = Transaction::where('business_id', $business_id)
                 ->where('type', 'sell')
-                ->findorfail($id);
+                ->findorfail($request->segment(3));
+            // ->findorfail($id);
+
             $duplicate_transaction_data = [];
             foreach ($transaction->toArray() as $key => $value) {
                 if (!in_array($key, ['id', 'created_at', 'updated_at'])) {
@@ -1603,7 +1605,11 @@ class SellController extends Controller
             $duplicate_transaction_data['invoice_token'] = null;
 
             DB::beginTransaction();
-            $duplicate_transaction_data['invoice_no'] = $this->transactionUtil->getInvoiceNumber($business_id, 'draft', $duplicate_transaction_data['location_id']);
+            $duplicate_transaction_data['invoice_no'] = $this->transactionUtil->getInvoiceNumber(
+                $business_id,
+                'draft',
+                $duplicate_transaction_data['location_id']
+            );
 
             //Create duplicate transaction
             $duplicate_transaction = Transaction::create($duplicate_transaction_data);
@@ -1659,6 +1665,7 @@ class SellController extends Controller
      */
     public function editShipping(Request $request, $id)
     {
+
         $is_admin = $this->businessUtil->is_admin(auth()->user());
 
         if (!$is_admin && !auth()->user()->hasAnyPermission(['access_shipping', 'access_own_shipping', 'access_commission_agent_shipping'])) {
@@ -1667,12 +1674,16 @@ class SellController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
 
+        // dd($request->segment(3));
         $transaction = Transaction::where('business_id', $business_id)
             ->with(['media', 'media.uploaded_by_user'])
-            ->findorfail($id);
+            ->findorfail($request->segment(3));
+        // ->findorfail($id);
+
+        // dd($business_id);
+
         $shipping_statuses = $this->transactionUtil->shipping_statuses();
         $menuItems = $request->menuItems;
-
         return view('sell.partials.edit_shipping')
             ->with(compact('transaction', 'shipping_statuses', 'menuItems'));
     }

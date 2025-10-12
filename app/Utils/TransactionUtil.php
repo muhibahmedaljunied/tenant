@@ -64,6 +64,7 @@ class TransactionUtil extends Util
         $uf_data = true
     ) {
         $ac_setting = AcSetting::where('business_id', $business_id)->first();
+        // dd($ac_setting);
         $sale_type = ! empty($input['type']) ? $input['type'] : 'sell';
         $invoice_scheme_id = ! empty($input['invoice_scheme_id']) ? $input['invoice_scheme_id'] : null;
         $invoice_no = ! empty($input['invoice_no']) ? $input['invoice_no'] : $this->getInvoiceNumber($business_id, $input['status'], $input['location_id'], $invoice_scheme_id, $sale_type);
@@ -312,6 +313,7 @@ class TransactionUtil extends Util
         $extra_line_parameters = [],
         $uf_data = true
     ) {
+        
         $lines_formatted = [];
         $modifiers_array = [];
         $edit_ids = [0];
@@ -321,6 +323,7 @@ class TransactionUtil extends Util
         $business_id = request()->session()->get('user.business_id');
 
 
+        // dd($transaction->type,AcSetting::firstOrFail());
         if ($transaction->status !== 'draft' && $transaction->type == 'sell') { // this for sell operation       !muhib add this comment
 
 
@@ -558,7 +561,9 @@ class TransactionUtil extends Util
                 }
             }
         }
+
         if ($transaction->type == 'sell') {
+
 
             $totalProductsPurchasePrice = collect($lines_formatted)->sum(fn($line) => $line->variations->default_purchase_price * $line->quantity);
             //sold_goods_cost
