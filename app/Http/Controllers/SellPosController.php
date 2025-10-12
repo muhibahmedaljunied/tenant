@@ -374,13 +374,13 @@ class SellPosController extends Controller
         // try {
         $input = $request->except('_token');
         // Suppose you want to change 'old_key' to 'new_key'
-       
-     
+
+
 
         // Transfer value from old key to new key
         if (isset($input['select_store_id'])) {
-      
-                $input['store_id'] = $input['select_store_id'];
+
+            $input['store_id'] = $input['select_store_id'];
         }
 
         // Optionally remove the old key
@@ -818,7 +818,8 @@ class SellPosController extends Controller
         }
 
         //Check if the transaction can be edited or not.
-        $edit_days = request()->session()->get('business.transaction_edit_days');
+        $edit_days = (int)request()->session()->get('business.transaction_edit_days');
+        // dd($edit_days);
         if (! $this->transactionUtil->canBeEdited($id, $edit_days)) {
             return back()
                 ->with('status', [
@@ -855,33 +856,25 @@ class SellPosController extends Controller
         $business_location = BusinessLocation::find($location_id);
         $payment_types = $this->productUtil->payment_types($business_location, true);
         $location_printer_type = $business_location->receipt_printer_type;
-        $sell_details = TransactionSellLine::join(
-            'products AS p',
-            'transaction_sell_lines.product_id',
-            '=',
-            'p.id'
-        )
-            ->join(
-                'variations AS variations',
-                'transaction_sell_lines.variation_id',
-                '=',
-                'variations.id'
-            )
-            ->join(
-                'product_variations AS pv',
-                'variations.product_variation_id',
-                '=',
-                'pv.id'
-            )
-            ->leftjoin('variation_location_details AS vld', function ($join) use ($location_id) {
+        $sell_details = TransactionSellLine::join('products AS p', 'transaction_sell_lines.product_id', '=', 'p.id')
+            ->join('variations AS variations', 'transaction_sell_lines.variation_id', '=', 'variations.id')
+            ->join('product_variations AS pv', 'variations.product_variation_id', '=', 'pv.id')
+            ->leftJoin('variation_location_details AS vld', function ($join) use ($location_id) {
                 $join->on('variations.id', '=', 'vld.variation_id')
                     ->where('vld.location_id', '=', $location_id);
             })
-            ->leftjoin('units', 'units.id', '=', 'p.unit_id')
+            ->leftJoin('units', 'units.id', '=', 'p.unit_id')
             ->where('transaction_sell_lines.transaction_id', $id)
             ->with(['warranties'])
-            ->select(
-                DB::raw("IF(pv.is_dummy = 0, CONCAT(p.name, ' (', pv.name, ':',variations.name, ')'), p.name) AS product_name"),
+            ->select([
+                DB::raw("
+                CASE 
+                    WHEN pv.is_dummy = 0 THEN 
+                        p.name + ' (' + pv.name + ':' + variations.name + ')'
+                    ELSE 
+                        p.name
+                END AS product_name
+            "),
                 'p.id as product_id',
                 'p.enable_stock',
                 'p.name as product_actual_name',
@@ -912,8 +905,9 @@ class SellPosController extends Controller
                 'units.id as unit_id',
                 'transaction_sell_lines.sub_unit_id',
                 DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available')
-            )
+            ])
             ->get();
+
         if (! empty($sell_details)) {
             foreach ($sell_details as $key => $value) {
 
