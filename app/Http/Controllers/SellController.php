@@ -923,7 +923,6 @@ class SellController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        dd(44);
 
         $business_id = request()->session()->get('user.business_id');
         $id = $request->segment(2);
