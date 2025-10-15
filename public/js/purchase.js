@@ -144,11 +144,13 @@ $(document).ready(function () {
                 source: function (request, response) {
                     $.getJSON(
                         '/purchases/get_products',
-                        { location_id: $('#location_id').val(),
+                        {
+                            location_id: $('#location_id').val(),
                             // ---------muhib add this-----------
                             store_id: $('#store_id').val(),
                             // --------------
-                             term: request.term },
+                            term: request.term,
+                        },
                         response
                     );
                 },
@@ -996,8 +998,23 @@ $(document).on('click', 'button#submit_purchase_form', function (e) {
     }
 });
 
+// -----------------muhib comment this 15/10/2025-------------------
+
+// function toggle_search() {
+//     if ($('#store_id').val()) {
+//         $('#search_product').removeAttr('disabled');
+//         $('#search_product').focus();
+//     } else {
+//         $('#search_product').attr('disabled', true);
+//     }
+// }
+
+// -------------------ended-----------------
+
+// -----------------muhib added this 15/10/2025-------------------
+
 function toggle_search() {
-    if ($('#location_id').val()) {
+    if ($('#store_id').val()) {
         $('#search_product').removeAttr('disabled');
         $('#search_product').focus();
     } else {
@@ -1005,10 +1022,27 @@ function toggle_search() {
     }
 }
 
+$(document).on('change', '#store_id', function () {
+    // console.log('ddddddddddddd');
+
+    toggle_search();
+
+    $('#purchase_entry_table tbody').html('');
+    update_table_total();
+    update_grand_total();
+    update_table_sr_number();
+});
+
+// -------------------ended-----------------
+
 $(document).on('change', '#location_id', function () {
     console.log('ddddddddddddd');
 
-    toggle_search();
+    // -----------------muhib comment this 15/10/2025-------------------
+
+    // toggle_search();
+    // -------------------ended-----------------
+
     $('#purchase_entry_table tbody').html('');
     update_table_total();
     update_grand_total();

@@ -22,13 +22,16 @@ $(document).ready(function () {
 
     // add by ali 29-6-2021
     $('select#price_group').change(function () {
-        if ($('select#price_group').val() && $('input#location_id').val()) {
+        if (
+            $('select#price_group').val() &&
+            $('select#select_store_id').val() &&
+            $('input#location_id').val()
+        ) {
             $('input#search_product').prop('disabled', false).focus();
         } else {
             $('input#search_product').prop('disabled', true);
         }
     });
-    //end ali
 
     // -------muhib add this-
 
@@ -36,9 +39,37 @@ $(document).ready(function () {
     //     console.log('muhib add this',$('select#select_store_id').val());
     //     $('select#select_store_id').val($('select#select_store_id').val());
     // });
-    // -------
+    // ------------ended-----
 
-    $('select#select_location_id').change(function () {
+    // -------muhib comment this-
+
+    // $('select#select_location_id').change(function () {
+    //     reset_pos_form();
+
+    //     var default_price_group = $(this).find(':selected').data('default_price_group');
+    //     if (default_price_group) {
+    //         if ($("#price_group option[value='" + default_price_group + "']").length > 0) {
+    //             $('#price_group').val(default_price_group);
+    //             $('#price_group').change();
+    //         }
+    //     }
+
+    //     //Set default price group
+    //     if ($('#default_price_group').length) {
+    //         var dpg = default_price_group ? default_price_group : 0;
+    //         $('#default_price_group').val(dpg);
+    //     }
+
+    //     set_payment_type_dropdown();
+
+    //     if ($('#types_of_service_id').length && $('#types_of_service_id').val()) {
+    //         $('#types_of_service_id').change();
+    //     }
+    // });
+    // -------ended----------------------------------------------
+    // ------------muhib add this 15/10/2025-------
+
+    $('select#select_store_id').change(function () {
         reset_pos_form();
 
         var default_price_group = $(this).find(':selected').data('default_price_group');
@@ -61,6 +92,8 @@ $(document).ready(function () {
             $('#types_of_service_id').change();
         }
     });
+
+    // ---------------------------------------
 
     //get customer
     $('#customer_id').select2({
