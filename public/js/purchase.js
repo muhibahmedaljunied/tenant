@@ -684,6 +684,10 @@ function get_purchase_entry_row(product_id, variation_id) {
     if (product_id) {
         var row_count = $('#row_count').val();
         var location_id = $('#location_id').val();
+        // ------------------------muhib add this ------------
+        var store_id = $('#store_id').val();
+
+        // ----------------------------------
         $.ajax({
             method: 'POST',
             url: '/purchases/get_purchase_entry_row',
@@ -693,6 +697,11 @@ function get_purchase_entry_row(product_id, variation_id) {
                 row_count: row_count,
                 variation_id: variation_id,
                 location_id: location_id,
+                // --------------muhib add this 15/10/2025----------------
+                store_id: store_id,
+
+                // -------------------------
+
             },
             success: function (result) {
                 console.log('resultresultresultresult', result);

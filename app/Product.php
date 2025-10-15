@@ -234,7 +234,7 @@ class Product extends Model
 
         return $query->where(function ($q) use ($store_id) {
             $q->whereHas('variation_location_details', function ($query) use ($store_id) {
-                $query->where('variation_location_details.store_id', $store_id);
+                $query->where('VLD.store_id', $store_id);
             });
         });
     }

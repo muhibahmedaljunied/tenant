@@ -1079,8 +1079,17 @@ class PurchaseController extends Controller
      */
     public function getProducts()
     {
+
+        // dd(request()->all());
         if (request()->ajax()) {
             $term = request()->term;
+            // -------muhib add this 15/10/2025-----
+            $location_id = request()->input('location_id', null);
+
+            $store_id = request()->input('store_id', null);
+
+            // --------------------------------------
+
 
             $check_enable_stock = true;
             if (isset(request()->check_enable_stock)) {
@@ -1097,35 +1106,65 @@ class PurchaseController extends Controller
                 return json_encode([]);
             }
 
-            $business_id = request()->session()->get('user.business_id');
-            $q = Product::leftJoin('variations', 'products.id', '=', 'variations.product_id')
+            // $business_id = request()->session()->get('user.business_id');
+            $q = Product::join('variations', 'products.id', '=', 'variations.product_id')
+                // ------------------------muhib add this 15/10/2025
+                // ->leftjoin('product_barcode as barcode', 'variations.id', '=', 'barcode.variation_id')
+                // ------------------------------------ended-------------
                 ->leftjoin('units as U', 'products.unit_id', '=', 'U.id')
                 ->leftjoin('units as VU', 'variations.unit_id', '=', 'VU.id')
 
+
+
+                // ---------------------muhib add this 15/10/2025----------------------
+
+                ->leftjoin(
+                    'variation_location_details AS VLD',
+                    function ($join) use ($location_id) {
+                        $join->on('variations.id', '=', 'VLD.variation_id');
+
+                        //Include Location
+                        if (! empty($location_id)) {
+                            $join->where(function ($query) use ($location_id) {
+                                $query->where('VLD.location_id', '=', $location_id);
+                                //Check null to show products even if no quantity is available in a location.
+                                //TODO: Maybe add a settings to show product not available at a location or not.
+                                $query->orWhereNull('VLD.location_id');
+                            });
+                        }
+                    }
+                )
+                ->leftjoin(
+                    'variation_location_details AS P_VLD',
+                    function ($join) use ($location_id) {
+                        $join->on('variations.parent_variation_id', '=', 'P_VLD.variation_id');
+                        if (! empty($location_id)) {
+                            $join->where(function ($query) use ($location_id) {
+                                $query
+                                    // ->whereNotNull('variations.parent_variation_id')
+                                    ->where('P_VLD.location_id', '=', $location_id)
+                                    ->orWhereNull('P_VLD.location_id');
+                                //Check null to show products even if no quantity is available in a location.
+                                //TODO: Maybe add a settings to show product not available at a location or not.
+                            });
+                        }
+
+                        $join->whereColumn('P_VLD.variation_id', 'variations.parent_variation_id');
+                    }
+                )
+
+                // --------------------------------------------
                 ->where(function ($query) use ($term) {
                     $query->where('products.name', 'like', '%' . $term . '%');
                     $query->orWhere('sku', 'like', '%' . $term . '%');
                     $query->orWhere('sku2', 'like', '%' . $term . '%');
                     $query->orWhere('sub_sku', 'like', '%' . $term . '%');
                 })
-                ->active()
-                ->where('products.business_id', $business_id)
-                ->where('products.business_id', $business_id)
-                ->whereNull('variations.deleted_at')
-                ->select(
-                    'products.id as product_id',
-                    'products.name',
-                    'products.type',
-                    // 'products.sku as sku',
-                    'U.short_name   as unit',
-                    'VU.short_name  as v_unit',
 
-                    'variations.id as variation_id',
-                    'variations.name as variation',
-                    'variations.sub_sku as sub_sku'
-                )
-                // ->groupBy('variation_id')
-            ;
+                ->active()
+                // ->where('VLD.store_id', $store_id)
+                ->whereNull('variations.deleted_at');
+
 
             if ($check_enable_stock) {
                 $q->where('enable_stock', 1);
@@ -1136,12 +1175,49 @@ class PurchaseController extends Controller
 
             // --------------muhib add this for store------------------
             if (!empty(request()->store_id)) {
-                $q->ForStore(request()->store_id);
+                $q->where(function ($q) use ($store_id) {
+                    $q->whereHas('variation_location_details', function ($query) use ($store_id) {
+                        $query->where('VLD.store_id', $store_id);
+                    });
+                });
             }
 
+
+            // $q->toSql();
+            // dd($q->toSql());
             // -----------------------------------
 
+
+            $q->select(
+                'products.id as product_id',
+                'products.name',
+                'products.type',
+                'U.short_name   as unit',
+                'VU.short_name  as v_unit',
+
+                'variations.id as variation_id',
+                'variations.name as variation',
+                'variations.sub_sku as sub_sku',
+                'VLD.qty_available',
+            )
+                ->groupBy(
+                    'products.id',
+                    'products.name',
+                    'products.type',
+                    'U.short_name',
+                    'VU.short_name',
+                    'variations.id',
+                    'variations.name',
+                    'variations.sub_sku',
+                    'VLD.qty_available',
+
+                );
+
+
+
             $products = $q->get();
+
+            // dd($products );
             $products_array = [];
             foreach ($products as $product) {
                 $products_array[$product->product_id]['name'] = "{$product->name}";
@@ -1155,11 +1231,13 @@ class PurchaseController extends Controller
                         'variation_name' => $product->variation,
                         'sub_sku' => $product->sub_sku,
                         'unit' => $product->v_unit ?? $product->unit,
+
                     ];
             }
 
             $result = [];
             $i = 1;
+            // dd($products_array );
 
             $no_of_records = $products->count();
             if (!empty($products_array)) {
@@ -1190,6 +1268,7 @@ class PurchaseController extends Controller
                 }
             }
 
+            // dd($result);
             return response()->json($result);
         }
     }
@@ -1207,6 +1286,10 @@ class PurchaseController extends Controller
             $variation_id = $request->input('variation_id');
             $business_id = request()->session()->get('user.business_id');
             $location_id = (int) $request->input('location_id');
+            // ------------muhib add this 15/10/2025-----------
+            $store_id = (int) $request->input('store_id');
+            // -----------------------------------------------
+
 
 
             $hide_tax = 'hide';
@@ -1231,16 +1314,24 @@ class PurchaseController extends Controller
                 $query = Variation::where('product_id', $product_id)
                     ->with([
                         'unit',
-                        'parentVariation' => function ($q) use ($location_id) {
+                        'parentVariation' => function ($q) use ($location_id, $store_id) {
                             $q->with([
-                                'variation_location_details' => function ($query) use ($location_id) {
-                                    $query->where('location_id', $location_id)->select('qty_available', 'variation_id');
+                                'variation_location_details' => function ($query) use ($location_id, $store_id) {
+                                    $query->where('location_id', $location_id)
+                                        // --------------------muhibadd this 15/10/2025-----------------------
+                                        ->where('store_id', $store_id)
+                                        // ------------------------------ended-----------------------------------
+                                        ->select('qty_available', 'variation_id');
                                 }
                             ]);
                         },
                         'product_variation',
-                        'variation_location_details' => function ($q) use ($location_id) {
-                            $q->where('location_id', $location_id)->select('qty_available', 'variation_id');
+                        'variation_location_details' => function ($q) use ($location_id, $store_id) {
+                            $q->where('location_id', $location_id)
+                                // --------------------muhibadd this 15/10/2025-----------------------
+                                ->where('store_id', $store_id)
+                                // ------------------------------ended-----------------------------------
+                                ->select('qty_available', 'variation_id');
                         }
                     ]);
                 if ($variation_id !== '0') {
